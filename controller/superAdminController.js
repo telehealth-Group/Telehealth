@@ -1,12 +1,25 @@
 const Hospital = require("../models/hospitalmodel");
 
+exports.getAllHospitals = async (req, res) => {
+  try {
+    const hospitals = await Hospital.find();
+
+    res.status(200).json({
+      status: true,
+      data: {
+        hospitals,
+      },
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: false,
+      message: error.message,
+    });
+  }
+};
 exports.createHospitals = async (req, res) => {
   try {
-    const newHospital = await Hospital.create({
-      name: req.body.name,
-      email: req.body.email,
-      phoneNumber: req.body.phoneNumber,
-    });
+    const newHospital = await Hospital.create(req.body);
 
     res.status(201).json({
       status: true,
