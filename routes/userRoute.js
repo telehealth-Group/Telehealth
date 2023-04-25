@@ -5,6 +5,6 @@ const router = express.Router()
 
 router.route('/').get(superAdminController.getAllHospitals).post(superAdminController.createHospitals)
 
-router.route('/:id').patch(superAdminController.updateHospitals)
+router.route('/:id').get(superAdminController.getHospital).patch(superAdminController.updateHospitals)
 
 module.exports = router
