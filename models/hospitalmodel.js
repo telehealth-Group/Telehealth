@@ -5,7 +5,7 @@ const hospitalSchema = new mongoose.Schema({
     type: String,
     require: [true, "Please provide a name"],
   },
-  phone: {
+  phoneNumber: {
     type: String,
     require: [true, "Please provide a phone number"],
   },
@@ -24,19 +24,18 @@ const hospitalSchema = new mongoose.Schema({
       coordinates: [Number],
       address: String,
       description: String,
-      day: Number``,
     },
   ],
   services: [
     {
       type: String,
-      required: [true, "Provide an services"],
+      // required: [true, "Provide an services"],
     },
   ],
   specialities: [
     {
       type: String,
-      require: [true, "Provide an specialities"],
+      // require: [true, "Provide an specialities"],
     },
     ],
     doctors: [{

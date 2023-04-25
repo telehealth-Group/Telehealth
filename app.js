@@ -1,9 +1,14 @@
 const express = require("express");
-const morgan = require('morgan')
-const app = express();
+const morgan = require("morgan");
+const userRoute = require("./routes/userRoute");
+const hospitalRoute = require("./routes/hospitalRoute");
 
-if (process.env.NODE_ENV === 'development') {
-    app.use(morgan('dev'))
-}
+const app = express();
 app.use(express.json());
+
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
+
+app.use('/api/users')
 module.exports = app;
