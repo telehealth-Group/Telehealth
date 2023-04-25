@@ -6,6 +6,7 @@ exports.getAllHospitals = async (req, res) => {
 
     res.status(200).json({
       status: true,
+      results: hospitals.length,
       data: {
         hospitals,
       },
