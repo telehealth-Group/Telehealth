@@ -39,12 +39,21 @@ const hospitalSchema = new mongoose.Schema({
       type: String,
       // require: [true, "Provide an specialities"],
     },
-    ],
-    doctors: [{
-        type: mongoose.Schema.ObjectId,
-        ref:'User'
-  }]
+  ],
+  doctors: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'User'
+  }],
+  active: {
+    type: Boolean,
+    default: true,
+    }
 });
+
+hospitalSchema.pre(/^find/, function(next) {
+  this.find({ active: { $ne: false } });
+  next();
+})
 
 const Hospital = mongoose.model('Hospital', hospitalSchema)
 

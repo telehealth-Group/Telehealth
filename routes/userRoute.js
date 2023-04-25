@@ -1,10 +1,13 @@
-const express = require('express')
-const superAdminController = require('../controller/superAdminController')
+const express = require("express");
+const superAdminController = require("../controller/superAdminController");
 
-const router = express.Router()
+const router = express.Router();
 
-router.route('/').post(superAdminController.createHospitals)
+router.route("/").post(superAdminController.createHospitals);
 
-router.route('/:id').patch(superAdminController.updateHospitals)
+router
+  .route("/:id")
+  .patch(superAdminController.updateHospitals)
+  .patch(superAdminController.deleteHospitals);
 
-module.exports = router
+module.exports = router;

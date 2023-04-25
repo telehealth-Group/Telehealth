@@ -54,3 +54,18 @@ exports.updateHospitals = async (req, res) => {
      });
   }
 }
+
+exports.deleteHospitals = async (req, res) => {
+try {
+  await Hospital.findByIdAndUpdate(req.params.id, { active: false })
+  res.status(200).json({
+    status: true,
+    message:'Hospital Deleted'
+  });
+} catch (error) {
+  res.status(404).json({
+    status: false,
+    message: error.message,
+  });
+}
+}
