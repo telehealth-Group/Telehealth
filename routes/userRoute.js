@@ -1,5 +1,5 @@
 const express = require('express')
-const superAdminController = require('../controller/hospitalController')
+const superAdminController = require('../controller/superAdminController')
 
 const router = express.Router()
 
