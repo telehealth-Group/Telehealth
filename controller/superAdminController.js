@@ -17,6 +17,25 @@ exports.getAllHospitals = async (req, res) => {
     });
   }
 };
+
+exports.getHospital = async (req, res) => {
+  try {
+    const hospital = await Hospital.findById(req.params.id);
+
+    res.status(200).json({
+      status: true,
+      data: {
+        hospital,
+      },
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: false,
+      message: error.message,
+    });
+  }
+};
+
 exports.createHospitals = async (req, res) => {
   try {
     const newHospital = await Hospital.create(req.body);
@@ -37,23 +56,27 @@ exports.createHospitals = async (req, res) => {
 
 exports.updateHospitals = async (req, res) => {
   try {
-    const updateHospital = await Hospital.findByIdAndUpdate(req.params.id, req.body, {
-      new:true,
-      runValidate:false
-    })
-     res.status(200).json({
-       status: true,
-       data: {
-         updateHospital,
-       },
-     });
+    const updateHospital = await Hospital.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+        runValidate: false,
+      }
+    );
+    res.status(200).json({
+      status: true,
+      data: {
+        updateHospital,
+      },
+    });
   } catch (error) {
-     res.status(404).json({
-       status: false,
-       message: error.message,
-     });
+    res.status(404).json({
+      status: false,
+      message: error.message,
+    });
   }
-}
+};
 
 exports.deleteHospitals = async (req, res) => {
 try {
