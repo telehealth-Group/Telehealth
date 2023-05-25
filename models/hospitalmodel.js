@@ -9,7 +9,6 @@ const hospitalSchema = new mongoose.Schema({
     type: String,
     require: [true, "Please provide a phone number"],
     minlength: 10,
-    maxlength: 12
   },
   email: {
     type: String,
