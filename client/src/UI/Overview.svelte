@@ -1,6 +1,4 @@
 <script>
-    import { onMount } from "svelte";
-  
     import Dashboard from "./Dashboard.svelte";
     import Patient from "./Patient.svelte";
     import Doctor from "./Doctor.svelte";
@@ -11,12 +9,6 @@
     const handleSectionChange = (section) => {
       activeSection = section;
     };
-  
-    // Trigger the handleSectionChange function with the activeSection value
-    // when the component mounts to ensure a valid section is selected initially
-    onMount(() => {
-      handleSectionChange(activeSection);
-    });
   </script>
   
   <main>
