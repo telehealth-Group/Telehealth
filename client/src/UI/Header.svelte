@@ -44,7 +44,7 @@
 
 <style>
   section.header {
-    padding: 10px;
+    padding: 10px 30px 30px 20px;
     background-color: #f5f5f5;
     display: flex;
     justify-content: space-between;
@@ -63,6 +63,10 @@
 
   .nav--button-group {
     position: relative;
+  }
+
+  .nav--button-group button:hover {
+    color: rgb(31, 136, 171);
   }
 
   .nav--button-dropdown {

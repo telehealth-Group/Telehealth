@@ -8,3 +8,9 @@
         <p>Here's the list of all you doctors</p>
     </nav>
 </section>
+
+<style>
+    .doctors--list-header{
+        padding: 1rem;
+    }
+</style>
