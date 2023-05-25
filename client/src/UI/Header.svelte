@@ -54,10 +54,8 @@
     background-color: #f5f5f5;
     display: flex;
     justify-content: space-between;
-    max-width: 1300px;
     text-align: center;
     border-radius: 5px;
-    margin: 0 auto;
   }
 
   nav {
