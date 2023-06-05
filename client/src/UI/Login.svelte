@@ -1,22 +1,23 @@
 <script>
     import axios from 'axios'
     import { createEventDispatcher } from 'svelte';
-    let dispacher = createEventDispatcher();
+  
+    let dispatcher = createEventDispatcher();
     let email = "";
     let password = "";
-    export let data 
-   let errorMessage = "";
+    export let data;
+    let errorMessage = "";
   
-   async function login() {
-     let data ={
-        email:email,
-        password:password
-     }
+    async function login() {
+      let requestData = {
+        email: email,
+        password: password
+      };
+  
       try {
-          const response = await axios.post('http://127.0.0.1:3000/api/users/login', data)
-          data = response.data
-          dispacher('dataReceived', data);
-
+        const response = await axios.post('http://127.0.0.1:3000/api/users/login', requestData);
+        data = response.data;
+        dispatcher('dataReceived', data);
       } catch (error) {
         errorMessage = error.response.data.message;
       }
@@ -37,12 +38,25 @@
           <input type="password" id="password" bind:value="{password}" />
           <button on:click="{login}">Login</button>
         </div>
+        <div class="additional">
+          <div class="forgot-password">Forgot Password</div>
+          <div class="register"><a href="#">Sign Up</a></div>
+        </div>
       </div>
     </div>
   </div>
   
   <style>
     /* Styles from previous code */
+  
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f2f2f2;
+      width: 100%;
+    }
   
     .content {
       flex: 1;
@@ -53,19 +67,23 @@
   
     .login-container {
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      height: 100vh;
-      background-color: #f2f2f2;
-      width: 100%;
+      background-color: white;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 20px;
     }
   
     .login-form {
       max-width: 400px;
-      padding: 20px;
-      background-color: white;
-      border-radius: 4px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      width: 100%;
+    }
+  
+    .login-form h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-weight: bold;
     }
   
     .login-form label {
@@ -101,6 +119,25 @@
     .login-form .error-message {
       color: red;
       margin-top: 10px;
+    }
+  
+    .additional {
+      display: flex;
+      justify-content: space-evenly;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+  
+    .forgot-password {
+      color: #999;
+      cursor: pointer;
+      margin-right: 100px;
+
+    }
+  
+    .register a {
+      text-decoration: none;
+      color: #4caf50;
     }
   </style>
   
