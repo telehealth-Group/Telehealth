@@ -4,7 +4,7 @@
     import Doctor from "./Doctor.svelte";
     import Appointment from "./Appointment.svelte";
   
-    let activeSection = "Doctors";
+    let activeSection = "Dashboard";
   
     const handleSectionChange = (section) => {
       activeSection = section;

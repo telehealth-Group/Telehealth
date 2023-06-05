@@ -10,7 +10,5 @@
 
 
 <style>
-  .container {
-    /* max-width: 1300px; */
-  }
+  
 </style>
