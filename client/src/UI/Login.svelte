@@ -40,7 +40,7 @@
         </div>
         <div class="additional">
           <div class="forgot-password">Forgot Password</div>
-          <div class="register"><a href="#">Sign Up</a></div>
+          <div class="register"><a href="#" on:click={()=>dispatcher('signup')}>Sign Up</a></div>
         </div>
       </div>
     </div>

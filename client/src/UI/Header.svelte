@@ -1,12 +1,14 @@
 <script>
 // @ts-nocheck
 
-  export let role = 'Doctor';
+  export let role;
+  export let name
   let showDropdown = false;
 
   function logoutHandler() {
     showDropdown = !showDropdown;
   }
+  console.log(role)
 
 </script>
 
@@ -17,10 +19,10 @@
     <h3>Telehealth</h3>
   </nav>
 
-  {#if role === 'Doctor'}
+  {#if role === 'doctor'}
   <div class="nav--button-group">
     <button class="nav--button-dropdown" on:click={logoutHandler}>
-      Hi Dr.Elizabeth 🙋‍♀️ Welcome <i class="fas fa-chevron-down"></i>
+      Hi Dr.{name} 🙋‍♀️ Welcome <i class="fas fa-chevron-down"></i>
     </button>
     {#if showDropdown}
       <div class="dropdown-content">
@@ -28,10 +30,10 @@
       </div>
     {/if}
   </div>
-  {:else if role === 'Admin'}
+  {:else}
     <div class="nav--button-group">
       <button class="nav--button-dropdown" on:click={logoutHandler}>
-        Hi Admin <i class="fas fa-chevron-down"></i>
+        Hi {name} 🙋‍♀️ Welcome<i class="fas fa-chevron-down"></i>
       </button>
       {#if showDropdown}
         <div class="dropdown-content">
