@@ -10,7 +10,7 @@
     //   set(hospitalss, value);
     // });
 
-    console.log(hospitals)
+    console.log($hospitals)
   </script>
   
   <div class="grid-container">
