@@ -43,6 +43,12 @@ const userSchema = new mongoose.Schema({
     enum: ["patient", "doctor", "admin", "superAdmin"],
     default: "patient",
   },
+  passwordChangedAt: Date,
+  active: {
+    type: Boolean,
+    default: true,
+    select: false,
+  },
 });
 
 userSchema.pre('save', async function (next) {
@@ -54,14 +60,26 @@ userSchema.pre('save', async function (next) {
   this.passwordConfirm = undefined
   next()
 })
-
+userSchema.pre(/^find/, function (next) {
+  this.find({ active: { $ne: false } });
+  next();
+});
 userSchema.methods.correctPassword = async function (
   candidatePassword,
   userPassword
 ) {
   return await bcrypt.compare(candidatePassword, userPassword);
 };
-
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+    return JWTTimestamp < changedTimestamp;
+  }
+  return false;
+};
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;

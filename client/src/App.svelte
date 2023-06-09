@@ -6,8 +6,6 @@
   import Login from "./UI/Login.svelte";
   import axios from "axios";
   import Signup from "./UI/Signup.svelte";
-  import {onMount} from 'svelte'
-  import { hospitals,appointments,patients } from './store.js';
 
   let receivedData = undefined;
   let isVisible = "login";
@@ -19,18 +17,7 @@
     console.log(receivedData);
   }
 
-   async function fetchData() {
-    try {
-      const response = await fetch('http://127.0.0.1:3000/api/users/hospital/');
-      const { data } = await response.json();
-      const currentItems = $hospitals;
-      hospitals.set([...currentItems, ...data.hospitals]);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  onMount(fetchData);
+  
 </script>
 
 <div class="container">
