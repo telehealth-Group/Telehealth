@@ -19,15 +19,18 @@
     console.log(receivedData);
   }
 
-  onMount(async () => {
+   async function fetchData() {
     try {
-      const response = await axios.get('http://127.0.0.1:3000/api/users/hospital/');
-      const data = response.data;
-      hospitals.set(data.hospitals);
+      const response = await fetch('http://127.0.0.1:3000/api/users/hospital/');
+      const { data } = await response.json();
+      const currentItems = $hospitals;
+      hospitals.set([...currentItems, ...data.hospitals]);
     } catch (error) {
       console.error(error);
     }
-  });
+  }
+
+  onMount(fetchData);
 </script>
 
 <div class="container">
