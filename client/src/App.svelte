@@ -27,6 +27,7 @@
       );
       console.log("Hospitals:", responseHospitals.data);
       hospitals.set(responseHospitals.data);
+
     } catch (error) {
       console.error(error);
     }

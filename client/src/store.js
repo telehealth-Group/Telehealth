@@ -1,11 +1,11 @@
-// Import the required dependencies
-import { writable } from 'svelte/store';
+// store.js
 import axios from 'axios';
+import { writable } from 'svelte/store';
 
-// Create writable stores for hospitals, patients, and doctors
+
 export const hospitals = writable([]);
 export const patients = writable([]);
-export const doctors = writable([]);
+export const appointments = writable([]);
 
 // Function to fetch data and update the store
 const fetchDataAndSetStore = async (url, store) => {
@@ -25,4 +25,4 @@ fetchDataAndSetStore('http://127.0.0.1:3000/api/hospital', hospitals);
 fetchDataAndSetStore('http://127.0.0.1:3000/api/patients', patients);
 
 // Fetch doctors data and update the doctors store
-fetchDataAndSetStore('http://127.0.0.1:3000/api/doctors', doctors);
+fetchDataAndSetStore('http://127.0.0.1:3000/api/appointments', appointments);
