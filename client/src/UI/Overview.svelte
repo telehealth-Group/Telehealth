@@ -2,7 +2,8 @@
   import Dashboard from "./Dashboard.svelte";
   import Patient from "./Patient.svelte";
   import Appointment from "./Appointment.svelte";
-  import PatienDashboard from "./patienDashboard.svelte";
+  import PatientDashboard from "./patientDashboard.svelte";
+  import Doctor from "./Doctor.svelte";
 
   export let role;
 
@@ -12,7 +13,7 @@
   const handleSectionChange = (section) => {
     activeSection = section;
   };
-  console.log(data)
+  console.log(data);
 </script>
 
 <main>
@@ -23,6 +24,13 @@
           >Dashboard</button
         >
       </li>
+      {#if role === "admin" || role === "superAdmin"}
+        <li class:selected={activeSection === "Doctors"}>
+          <button on:click={() => handleSectionChange("Doctors")}
+            >Doctors</button
+          >
+        </li>
+      {/if}
       {#if role === "doctor" || role === "admin" || role === "superAdmin"}
         <li class:selected={activeSection === "Patients"}>
           <button on:click={() => handleSectionChange("Patients")}
@@ -30,26 +38,37 @@
           >
         </li>
       {/if}
-      <li class:selected={activeSection === "Appointment"}>
-        <button on:click={() => handleSectionChange("Appointment")}
-          >Appointment</button
-        >
-      </li>
+      {#if role === "doctor" || role === "admin" || role === "patient"}
+        <li class:selected={activeSection === "Appointment"}>
+          <button on:click={() => handleSectionChange("Appointment")}
+            >Appointment</button
+          >
+        </li>
+      {/if}
       <li class:selected={activeSection === "Settings"}>
         <button on:click={() => handleSectionChange("Settings")}
           >Settings</button
         >
       </li>
+      {#if role === "admin" || role === "superAdmin" || role === "doctor"}
+        <li class:selected={activeSection === "Reports"}>
+          <button on:click={() => handleSectionChange("Reports")}
+            >Reports</button
+          >
+        </li>
+      {/if}
     </ul>
   </nav>
 
   <section>
     {#if activeSection === "Dashboard"}
-      {#if role === "patient"}
-        <PatienDashboard />
-      {:else}
+      <!-- {#if role === "patient"} -->
+        <PatientDashboard />
+      <!-- {:else}
         <Dashboard />
-      {/if}
+      {/if} -->
+    {:else if activeSection === "Doctors"}
+      <Doctor />
     {:else if activeSection === "Patients"}
       <Patient />
     {:else if activeSection === "Appointment"}
