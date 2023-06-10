@@ -12,6 +12,7 @@ const fetchDataAndSetStore = async (url, store) => {
   try {
     const response = await axios.get(url);
     const data = response.data;
+    console.log(data);
     store.set(data);
   } catch (error) {
     console.error(error);
