@@ -53,18 +53,18 @@
   </nav>
 
   <section>
-    {#if activeSection === "Dashboard"}
+    {#if activeOption === "Dashboard"}
       {#if role === "patient"}
         <h1>Not build yet</h1>
         <PatienDashboard/>
       {:else}
         <Dashboard />
       {/if}
-    {:else if activeSection === "Doctors"}
+    {:else if activeOption === "Doctors"}
       <Doctor />
-    {:else if activeSection === "Patients"}
+    {:else if activeOption === "Patients"}
       <Patient />
-    {:else if activeSection === "Appointment"}
+    {:else if activeOption === "Appointment"}
       <Appointment />
     {/if}
   </section>
@@ -121,12 +121,12 @@
   }
 
   /* Section content */
-  .flex-item {
+  /* .flex-item {
     flex: 1;
     padding: 20px;
     background-color: #ffffff;
     box-sizing: border-box;
-  }
+  } */
 </style>
 
 
