@@ -260,88 +260,34 @@
   <table class="patients-table">
     <thead>
       <tr>
-        <th>
-          <span class="icon">👤</span>
-          Name
-        </th>
-        <th>
-          <span class="icon">🎂</span>
-          Age
-        </th>
-        <th>
-          <span class="icon">✉️</span>
-          Email
-        </th>
-        <th>
-          <span class="icon">📞</span>
-          Phone
-        </th>
-        <!-- <th>
-          <span class="icon">🏠</span>
-          Address
-        </th> -->
-        <th>
-          <span class="icon">⚥</span>
-          Gender
-        </th>
-        <!-- <th>
-          <span class="icon">❤️</span>
-          Blood Type
-        </th>
-        <th>
-          <span class="icon">🌼</span>
-          Allergies
-        </th>
-        <th>
-          <span class="icon">💊</span>
-          Medical History
-        </th> -->
+        <th>Name</th>
+        <th>Age</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Address</th>
+        <th>Gender</th>
+        <th>Blood Type</th>
+        <th>Allergies</th>
+        <th>Medical History</th>
       </tr>
     </thead>
     <tbody>
       {#if filteredPatients.length === 0}
         <tr>
-          <td class="no-patients" colspan="9">No matching patients found.</td>
+          <td colspan="5">No matching patients found.</td>
         </tr>
-      {:else}
+        {:else}
         {#each filteredPatients as patient}
           <tr>
-            <td>
-              <span class="icon">👤</span>
-              {patient.name}
-            </td>
-            <td>
-              <span class="icon">🎂</span>
-              {patient.age}
-            </td>
-            <td>
-              <span class="icon">✉️</span>
-              {patient.email}
-            </td>
-            <td>
-              <span class="icon">📞</span>
-              {patient.phone}
-            </td>
-            <!-- <td>
-              <span class="icon">🏠</span>
-              {patient.address}
-            </td> -->
-            <td>
-              <span class="icon">⚥</span>
-              {patient.gender}
-            </td>
-            <!-- <td>
-              <span class="icon">❤️</span>
-              {patient.bloodType}
-            </td>
-            <td>
-              <span class="icon">🌼</span>
-              {patient.allergies}
-            </td>
-            <td>
-              <span class="icon">💊</span>
-              {patient.medicalHistory}
-            </td> -->
+            <td>{patient.name}</td>
+            <td>{patient.age}</td>
+            <td>{patient.email}</td>
+            <td>{patient.phone}</td>
+            <td>{patient.address}</td>
+            <td>{patient.gender}</td>
+            <td>{patient.bloodType}</td>
+            <td>{patient.allergies}</td>
+            <td>{patient.medicalHistory}</td>
           </tr>
         {/each}
       {/if}
@@ -351,23 +297,40 @@
 
 <style>
   .search-bar-container {
+    display: flex;
+    justify-content: flex-end;
     margin-bottom: 20px;
   }
 
   .search-bar {
     display: flex;
     align-items: center;
-    width: 300px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
   }
 
   .search-bar input {
-    flex: 1;
-    border: none;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
     outline: none;
-    padding: 5px;
+  }
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
+  .patients-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  .patients-table th,
+  .patients-table td {
+    padding: 8px;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .table-wrapper {
@@ -377,26 +340,60 @@
   .patients-table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
   }
 
   .patients-table th,
   .patients-table td {
-    padding: 10px;
+    padding: 8px;
     text-align: left;
-    border-bottom: 1px solid #ccc;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  .patients-table th {
-    background-color: #f0f0f0;
-    font-weight: bold;
+  .patients-table th:nth-child(1),
+  .patients-table td:nth-child(1) {
+    width: 15%;
   }
 
-  .patients-table td span.icon {
-    margin-right: 5px;
+  .patients-table th:nth-child(2),
+  .patients-table td:nth-child(2) {
+    width: 5%;
   }
 
-  .no-patients {
-    text-align: center;
-    font-style: italic;
+  .patients-table th:nth-child(3),
+  .patients-table td:nth-child(3) {
+    width: 15%;
+  }
+
+  .patients-table th:nth-child(4),
+  .patients-table td:nth-child(4) {
+    width: 10%;
+  }
+
+  .patients-table th:nth-child(5),
+  .patients-table td:nth-child(5) {
+    width: 15%;
+  }
+
+  .patients-table th:nth-child(6),
+  .patients-table td:nth-child(6) {
+    width: 5%;
+  }
+
+  .patients-table th:nth-child(7),
+  .patients-table td:nth-child(7) {
+    width: 5%;
+  }
+
+  .patients-table th:nth-child(8),
+  .patients-table td:nth-child(8) {
+    width: 15%;
+  }
+
+  .patients-table th:nth-child(9),
+  .patients-table td:nth-child(9) {
+    width: 15%;
   }
 </style>

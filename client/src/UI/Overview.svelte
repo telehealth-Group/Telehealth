@@ -2,70 +2,61 @@
   import Dashboard from "./Dashboard.svelte";
   import Patient from "./Patient.svelte";
   import Appointment from "./Appointment.svelte";
-  import PatientDashboard from "./patientDashboard.svelte";
   import Doctor from "./Doctor.svelte";
   import PatienDashboard from "./patienDashboard.svelte";
   import DoctorDashboard from "./DoctorDashboard.svelte";
 
   export let role;
 
-  let activeSection = "Dashboard";
+  // Define options based on role
+  let options = [];
+  if (role === "admin" || role === "superAdmin") {
+    options = [
+      { label: "Dashboard", component: Dashboard },
+      { label: "Doctors", component: Doctor },
+      { label: "Patients", component: PatienDashboard },
+      { label: "Settings", component: 'SettingsOptions' },
+      { label: "Feedbacks", component: 'ReportsOptions' },
+    ];
+  } else if (role === "doctor") {
+    options = [
+      { label: "Dashboard", component: Dashboard },
+      { label: "Patients", component: PatienDashboard },
+      { label: "Appointment", component: Appointment },
+      { label: "Settings", component: 'SettingsOptions' },
+      { label: "Feedbacks", component: 'ReportsOptions' },
+    ];
+  } else if (role === "patient") {
+    options = [
+      { label: "Dashboard", component: PatienDashboard },
+      { label: "Appointment", component: Appointment },
+      { label: "Settings", component: 'SettingsOptions' },
+    ];
+  }
 
-  const handleSectionChange = (section) => {
-    activeSection = section;
+  let activeOption = options[0];
+
+  const handleOptionChange = (option) => {
+    activeOption = option;
   };
 </script>
 
-<main>
+<main class="flex-container">
   <nav class="vertical-header">
     <ul>
-      <li class:selected={activeSection === "Dashboard"}>
-        <button on:click={() => handleSectionChange("Dashboard")}
-          >🏠 Dashboard</button
-        >
-      </li>
-      {#if role === "admin" || role === "superAdmin"}
-        <li class:selected={activeSection === "Doctors"}>
-          <button on:click={() => handleSectionChange("Doctors")}
-            >👨‍⚕️ Doctors</button
-          >
+      {#each options as option}
+        <li class:selected={option === activeOption}>
+          <button on:click={() => handleOptionChange(option)}>{option.label}</button>
         </li>
-      {/if}
-      {#if role === "doctor" || role === "admin" || role === "superAdmin"}
-        <li class:selected={activeSection === "Patients"}>
-          <button on:click={() => handleSectionChange("Patients")}
-            >👥 Patients</button
-          >
-        </li>
-      {/if}
-      {#if role === "doctor" || role === "admin" || role === "patient"}
-        <li class:selected={activeSection === "Appointment"}>
-          <button on:click={() => handleSectionChange("Appointment")}
-            >📅 Appointment</button
-          >
-        </li>
-      {/if}
-      <li class:selected={activeSection === "Settings"}>
-        <button on:click={() => handleSectionChange("Settings")}
-          >⚙️ Settings</button
-        >
-      </li>
-      {#if role === "admin" || role === "superAdmin" || role === "doctor"}
-        <li class:selected={activeSection === "Reports"}>
-          <button on:click={() => handleSectionChange("Reports")}
-            >📊 Reports</button
-          >
-        </li>
-      {/if}
+      {/each}
     </ul>
   </nav>
 
-  <section class="section">
+  <section>
     {#if activeSection === "Dashboard"}
       {#if role === "patient"}
+        <h1>Not build yet</h1>
         <PatienDashboard/>
-      {:else if role === "doctor"}
-      <DoctorDashboard/>
       {:else}
         <Dashboard />
       {/if}
@@ -80,37 +71,32 @@
 </main>
 
 <style>
-  .section { 
-    padding: 0; margin: 0;
-  }
   main {
     display: flex;
     height: 100vh;
   }
 
+  /* Sidebar navigation */
   .vertical-header {
     width: 200px;
     padding: 20px;
     background-color: #f0f0f0;
     border-radius: 5px;
-    height: inherit;
+    height: 100%;
+    box-sizing: border-box;
   }
 
-  .selected {
-    font-weight: bold;
-  }
-
-  ul {
+  .vertical-header ul {
     list-style: none;
     padding: 0;
     margin: 0;
   }
 
-  li {
+  .vertical-header li {
     margin-bottom: 0.5rem;
   }
 
-  button {
+  .vertical-header button {
     background-color: #fff;
     border: 1px solid #ccc;
     padding: 10px 20px;
@@ -121,17 +107,29 @@
     text-align: left;
   }
 
-  button:hover {
+  .vertical-header button:hover {
     background-color: #f0f0f0;
     color: #555;
   }
 
-  button:focus {
+  .vertical-header button:focus {
     outline: none;
   }
 
-  section {
+  .vertical-header li.selected button {
+    font-weight: bold;
+  }
+
+  /* Section content */
+  .flex-item {
     flex: 1;
     padding: 20px;
+    background-color: #ffffff;
+    box-sizing: border-box;
   }
 </style>
+
+
+
+
+

@@ -12,18 +12,17 @@ const fetchDataAndSetStore = async (url, store) => {
   try {
     const response = await axios.get(url);
     const data = response.data;
-    console.log(data);
-    store.set(data);
+    store.set(data.data);
   } catch (error) {
     console.error(error);
   }
 };
 
 // Fetch hospitals data and update the hospitals store
-fetchDataAndSetStore('http://127.0.0.1:3000/api/hospital', hospitals);
+fetchDataAndSetStore('http://127.0.0.1:3000/api/users/hospital', hospitals);
 
 // Fetch patients data and update the patients store
 fetchDataAndSetStore('http://127.0.0.1:3000/api/patients', patients);
 
-// Fetch appointments data and update the appointments store
+// Fetch doctors data and update the doctors store
 fetchDataAndSetStore('http://127.0.0.1:3000/api/appointments', appointments);

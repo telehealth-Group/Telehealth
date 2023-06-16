@@ -115,12 +115,6 @@
   filterAppointments();
 </script>
 
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-/>
-
-
 <div class="search-bar-container">
   <div class="search-bar">
     <input
@@ -136,30 +130,31 @@
   <table class="appointments-table">
     <thead>
       <tr>
-        <th><i class="fas fa-id-badge" style="color: #377dff;"></i> ID</th>
-        <th><i class="fas fa-user" style="color: #ff68b6;"></i> Patient</th>
-        <th><i class="fas fa-user-md" style="color: #00c4b2;"></i> Doctor</th>
-        <th><i class="fas fa-calendar-alt" style="color: #ff901f;"></i> Date</th>
-        <th><i class="fas fa-clock" style="color: #00b37e;"></i> Time</th>
-        <th><i class="fas fa-hourglass" style="color: #f9423a;"></i> Duration</th>
-        <th><i class="fas fa-sticky-note" style="color: #8353d4;"></i> Notes</th>
+        <th>ID</th>
+        <th>Patient</th>
+        <th>Doctor</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Duration</th>
+        <th>Notes</th>
       </tr>
     </thead>
     <tbody>
       {#each filteredAppointments as appointment}
         <tr>
-          <td><span class="icon"><i class="fas fa-id-badge" style="color: #377dff;"></i></span>{appointment.id}</td>
-          <td><span class="icon"><i class="fas fa-user" style="color: #ff68b6;"></i></span>{appointment.patient}</td>
-          <td><span class="icon"><i class="fas fa-user-md" style="color: #00c4b2;"></i></span>{appointment.doctor}</td>
-          <td><span class="icon"><i class="fas fa-calendar-alt" style="color: #ff901f;"></i></span>{appointment.date}</td>
-          <td><span class="icon"><i class="fas fa-clock" style="color: #00b37e;"></i></span>{appointment.time}</td>
-          <td><span class="icon"><i class="fas fa-hourglass" style="color: #f9423a;"></i></span>{appointment.duration}</td>
-          <td><span class="icon"><i class="fas fa-sticky-note" style="color: #8353d4;"></i></span>{appointment.notes}</td>
+          <td>{appointment.id}</td>
+          <td>{appointment.patient}</td>
+          <td>{appointment.doctor}</td>
+          <td>{appointment.date}</td>
+          <td>{appointment.time}</td>
+          <td>{appointment.duration}</td>
+          <td>{appointment.notes}</td>
         </tr>
       {/each}
     </tbody>
   </table>
 </div>
+
 <style>
   .search-bar-container {
     display: flex;
@@ -179,7 +174,6 @@
     font-size: 16px;
     outline: none;
   }
-
   .table-wrapper {
     overflow-x: auto;
   }
@@ -197,7 +191,6 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    animation: fade-in 0.5s ease-in-out;
   }
 
   .appointments-table th:nth-child(1),
@@ -233,20 +226,5 @@
   .appointments-table th:nth-child(7),
   .appointments-table td:nth-child(7) {
     width: 35%;
-  }
-
-  .icon {
-    display: inline-flex;
-    align-items: center;
-    margin-right: 5px;
-  }
-
-  @keyframes fade-in {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
   }
 </style>
