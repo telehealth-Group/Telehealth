@@ -64,8 +64,6 @@ exports.login = async (req, res) => {
 
     // 2) Check if user exists & pass is correct
     const user = await User.findOne({ email }).select("+password");
-    console.log(user);
-
     if (!user || !(await user.correctPassword(password, user.password))) {
       return res.status(401).json({
         status: "fail",
