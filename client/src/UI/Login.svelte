@@ -3,9 +3,9 @@
     import { createEventDispatcher } from 'svelte';
   
     let dispatcher = createEventDispatcher();
-    let email = "";;
+    let email = "";
     let password = "";
-     let data
+    export let data;
     let errorMessage = "";
   
     async function login() {
