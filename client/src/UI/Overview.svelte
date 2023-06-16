@@ -5,6 +5,7 @@
   import PatientDashboard from "./patientDashboard.svelte";
   import Doctor from "./Doctor.svelte";
   import PatienDashboard from "./patienDashboard.svelte";
+  import DoctorDashboard from "./DoctorDashboard.svelte";
 
   export let role;
 
@@ -59,11 +60,12 @@
     </ul>
   </nav>
 
-  <section>
+  <section class="section">
     {#if activeSection === "Dashboard"}
       {#if role === "patient"}
-        <h1>Not build yet</h1>
         <PatienDashboard/>
+      {:else if role === "doctor"}
+      <DoctorDashboard/>
       {:else}
         <Dashboard />
       {/if}
@@ -78,6 +80,9 @@
 </main>
 
 <style>
+  .section { 
+    padding: 0; margin: 0;
+  }
   main {
     display: flex;
     height: 100vh;

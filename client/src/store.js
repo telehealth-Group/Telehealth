@@ -25,5 +25,5 @@ fetchDataAndSetStore('http://127.0.0.1:3000/api/hospital', hospitals);
 // Fetch patients data and update the patients store
 fetchDataAndSetStore('http://127.0.0.1:3000/api/patients', patients);
 
-// Fetch doctors data and update the doctors store
+// Fetch appointments data and update the appointments store
 fetchDataAndSetStore('http://127.0.0.1:3000/api/appointments', appointments);
