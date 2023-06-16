@@ -34,62 +34,86 @@
   
     <div class="summary">
       <div class="summary-item">
-        <h2>{doctorsCount}</h2>
-        <p>Doctors</p>
+        <div class="icon-container">
+          <span class="icon">👩‍⚕️</span>
+        </div>
+        <div class="summary-info">
+          <h2>{doctorsCount}</h2>
+          <p>Doctors</p>
+        </div>
       </div>
       <div class="summary-item">
-        <h2>{appointmentsCount}</h2>
-        <p>Appointments</p>
+        <div class="icon-container">
+          <span class="icon">📅</span>
+        </div>
+        <div class="summary-info">
+          <h2>{appointmentsCount}</h2>
+          <p>Appointments</p>
+        </div>
       </div>
       <div class="summary-item">
-        <h2>{patientsCount}</h2>
-        <p>Patients</p>
+        <div class="icon-container">
+          <span class="icon">🏥</span>
+        </div>
+        <div class="summary-info">
+          <h2>{patientsCount}</h2>
+          <p>Patients</p>
+        </div>
+      </div>
+      <div class="summary-item">
+        <div class="icon-container">
+          <span class="icon">💰</span>
+        </div>
+        <div class="summary-info">
+          <h2>${revenue}</h2>
+          <p>Revenue</p>
+        </div>
       </div>
     </div>
   
-    <div class="revenue">
-      <h2>Revenue</h2>
-      <h2>${revenue}</h2>
-    </div>
-  
-    <!-- Upcoming Appointments -->
     <div class="dashboard-item">
       <h2>Upcoming Appointments</h2>
-      <ul>
+      <ul class="appointment-list">
         {#each upcomingAppointments as appointment}
-          <li>
+          <li class="appointment-item">
             <div class="patient-info">
-              <div>
-                <span class="patient-name">{appointment.patientName}</span>
-                <span class="appointment-time">{appointment.appointmentTime}</span>
+              <div class="patient-name">{appointment.patientName}</div>
+              <div class="appointment-details">
+                <div class="icon-container">
+                  <span class="icon">👨‍⚕️</span>
+                </div>
+                <div class="doctor-name">{appointment.doctorName}</div>
               </div>
-              <div>
-                <span class="doctor-name">Doctor: {appointment.doctorName}</span>
-              </div>
+              <div class="appointment-time">{appointment.appointmentTime}</div>
             </div>
           </li>
         {/each}
       </ul>
     </div>
+    
   
-    <!-- New Patients -->
     <div class="dashboard-item">
       <h2>New Patients</h2>
-      <ul>
+      <ul class="patient-list">
         {#each newPatients as patient}
-          <li>
+          <li class="patient-item">
             <div class="patient-info">
-              <div>
-                <span class="patient-name">{patient.patientName}</span>
-                <span class="registration-date">Registered on: {patient.registrationDate}</span>
+              <div class="patient-name">{patient.patientName}</div>
+              <div class="patient-details">
+                <div class="icon-container">
+                  <span class="icon">📅</span>
+                </div>
+                <div class="registration-date">{patient.registrationDate}</div>
+                <div class="icon-container">
+                  <span class="icon">🎂</span>
+                </div>
+                <div class="patient-age">{patient.age}</div>
               </div>
             </div>
           </li>
         {/each}
       </ul>
     </div>
-  
-    <!-- Add more dashboard items here as needed -->
   </div>
   
   <style>
@@ -103,6 +127,7 @@
       font-size: 28px;
       font-weight: bold;
       margin-bottom: 20px;
+      color: #333;
     }
   
     .summary {
@@ -112,36 +137,45 @@
     }
   
     .summary-item {
-      flex: 1;
+      display: flex;
+      align-items: center;
       padding: 20px;
       background-color: #f7f7f7;
-      border-radius: 4px;
+      border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      text-align: center;
+    }
+  
+    .icon-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #fff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  
+    .icon {
+      font-size: 24px;
+    }
+  
+    .summary-info {
+      flex: 1;
     }
   
     .summary-item h2 {
       font-size: 24px;
       font-weight: bold;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
+      color: #333;
     }
   
     .summary-item p {
       font-size: 16px;
       color: #777;
       margin-bottom: 0;
-    }
-  
-    .revenue {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-  
-    .revenue h2 {
-      font-size: 36px;
-      font-weight: bold;
-      color: #1abc9c;
-      margin: 0;
     }
   
     .dashboard-item {
@@ -155,89 +189,180 @@
       color: #333;
     }
   
-    .dashboard-item ul {
+    .appointment-list,
+    .patient-list {
       list-style-type: none;
       padding: 0;
       margin: 0;
     }
   
-    .dashboard-item li {
+    .appointment-item,
+    .patient-item {
       margin-bottom: 10px;
       background-color: #fff;
       padding: 15px;
-      border-radius: 4px;
+      border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       transition: box-shadow 0.3s ease;
     }
   
-    .dashboard-item li:hover {
+    .appointment-item:hover,
+    .patient-item:hover {
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
   
-    .dashboard-item .patient-info {
+    .patient-info {
       display: flex;
-      justify-content: space-between;
       align-items: center;
     }
   
-    .dashboard-item .patient-name {
-      font-weight: bold;
+    .patient-name,
+    .doctor-name,
+    .appointment-time,
+    .registration-date,
+    .patient-age {
       color: #333;
+      font-size: 16px;
+      margin-bottom: 5px;
     }
   
-    .dashboard-item .appointment-time {
-      color: #777;
+    .icon-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f7f7f7;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      margin-right: 5px;
+    }
+  
+    .icon {
+      font-size: 16px;
+    }
+    .dashboard-item .patient-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #f7f7f7;
+    transition: background-color 0.3s ease;
+  }
+
+  .dashboard-item .patient-info:hover {
+    background-color: #ebebeb;
+  }
+
+  .patient-name {
+    font-weight: bold;
+    color: #333;
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+
+  .registration-date {
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 0;
+  }
+
+
+  .dashboard-item .patient-info:hover {
+    background-color: #ebebeb;
+  }
+
+  .patient-name {
+    font-weight: bold;
+    color: #333;
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+
+  .appointment-details {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+
+  .icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1abc9c;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+  }
+
+  .icon-container svg {
+    fill: #fff;
+    width: 16px;
+    height: 16px;
+  }
+
+  .appointment-time,
+  .doctor-name {
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 0;
+  }
+  .patient-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 3 0px;
+    padding-right: 1rem;
+  }
+
+  @media (max-width: 600px) {
+    /* ... previous media queries ... */
+
+    .dashboard-item .patient-info {
+      flex-direction: column;
+      padding: 15px;
+    }
+
+    .patient-name,
+    .appointment-details,
+    .appointment-time,
+    .doctor-name {
       font-size: 14px;
     }
-  
-    .dashboard-item .doctor-name {
-      color: #777;
-      font-size: 14px;
+
+    .icon-container {
+      width: 24px;
+      height: 24px;
+      margin-bottom: 10px;
     }
-  
-    @media (max-width: 600px) {
-      .summary {
-        flex-direction: column;
-      }
-  
-      .summary-item {
-        margin-bottom: 20px;
-      }
+
+    .icon-container svg {
+      width: 12px;
+      height: 12px;
     }
-  
-    @media (max-width: 400px) {
-      h1 {
-        font-size: 24px;
-      }
-  
-      .summary-item h2 {
-        font-size: 20px;
-      }
-  
-      .summary-item p {
-        font-size: 14px;
-      }
-  
-      .revenue h2 {
-        font-size: 28px;
-      }
-  
-      .dashboard-item h2 {
-        font-size: 20px;
-      }
-  
-      .dashboard-item li {
-        padding: 10px;
-      }
-  
-      .dashboard-item .patient-name {
-        font-size: 16px;
-      }
-  
-      .dashboard-item .appointment-time,
-      .dashboard-item .doctor-name {
-        font-size: 12px;
-      }
+  }
+
+  @media (max-width: 400px) {
+    /* ... previous media queries ... */
+
+    .patient-name,
+    .appointment-details,
+    .appointment-time,
+    .doctor-name {
+      font-size: 12px;
     }
+
+    .icon-container {
+      width: 20px;
+      height: 20px;
+      margin-bottom: 8px;
+    }
+
+    .icon-container svg {
+      width: 10px;
+      height: 10px;
+    }
+  }
   </style>
   

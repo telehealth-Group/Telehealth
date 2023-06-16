@@ -201,11 +201,11 @@
       margin-bottom: 20px;
     }
   
-    h1 {
+    /* h1 {
       font-size: 24px;
       margin-bottom: 20px;
       text-align: center;
-    }
+    } */
   
     h2 {
       font-size: 20px;

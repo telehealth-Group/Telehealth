@@ -20,7 +20,18 @@
     console.log(receivedData);
   }
 
-  
+  onMount(async () => {
+    try {
+      const responseHospitals = await axios.get(
+        "http://127.0.0.1:3000/api/users/hospital"
+      );
+      console.log("Hospitals:", responseHospitals.data);
+      hospitals.set(responseHospitals.data);
+
+    } catch (error) {
+      console.error(error);
+    }
+  });
 </script>
 
 <div class="container">
@@ -38,4 +49,5 @@
 </div>
 
 <style>
+ 
 </style>
