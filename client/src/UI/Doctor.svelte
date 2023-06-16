@@ -101,6 +101,7 @@
     // Add more doctors here...
   ];
 
+
   let searchQuery = "";
   let filteredDoctors = [];
 
@@ -155,11 +156,11 @@
         {:else}
           {#each filteredDoctors as doctor}
             <tr>
-              <td>{doctor.name}</td>
-              <td>{doctor.specialization}</td>
-              <td>{doctor.email}</td>
-              <td>{doctor.phone}</td>
-              <td>{doctor.location}</td>
+              <td><i class="fas fa-user-md"></i> {doctor.name}</td>
+              <td><i class="fas fa-stethoscope"></i> {doctor.specialization}</td>
+              <td><i class="fas fa-envelope"></i> {doctor.email}</td>
+              <td><i class="fas fa-phone"></i> {doctor.phone}</td>
+              <td><i class="fas fa-map-marker-alt"></i> {doctor.location}</td>
             </tr>
           {/each}
         {/if}
