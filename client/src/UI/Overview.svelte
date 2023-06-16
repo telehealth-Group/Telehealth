@@ -131,10 +131,10 @@
   }
 
   /* Section content */
-  .flex-item {
+  /* .flex-item {
     flex: 1;
     padding: 20px;
     background-color: #ffffff;
     box-sizing: border-box;
-  }
+  } */
 </style>
