@@ -20,10 +20,10 @@ const fetchDataAndSetStore = async (url, store) => {
 };
 
 // Fetch hospitals data and update the hospitals store
-fetchDataAndSetStore('http://127.0.0.1:3000/api/hospital', hospitals);
+fetchDataAndSetStore('http://127.0.0.1:3000/api/users/hospital', hospitals);
 
 // Fetch patients data and update the patients store
-fetchDataAndSetStore('http://127.0.0.1:3000/api/patients', patients);
+fetchDataAndSetStore('http://127.0.0.1:3000/api/users/patients', patients);
 
 // Fetch appointments data and update the appointments store
-fetchDataAndSetStore('http://127.0.0.1:3000/api/appointments', appointments);
+fetchDataAndSetStore('http://127.0.0.1:3000/api/users/appointments', appointments);
