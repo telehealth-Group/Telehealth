@@ -19,47 +19,35 @@
   <nav class="vertical-header">
     <ul>
       <li class:selected={activeSection === "Dashboard"}>
-        <button on:click={() => handleSectionChange("Dashboard")}
-          >🏠 Dashboard</button
-        >
+        <button on:click={() => handleSectionChange("Dashboard")}>🏠 Dashboard</button>
       </li>
       {#if role === "admin" || role === "superAdmin"}
         <li class:selected={activeSection === "Doctors"}>
-          <button on:click={() => handleSectionChange("Doctors")}
-            >👨‍⚕️ Doctors</button
-          >
+          <button on:click={() => handleSectionChange("Doctors")}>👨‍⚕️ Doctors</button>
         </li>
       {/if}
       {#if role === "doctor" || role === "admin" || role === "superAdmin"}
         <li class:selected={activeSection === "Patients"}>
-          <button on:click={() => handleSectionChange("Patients")}
-            >👥 Patients</button
-          >
+          <button on:click={() => handleSectionChange("Patients")}>👥 Patients</button>
         </li>
       {/if}
       {#if role === "doctor" || role === "admin" || role === "patient"}
         <li class:selected={activeSection === "Appointment"}>
-          <button on:click={() => handleSectionChange("Appointment")}
-            >📅 Appointment</button
-          >
+          <button on:click={() => handleSectionChange("Appointment")}>📅 Appointment</button>
         </li>
       {/if}
       <li class:selected={activeSection === "Settings"}>
-        <button on:click={() => handleSectionChange("Settings")}
-          >⚙️ Settings</button
-        >
+        <button on:click={() => handleSectionChange("Settings")}>⚙️ Settings</button>
       </li>
       {#if role === "admin" || role === "superAdmin" || role === "doctor"}
         <li class:selected={activeSection === "Reports"}>
-          <button on:click={() => handleSectionChange("Reports")}
-            >📊 Reports</button
-          >
+          <button on:click={() => handleSectionChange("Reports")}>📊 Reports</button>
         </li>
       {/if}
     </ul>
   </nav>
 
-  <section>
+  <section class="section-content">
     {#if activeSection === "Dashboard"}
       {#if role === "patient"}
         <PatientDashboard />
@@ -79,7 +67,7 @@
 </main>
 
 <style>
-  main {
+   main {
     display: flex;
     height: 100vh;
   }
@@ -90,6 +78,15 @@
     background-color: #f0f0f0;
     border-radius: 5px;
     height: inherit;
+    flex-shrink: 0;
+  }
+
+  .section-content {
+    width: 80%;
+    margin: 0 auto;
+    /* padding: 20px; */
+    background-color: #ffffff;
+    box-sizing: border-box;
   }
 
   .selected {
@@ -129,12 +126,5 @@
   .vertical-header li.selected button {
     font-weight: bold;
   }
-
-  /* Section content */
-  /* .flex-item {
-    flex: 1;
-    padding: 20px;
-    background-color: #ffffff;
-    box-sizing: border-box;
-  } */
+  
 </style>

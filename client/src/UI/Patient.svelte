@@ -250,7 +250,7 @@
     <input
       type="text"
       placeholder="Search..."
-      bind:value={searchQuery}
+      value={searchQuery}
       on:input={handleSearch}
     />
   </div>
@@ -276,32 +276,12 @@
           <span class="icon">📞</span>
           Phone
         </th>
-        <!-- <th>
-          <span class="icon">🏠</span>
-          Address
-        </th> -->
-        <th>
-          <span class="icon">⚥</span>
-          Gender
-        </th>
-        <!-- <th>
-          <span class="icon">❤️</span>
-          Blood Type
-        </th>
-        <th>
-          <span class="icon">🌼</span>
-          Allergies
-        </th>
-        <th>
-          <span class="icon">💊</span>
-          Medical History
-        </th> -->
       </tr>
     </thead>
     <tbody>
       {#if filteredPatients.length === 0}
         <tr>
-          <td class="no-patients" colspan="9">No matching patients found.</td>
+          <td class="no-patients" colspan="4">No matching patients found.</td>
         </tr>
       {:else}
         {#each filteredPatients as patient}
@@ -322,26 +302,6 @@
               <span class="icon">📞</span>
               {patient.phone}
             </td>
-            <!-- <td>
-              <span class="icon">🏠</span>
-              {patient.address}
-            </td> -->
-            <td>
-              <span class="icon">⚥</span>
-              {patient.gender}
-            </td>
-            <!-- <td>
-              <span class="icon">❤️</span>
-              {patient.bloodType}
-            </td>
-            <td>
-              <span class="icon">🌼</span>
-              {patient.allergies}
-            </td>
-            <td>
-              <span class="icon">💊</span>
-              {patient.medicalHistory}
-            </td> -->
           </tr>
         {/each}
       {/if}
@@ -351,6 +311,8 @@
 
 <style>
   .search-bar-container {
+    display: flex;
+    justify-content: flex-end;
     margin-bottom: 20px;
   }
 
@@ -358,6 +320,7 @@
     display: flex;
     align-items: center;
     width: 300px;
+    max-width: 100%;
     padding: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -371,32 +334,39 @@
   }
 
   .table-wrapper {
+    width: 100%;
+    max-width: 1200px;
     overflow-x: auto;
   }
 
   .patients-table {
     width: 100%;
     border-collapse: collapse;
-  }
-
-  .patients-table th,
-  .patients-table td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ccc;
+    margin-top: 10px;
   }
 
   .patients-table th {
-    background-color: #f0f0f0;
+    background-color: #f2f2f2;
     font-weight: bold;
+    text-align: left;
   }
 
-  .patients-table td span.icon {
+  .patients-table td {
+    border-bottom: 1px solid #ddd;
+  }
+
+  .patients-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .icon {
     margin-right: 5px;
   }
 
   .no-patients {
     text-align: center;
     font-style: italic;
+    color: #888;
   }
 </style>
+
