@@ -3,7 +3,6 @@
     import { onDestroy } from "svelte";
   
     let subscribedHospitals = [];
-    let selectedHospital = null;
   
     // Subscribe to the hospitals store
     const unsubscribe = hospitals.subscribe((value) => {
@@ -15,28 +14,7 @@
     onDestroy(() => {
       unsubscribe();
     });
-  
-    function toggleDoctors(hospital) {
-      if (selectedHospital === hospital) {
-        // If the same hospital is clicked again, toggle the showDoctors flag
-        hospital.showDoctors = !hospital.showDoctors;
-      } else {
-        // If a different hospital is clicked, update the selectedHospital and set showDoctors to true
-        if (selectedHospital) {
-          selectedHospital.showDoctors = false;
-        }
-        selectedHospital = hospital;
-        selectedHospital.showDoctors = true;
-      }
-    }
-  
-    let showPatientDashboard = true;
-  
-    function toggleDashboard() {
-      showPatientDashboard = !showPatientDashboard;
-    }
-    let showDoctors = false; // Add this line to define the showDoctors variable
-  
+    
     // Function to get the appropriate icon and color based on the hospital's speciality
     function getSpecialityIcon(speciality) {
       switch (speciality) {
@@ -106,12 +84,6 @@
                   {/each}
                 </ul>
               </div>
-              {#if showDoctors}
-                <div class="doctors-container">
-                  <p class="doctors-heading">Doctors:</p>
-                  <!-- Display doctors here -->
-                </div>
-              {/if}
             </div>
           </li>
         {/each}
@@ -123,9 +95,9 @@
   
   <style>
     .container {
-      width: 90%;
+      width: auto;
       margin: 0 auto;
-      padding: 20px;
+      padding: 0 ;
       background-color: #f5f5f5;
       border-radius: 4px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -139,9 +111,9 @@
   
     .hospital-list {
       list-style-type: none;
-      padding: 0;
+      padding: 0 20px;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(3,1fr);
       grid-gap: 20px;
     }
   
