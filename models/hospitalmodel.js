@@ -54,6 +54,7 @@ hospitalSchema.pre(/^find/, function(next) {
   next();
 })
 
+
 const Hospital = mongoose.model('Hospital', hospitalSchema)
 
 module.exports = Hospital;
