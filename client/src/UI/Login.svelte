@@ -5,7 +5,7 @@
     let dispatcher = createEventDispatcher();
     let email = "";
     let password = "";
-    export let data;
+    let data;
     let errorMessage = "";
   
     async function login() {
