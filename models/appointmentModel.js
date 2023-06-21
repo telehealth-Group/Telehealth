@@ -26,7 +26,18 @@ const appointmentSchema = new mongoose.Schema({
   },
   confirmation: { type: Boolean, default: false },
 });
-
+appointmentSchema.pre(/^find/, function (next) {
+    this.populate('patient').populate({
+        path: 'user',
+    })
+  this.populate("doctor").populate({
+    path: "user",
+  });
+  this.populate("hospital").populate({
+    path: "hospital",
+  });
+    next();
+})
 const Appointment = mongoose.model('Appointment', appointmentSchema);
 
 module.exports = Appointment;
