@@ -21,19 +21,15 @@ const appointmentSchema = new mongoose.Schema({
   dateTime: { type: Date, required: true },
   status: {
     type: String,
-    enum: ['scheduled', 'confirmed', 'canceled', 'completed'],
+    enum: ['scheduled','canceled', 'completed'],
     default: 'scheduled',
   },
   confirmation: { type: Boolean, default: false },
-  active: {
-    type: Boolean,
-    select: false,
-    default: true
-  }
+
 });
 
 appointmentSchema.pre(/^find/, function(next) {
-    this.find({active: {$ne: false}})
+    this.find({status: {$ne: 'canceled'}})
     next()
 })
 
