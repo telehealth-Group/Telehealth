@@ -1,6 +1,12 @@
 const mongoose = require("mongoose");
 const bcrypt = require('bcrypt')
 
+const ratingSchema = new mongoose.Schema({
+  rating: { type: Number },
+  comment: { type: String },
+  date: { type: Date, default: Date.now },
+});
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -44,13 +50,7 @@ const userSchema = new mongoose.Schema({
     default: "patient",
   },
   specialization: { type: String },
-  ratings: [
-    {
-      rating: { type: Number },
-      comment: { type: String },
-      date: { type: Date, default: Date.now },
-    },
-  ],
+  ratings: [ratingSchema],
 });
 
 userSchema.pre('save', async function (next) {

@@ -16,6 +16,8 @@ if (process.env.NODE_ENV === "development") {
 
 app.use("/api/users", userRoute);
 app.use("/api/users", appointmentRoute);
+app.use("/api/users", hospitalRoute);
+
 
 app.use(express.static(path.join(__dirname, "client", "dist")));
 

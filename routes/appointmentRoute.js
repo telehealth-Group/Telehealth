@@ -1,5 +1,6 @@
 const express = require('express')
 const appointmentController = require('../controller/appointmentController')
+const authController = require("../controller/authController")
 
 const router = express.Router()
 
