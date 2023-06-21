@@ -33,11 +33,21 @@ appointmentSchema.pre(/^find/, function(next) {
 })
 
 appointmentSchema.pre(/^find/, function (next) {
-  this.populate("patient", "user")
-    .populate("doctor", "user")
-    .populate("hospital", "hospital");
+  this.populate({
+    path: "patient",
+    select: "name phone email age gender medicalHistory",
+  })
+    .populate({
+      path: "doctor",
+      select: "name ratings specialization",
+    })
+    .populate({
+      path: "hospital",
+      select: "name phoneNumber locations",
+    });
   next();
 });
+
 
 const Appointment = mongoose.model('Appointment', appointmentSchema);
 
