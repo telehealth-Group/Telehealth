@@ -1,4 +1,6 @@
 <script>
+// @ts-nocheck
+
   import { hospitals } from "../store.js";
   import { onDestroy } from "svelte";
 
@@ -7,7 +9,6 @@
 
   // Subscribe to the hospitals store
   const unsubscribe = hospitals.subscribe((value) => {
-    // @ts-ignore
     subscribedHospitals = value.data.hospitals;
   });
 
