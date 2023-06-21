@@ -25,8 +25,17 @@ const appointmentSchema = new mongoose.Schema({
     default: 'scheduled',
   },
   confirmation: { type: Boolean, default: false },
+  active: {
+    type: Boolean,
+    select: false,
+    default: true
+  }
 });
 
+appointmentSchema.pre(/^find/, function(next) {
+    this.find({active: {$ne: false}})
+    next()
+})
 
 appointmentSchema.pre(/^find/, function (next) {
     this.populate('patient').populate({
