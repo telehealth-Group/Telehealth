@@ -8,7 +8,7 @@ exports.getAllAppointments = async (req, res) =>{
             status: true,
             results: appointments.length,
             data: {
-                appointment,
+                appointments,
             },
           });
     } catch (error) {

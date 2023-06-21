@@ -4,6 +4,7 @@ const path = require('path')
 const cors = require("cors");
 const userRoute = require("./routes/userRoute");
 const hospitalRoute = require("./routes/hospitalRoute");
+const appointmentRoute = require("./routes/appointmentRoute")
 
 const app = express();
 app.use(cors());
@@ -14,6 +15,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 app.use("/api/users", userRoute);
+app.use("/api/users", appointmentRoute);
 
 app.use(express.static(path.join(__dirname, "client", "dist")));
 

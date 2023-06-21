@@ -26,6 +26,8 @@ const appointmentSchema = new mongoose.Schema({
   },
   confirmation: { type: Boolean, default: false },
 });
+
+
 appointmentSchema.pre(/^find/, function (next) {
     this.populate('patient').populate({
         path: 'user',
