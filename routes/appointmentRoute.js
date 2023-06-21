@@ -1,6 +1,8 @@
 const express = require('express')
-const appointmentController = require('../controller/appointment')
+const appointmentController = require('../controller/appointmentController')
 
-const route = express.Router()
+const router = express.Router()
 
-module.exports = route
+router.route('/getAllAppointemts').get(appointmentController.getAllAppointments)
+
+module.exports = router
