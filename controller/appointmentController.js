@@ -56,3 +56,45 @@ exports.updateAppointment = async (req, res) => {
      });
    }
 }
+exports.cancleAppointment = async (req, res, next) => {
+  try {
+    await Appointment.findByIdAndUpdate(req.body.id, { status: "canceled" },{
+       new: true,
+       runValidators: true,
+     });
+
+    res.status(204).json({
+      status: "success",
+    });
+  } catch (error) {
+    return next(
+      res.status(400).json({
+        status: "failed",
+        message: error,
+      })
+    );
+  }
+};
+exports.completAppointment = async (req, res, next) => {
+  try {
+    await Appointment.findByIdAndUpdate(
+      req.body.id,
+      { status: "completed" },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    res.status(204).json({
+      status: "success",
+    });
+  } catch (error) {
+    return next(
+      res.status(400).json({
+        status: "failed",
+        message: error,
+      })
+    );
+  }
+};
