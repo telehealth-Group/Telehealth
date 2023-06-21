@@ -43,6 +43,14 @@ const userSchema = new mongoose.Schema({
     enum: ["patient", "doctor", "admin", "superAdmin"],
     default: "patient",
   },
+  specialization: { type: String },
+  ratings: [
+    {
+      rating: { type: Number },
+      comment: { type: String },
+      date: { type: Date, default: Date.now },
+    },
+  ],
 });
 
 userSchema.pre('save', async function (next) {
