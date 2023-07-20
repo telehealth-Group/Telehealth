@@ -1,9 +1,7 @@
 const User = require("../models/usermodel");
-const { promisify } = require('util');
-const crypto = require('crypto');
-const jwt = require('jsonwebtoken');
-
-
+const { promisify } = require("util");
+const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
 
 const signtoken = function (id) {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -20,11 +18,11 @@ const createSendToken = (user, statusCode, res) => {
     httpOnly: true,
   };
 
-  if (process.env.NODE_ENV === 'production') cookieOption.secure = true;
-  res.cookie('jwt', token, cookieOption);
+  if (process.env.NODE_ENV === "production") cookieOption.secure = true;
+  res.cookie("jwt", token, cookieOption);
   user.password = undefined;
   res.status(statusCode).json({
-    status: 'success',
+    status: "success",
     token,
     data: {
       user,
@@ -41,7 +39,7 @@ exports.signUp = async (req, res) => {
       passwordConfirm: req.body.passwordConfirm,
     });
 
-     createSendToken(newUser, 201, res);
+    createSendToken(newUser, 201, res);
   } catch (error) {
     res.status(404).json({
       status: "fail",
@@ -71,7 +69,7 @@ exports.login = async (req, res) => {
       });
     }
 
-     createSendToken(user, 201, res);
+    createSendToken(user, 201, res);
   } catch (error) {
     res.status(404).json({
       status: "fail",
@@ -81,12 +79,12 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-  res.cookie('jwt', 'loggedout', {
+  res.cookie("jwt", "loggedout", {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
   });
   res.status(200).json({
-    status: 'success',
+    status: "success",
   });
 };
 
@@ -148,3 +146,5 @@ exports.restrictTo = (...roles) => {
     next();
   };
 };
+
+

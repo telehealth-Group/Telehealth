@@ -58,3 +58,23 @@ exports.signUp = async (req, res) => {
       })
     }
   }
+
+
+  exports.getAllUsers = async (req, res) => {
+    try {
+      const users = await User.find();
+  
+      res.status(200).json({
+        status: true,
+        results: users.length,
+        data: {
+          users,
+        },
+      });
+    } catch (error) {
+      res.status(404).json({
+        status: false,
+        message: error.message,
+      });
+    }
+  };
