@@ -185,7 +185,7 @@
     width: auto;
     margin: 0 auto;
     padding: 0;
-    background-color: #f5f5f5;
+    /* background-color: #f5f5f5; */
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }

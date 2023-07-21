@@ -45,11 +45,16 @@
 </section>
 
 <style>
-  section.header {
+    section.header {
     padding: 10px 30px 30px 20px;
     background-color: #f5f5f5;
     display: flex;
     justify-content: space-between;
+    position: fixed; /* Add fixed positioning */
+    top: 0; /* Stick the header to the top */
+    left: 0; /* Ensure the header starts from the left */
+    right: 0; /* Extend the header to the right */
+    z-index: 999; /* Ensure the header stays above other content */
   }
 
   nav {
