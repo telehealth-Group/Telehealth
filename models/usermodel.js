@@ -42,7 +42,33 @@ const userSchema = new mongoose.Schema({
     coordinates: [Number],
   },
   medicalHistory: {
-    type: String,
+    familyMedicalHistory: {
+      type: String,
+    },
+    medications: {
+      type: String,
+    },
+    immunizations: {
+      type: String,
+    },
+    socialHistory: {
+      type: String,
+    },
+    healthRiskFactors: {
+      type: String,
+    },
+    reviewOfSystems: {
+      type: String,
+    },
+    physicalExaminationFindings: {
+      type: String,
+    },
+    diagnosticTestsResults: {
+      type: String,
+    },
+    generalMedicalHistory: {
+      type: String,
+    },
   },
   role: {
     type: String,

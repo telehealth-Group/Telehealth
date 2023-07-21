@@ -78,3 +78,21 @@ exports.signUp = async (req, res) => {
       });
     }
   };
+
+  exports.addPatients = async (req, res) => {
+    try {
+      const newUser = await User.create(req.body);
+  
+      res.status(201).json({
+        status: true,
+        data: {
+          newUser,
+        },
+      });
+    } catch (error) {
+      res.status(404).json({
+        status: false,
+        message: error.message,
+      });
+    }
+  };
