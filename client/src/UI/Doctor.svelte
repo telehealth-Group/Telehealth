@@ -170,9 +170,9 @@
 </main>
 
 <style>
-  /* main { */
-    /* padding: 20px; */
-  /* } */
+  main {
+     padding: 20px; 
+  } 
 
   .search-bar-container {
     display: flex;
