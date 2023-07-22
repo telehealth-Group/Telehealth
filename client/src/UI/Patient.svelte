@@ -209,12 +209,13 @@ p {
   border-radius: 10px;
   box-shadow: 0 5px 20px rgba(0,0,0,0.1);  
   max-width: 1000px;
+  position: relative;
 }
 
 .close {
     position: absolute;
     top: 10px;
-    right: 150px;
+    right: 10px;
     display: flex;
     align-items: center;
     cursor: pointer;

@@ -1,4 +1,3 @@
-<!-- appointments.svelte -->
 <script>
   // @ts-nocheck
   import { appointments } from "../store.js";
@@ -31,8 +30,6 @@
 
 <main class="appointments">
 
-  <h1>Appointments Dashboard</h1>
-
   {#if subscribedAppointments.length > 0}
 
     <table class="appointments-table">
@@ -40,6 +37,7 @@
         <tr>
           <th>Date & Time</th>
           <th>Hospital</th>
+          <th>Action</th>
         </tr>  
       </thead>
 
@@ -48,6 +46,11 @@
           <tr class="appointment-row" on:click={() => showAppointmentDetails(appointment)}>
             <td>{new Date(appointment.dateTime).toLocaleString()}</td>
             <td>{appointment.hospital.name}</td>
+            <td>
+              <button class="view-button">
+                <i class="fas fa-eye"></i> View Details
+              </button>
+            </td>
           </tr>
         {/each}
       </tbody>
@@ -63,17 +66,19 @@
 
     <div class="appointment-modal">
       <div class="modal-content">
-        <div class="close" on:click={closeModal}>&#10005;</div>
+        <div class="close" on:click={closeModal}>
+          <i class="fas fa-times-circle"></i>
+        </div>
         <h2>Appointment Details</h2>
         
-        <p>Date & Time: {new Date(selectedAppointment.dateTime).toLocaleString()}</p>
+        <p><strong>Date & Time:</strong> {new Date(selectedAppointment.dateTime).toLocaleString()}</p>
         
-        <p>Hospital: {selectedAppointment.hospital.name}</p>
+        <p><strong>Hospital:</strong> {selectedAppointment.hospital.name}</p>
         
         {#if selectedAppointment.patient}
-          <p>Patient: {selectedAppointment.patient.name}</p>
+          <p><strong>Patient:</strong> {selectedAppointment.patient.name}</p>
         {:else}
-          <p>Patient: N/A</p>  
+          <p><strong>Patient:</strong> N/A</p>  
         {/if}
 
       </div>
@@ -84,21 +89,18 @@
 
 
 <style>
+  
 
   /* Layout */
 
   .appointments {
-    max-width: 600px;
+    /* max-width: 600px; */
     margin: 0 auto;
     padding: 20px;
+    width: 100%;
   }
 
   /* Typography */
-
-  h1 {
-    text-align: center;
-    margin-bottom: 30px; 
-  }
 
   .no-appointments {
     text-align: center;
@@ -111,16 +113,24 @@
   .appointments-table {
     width: 100%;
     border-collapse: collapse;
+
   }
 
   .appointments-table th,
   .appointments-table td {
     padding: 12px 15px;
     border-bottom: 1px solid #ddd;
+    text-align: center;
+  }
+
+  .appointments-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    color: #555;
   }
 
   .appointment-row:hover {
-    background: #f5f5f5;
+    background: #b3cad1;
     cursor: pointer;
   }
 
@@ -150,9 +160,13 @@
     position: absolute;
     top: 10px;
     right: 10px;
-    font-size: 28px;
-    font-weight: bold;
+    font-size: 24px;
     cursor: pointer;
+    color: #555;
+  }
+
+  .close:hover {
+    color: #d52d2d;
   }
 
   .modal-content h2 {
@@ -161,6 +175,28 @@
 
   .modal-content p {
     margin-bottom: 10px;
+  }
+
+  /* Buttons */
+
+  .view-button {
+    padding: 8px 12px;
+    font-size: 14px;
+    background-color: #60aec2;
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .view-button i {
+    margin-right: 8px;
+  }
+
+  .view-button:hover {
+    background-color: #e6ecee;
+    color: black;
   }
 
 </style>
