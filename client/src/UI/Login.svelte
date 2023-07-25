@@ -1,28 +1,36 @@
 <script>
-    import axios from 'axios'
-    import { createEventDispatcher } from 'svelte';
-  
-    let dispatcher = createEventDispatcher();
-    let email = "";
-    let password = "";
-    let data;
-    let errorMessage = "";
-  
-    async function login() {
-      let requestData = {
-        email: email,
-        password: password
-      };
-  
-      try {
-        const response = await axios.post('http://127.0.0.1:3000/api/users/login', requestData);
-        data = response.data;
-        dispatcher('dataReceived', data);
-      } catch (error) {
-        errorMessage = error.response.data.message;
-      }
+  import axios from 'axios';
+  import { createEventDispatcher } from 'svelte';
+
+  let dispatcher = createEventDispatcher();
+  let email = '';
+  let password = '';
+  let data;
+  let errorMessage = '';
+  let isLoading = false;
+
+  async function login() {
+    // Set loading to true while waiting for the response
+    isLoading = true;
+    errorMessage = '';
+
+    let requestData = {
+      email: email,
+      password: password
+    };
+
+    try {
+      const response = await axios.post('http://127.0.0.1:3000/api/users/login', requestData);
+      data = response.data;
+      dispatcher('dataReceived', data);
+    } catch (error) {
+      errorMessage = error.response.data.message;
+    } finally {
+      // Set loading back to false after the response is received
+      isLoading = false;
     }
-  </script>
+  }
+</script>
   
   <div class="container">
     <div class="content">
@@ -37,6 +45,9 @@
           <label for="password">Password</label>
           <input type="password" id="password" bind:value="{password}" />
           <button on:click="{login}">Login</button>
+          {#if isLoading}
+    <div class="loading-spinner"></div>
+  {/if}
         </div>
         <div class="additional">
           <div class="forgot-password">Forgot Password</div>
@@ -45,7 +56,7 @@
       </div>
     </div>
   </div>
-  
+
   <style>
     /* Styles from previous code */
   
@@ -139,5 +150,24 @@
       text-decoration: none;
       color: #4caf50;
     }
+
+    .loading-spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 2s linear infinite;
+    margin: 20px auto; /* Adjust the margin as needed */
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
   </style>
   
