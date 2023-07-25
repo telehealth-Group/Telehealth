@@ -6,7 +6,7 @@
   let newPassword = "";
   let newPasswordConfirm = "";
   let passwordError = "";
-    let darkMode = false;
+    // let darkMode = false;
 
   let loading = false;
 
@@ -151,19 +151,7 @@
       <div class="loading" />
     </div>
   {/if}
-  <div class="toggle-container">
-    <label for="darkModeToggle" class="toggle-label">
-      <input
-        type="checkbox"
-        id="darkModeToggle"
-        bind:checked={darkMode}
-        on:change={toggleDarkMode}
-      />
-      <div class="toggle-button" />
-    </label>
-    <span class="toggle-text">Toggle Dark Mode</span>
-  </div>
-</main>
+</main> 
 
 <style>
   :root {
