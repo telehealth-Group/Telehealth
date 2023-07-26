@@ -73,6 +73,7 @@ exports.login = async (req, res) => {
       });
     }
     createSendToken(user, 201, res);
+    
   } catch (error) {
     res.status(404).json({
       status: "fail",
@@ -98,8 +99,8 @@ exports.protect = async (req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ")[1];
-  } else if (req.cookies.jwt) {
-    token = req.cookies.jwt;
+  } else if (req.cookie.jwt) {
+    token = req.cookie.jwt;
   }
   if (!token) {
     return next(

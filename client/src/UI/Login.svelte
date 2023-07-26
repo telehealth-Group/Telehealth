@@ -1,7 +1,7 @@
 <script>
     import axios from 'axios'
     import { createEventDispatcher } from 'svelte';
-  
+  let isLoading = false
     let dispatcher = createEventDispatcher();
     let email = "";
     let password = "";
@@ -9,6 +9,8 @@
     let errorMessage = "";
   
     async function login() {
+      isLoading = true
+      errorMessage = ''
       let requestData = {
         email: email,
         password: password

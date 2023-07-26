@@ -6,10 +6,13 @@ const reviewRouter = express.Router({mergeParams:true});
 
 reviewRouter
   .route("/")
-  .get(reviewController.getAllReview)
-  .post(
-    reviewController.createReview
-  );
+  .get(
+    authController.protect,
+    authController.restrictTo("user"),
+    reviewController.getAllReview
+  )
+  .post(reviewController.createReview);
+ 
 reviewRouter
   .route("/:id")
   .get(reviewController.getAllReview)

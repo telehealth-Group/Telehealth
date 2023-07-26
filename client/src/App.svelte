@@ -42,7 +42,7 @@
     <Signup on:signUpDataReceived="{handleDataReceived}" />
   {:else}
     <Header name="{name}" role="{role}" />
-    <Overview role="{role}" data="{receivedData}" />
+    <Overview {role} data={receivedData} user={receivedData} />
   {/if}
 </div>
 
