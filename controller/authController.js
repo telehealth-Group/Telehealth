@@ -17,7 +17,6 @@ const createSendToken = (user, statusCode, res) => {
     ),
     httpOnly: true,
   };
-
   if (process.env.NODE_ENV === "production") cookieOption.secure = true;
   res.cookie("jwt", token, cookieOption);
   user.password = undefined;
@@ -39,7 +38,12 @@ exports.signUp = async (req, res) => {
       passwordConfirm: req.body.passwordConfirm,
     });
 
-    createSendToken(newUser, 201, res);
+    res.status(201).json({
+      status: "success",
+      data: {
+        user: newUser,
+      },
+    });
   } catch (error) {
     res.status(404).json({
       status: "fail",
@@ -68,7 +72,6 @@ exports.login = async (req, res) => {
         message: "Incorrect email or password",
       });
     }
-
     createSendToken(user, 201, res);
   } catch (error) {
     res.status(404).json({
@@ -79,7 +82,7 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-  res.cookie("jwt", "loggedout", {
+  res.cookie("jwt", "logedout", {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
   });
@@ -146,5 +149,105 @@ exports.restrictTo = (...roles) => {
     next();
   };
 };
+exports.forgotPassword = async (req, res, next) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
 
+  if (!user) {
+    return res.status(404).json({
+      status: "failed",
+      message: "There is no user with email this address",
+    });
+  }
+  const resetToken = user.createPasswordResetToken();
+  await user.save({ validateBeforeSave: false });
 
+  try {
+    const resetURL = `${req.protocol}://${req.get(
+      "host"
+    )}/api/v1/users/resetpassword/${resetToken}`;
+    await new Email(user, resetURL).sendPasswordReset();
+    res.status(200).json({
+      status: "success",
+      message: "Token sent to email",
+    });
+  } catch (err) {
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save({ validateBeforeSave: false });
+    return next(
+      res.status(500).json({
+        status: "failed",
+        message: "There was an error sending the email,Try again later",
+      })
+    );
+  }
+};
+
+exports.resetPassword = async (req, res, next) => {
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetExpires: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return next(
+      res.status(400).json({
+        status: "failed",
+        message: "Token is expired",
+      })
+    );
+  }
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
+
+  await user.save();
+  createSendToken("", 200, res);
+};
+
+exports.updatePassword = async (req, res, next) => {
+  const user = await User.findById(req.user.id).select("+password");
+  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+    return next(
+      res.status(401).json({
+        status: "failed",
+        message: "Your current password is wrong",
+      })
+    );
+  }
+
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  await user.save();
+  createSendToken(user, 200, res);
+};
+
+exports.isLoggedIn = async (req, res, next) => {
+  if (req.cookies.jwt) {
+    try {
+      const decoded = await promisify(jwt.verify)(
+        req.cookies.jwt,
+        process.env.JWT_SECRET
+      );
+      const freshUser = await User.findById(decoded.id);
+      if (!freshUser) {
+        return next();
+      }
+      if (freshUser.changedPasswordAfter(decoded.iat)) {
+        return next();
+      }
+      res.locals.user = freshUser;
+      return next();
+    } catch (err) {
+      return next();
+    }
+  }
+  next();
+};

@@ -1,36 +1,29 @@
 <script>
-  import axios from 'axios';
-  import { createEventDispatcher } from 'svelte';
-
-  let dispatcher = createEventDispatcher();
-  let email = '';
-  let password = '';
-  let data;
-  let errorMessage = '';
-  let isLoading = false;
-
-  async function login() {
-    // Set loading to true while waiting for the response
-    isLoading = true;
-    errorMessage = '';
-
-    let requestData = {
-      email: email,
-      password: password
-    };
-
-    try {
-      const response = await axios.post('http://127.0.0.1:3000/api/users/login', requestData);
-      data = response.data;
-      dispatcher('dataReceived', data);
-    } catch (error) {
-      errorMessage = error.response.data.message;
-    } finally {
-      // Set loading back to false after the response is received
-      isLoading = false;
+    import axios from 'axios'
+    import { createEventDispatcher } from 'svelte';
+  
+    let dispatcher = createEventDispatcher();
+    let email = "";
+    let password = "";
+    let data;
+    let errorMessage = "";
+  
+    async function login() {
+      let requestData = {
+        email: email,
+        password: password
+      };
+  
+      try {
+        const response = await axios.post('http://127.0.0.1:3000/api/users/login', requestData);
+        data = response.data.data;
+        dispatcher('dataReceived', data);
+        console.log(response)
+      } catch (error) {
+        errorMessage = error.response.data.message;
+      }
     }
-  }
-</script>
+  </script>
   
   <div class="container">
     <div class="content">

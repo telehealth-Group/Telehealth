@@ -8,9 +8,12 @@ reviewRouter
   .route("/")
   .get(reviewController.getAllReview)
   .post(
-    authController.protect,
-    authController.restrictTo("patient"),
     reviewController.createReview
   );
-
+reviewRouter
+  .route("/:id")
+  .get(reviewController.getAllReview)
+  .post(
+    reviewController.createReview
+  );
 module.exports = reviewRouter;
