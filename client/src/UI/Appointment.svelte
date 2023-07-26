@@ -1,8 +1,10 @@
+<!-- Appointments.svelte -->
 <script>
   // @ts-nocheck
   import { appointments } from "../store.js";
   import { onDestroy } from "svelte";
-  
+
+  import AppointmentDetails from "./AppointmentDetails.svelte";
 
   let subscribedAppointments = [];
   let selectedAppointment = null;
@@ -17,95 +19,107 @@
     unsubscribe();
   });
 
-  // Function to display appointment details in the modal
+  // Function to display appointment details
   function showAppointmentDetails(appointment) {
     selectedAppointment = appointment;
   }
 
-  // Function to close the modal
-  function closeModal() {
+  // Function to close appointment details
+  function closeDetails() {
     selectedAppointment = null;
+  }
+
+  // Function to create a new appointment (example only, adjust as needed)
+  function createNewAppointment() {
+    const newAppointment = {
+      dateTime: new Date(),
+      hospital: {
+        name: "Example Hospital",
+        // Add hospital details as needed
+      },
+      // Add more appointment details as needed
+    };
+
+    // Add the new appointment to the store (example only, adjust based on your actual implementation)
+    appointments.update((value) => {
+      return { ...value, data: { ...value.data, appointments: [...value.data.appointments, newAppointment] } };
+    });
+
+    // Show the details of the newly created appointment
+    showAppointmentDetails(newAppointment);
   }
 </script>
 
 <main class="appointments">
+  <h1 class="title">Appointments</h1>
 
-  {#if subscribedAppointments.length > 0}
+  <!-- Button to create a new appointment -->
+  <button class="new-appointment-button" on:click={() => createNewAppointment()}>New Appointment</button>
 
-    <table class="appointments-table">
-      <thead>
-        <tr>
-          <th>Date & Time</th>
-          <th>Hospital</th>
-          <th>Action</th>
-        </tr>  
-      </thead>
-
-      <tbody>
-        {#each subscribedAppointments as appointment}
-          <tr class="appointment-row" on:click={() => showAppointmentDetails(appointment)}>
-            <td>{new Date(appointment.dateTime).toLocaleString()}</td>
-            <td>{appointment.hospital.name}</td>
-            <td>
-              <button class="view-button">
-                <i class="fas fa-eye"></i> View Details
-              </button>
-            </td>
+  {#if !selectedAppointment}
+    {#if subscribedAppointments.length > 0}
+      <table class="appointments-table">
+        <thead>
+          <tr>
+            <th>Date & Time</th>
+            <th>Hospital</th>
+            <th>Action</th>
           </tr>
-        {/each}
-      </tbody>
-    </table>
-
-  {:else}
-
-    <p class="no-appointments">No appointments found.</p>
-  
+        </thead>
+        <tbody>
+          {#each subscribedAppointments as appointment}
+            <tr class="appointment-row" on:click={() => showAppointmentDetails(appointment)}>
+              <td>{new Date(appointment.dateTime).toLocaleString()}</td>
+              <td>{appointment.hospital.name}</td>
+              <td>
+                <button class="view-button">
+                  <i class="fas fa-eye"></i> View Details
+                </button>
+              </td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    {:else}
+      <p class="no-appointments">No appointments found.</p>
+    {/if}
   {/if}
 
   {#if selectedAppointment}
-
-    <div class="appointment-modal">
-      <div class="modal-content">
-        <div class="close" on:click={closeModal}>
-          <i class="fas fa-times-circle"></i>
-        </div>
-        <h2>Appointment Details</h2>
-        
-        <p><strong>Date & Time:</strong> {new Date(selectedAppointment.dateTime).toLocaleString()}</p>
-        
-        <p><strong>Hospital:</strong> {selectedAppointment.hospital.name}</p>
-        
-        {#if selectedAppointment.patient}
-          <p><strong>Patient:</strong> {selectedAppointment.patient.name}</p>
-        {:else}
-          <p><strong>Patient:</strong> N/A</p>  
-        {/if}
-
-      </div>
-    </div>
+    <!-- Render AppointmentDetails component with the selected appointment -->
+    <AppointmentDetails
+      appointment={selectedAppointment}
+      on:closeDetails={() => closeDetails()}
+    />
   {/if}
-
 </main>
 
-
 <style>
-  
-
-  /* Layout */
+  /* Overall page styles */
+  /* Add your styles here */
 
   .appointments {
-    /* max-width: 600px; */
-    margin: 0 auto;
-    padding: 20px;
+    max-width: 1100px;
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
     width: 100%;
   }
 
   /* Typography */
 
+  .title {
+    font-size: 24px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
   .no-appointments {
     text-align: center;
     font-style: italic;
     color: #777;
+    margin-top: 20px;
   }
 
   /* Table */
@@ -113,71 +127,47 @@
   .appointments-table {
     width: 100%;
     border-collapse: collapse;
-
   }
 
   .appointments-table th,
   .appointments-table td {
-    padding: 12px 15px;
+    padding: 15px;
     border-bottom: 1px solid #ddd;
-    text-align: center;
+    text-align: left;
   }
 
   .appointments-table th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-    color: #555;
+    background: #f5f5f5;
   }
 
   .appointment-row:hover {
-    background: #b3cad1;
+    background: #f9f9f9;
     cursor: pointer;
-  }
-
-  /* Modal */
-
-  .appointment-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .modal-content {
-    background: white;
-    padding: 40px;
-    border-radius: 5px;
-    width: 500px;
-    position: relative;
-  }
-
-  .close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 24px;
-    cursor: pointer;
-    color: #555;
-  }
-
-  .close:hover {
-    color: #d52d2d;
-  }
-
-  .modal-content h2 {
-    margin-bottom: 15px;
-  }
-
-  .modal-content p {
-    margin-bottom: 10px;
   }
 
   /* Buttons */
+
+  .new-appointment-button {
+    background-color: #274247;
+    color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+    cursor: pointer;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    margin-bottom: 20px;
+  }
+
+  .new-appointment-button:hover {
+    background-color: #45a049;
+  }
+
+  .new-appointment-button:focus {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  }
 
   .view-button {
     padding: 8px 12px;
@@ -198,5 +188,4 @@
     background-color: #e6ecee;
     color: black;
   }
-
 </style>
