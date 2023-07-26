@@ -23,19 +23,28 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, "please provide a password"],
+    required: [true, "Please provide a password"],
+    minlegth: 8,
+    select: false,
   },
-  passwordConfirmaton: {
+  passwordConfirmation: {
     type: String,
+    required: [true, "Please confirm your password"],
+    validate: {
+      validator: function (el) {
+        return el === this.password;
+      },
+      messege: "Passwords are not the same",
+    },
   },
   age: {
     type: Number,
-    // required: [true, "please provide age"],
+    required: [true, "please provide age"],
   },
   gender: {
     type: String,
     enum: ["male", "female"],
-    // required: [true, "please provide your gender"],
+    required: [true, "please provide your gender"],
   },
   address: {
     type: String,
@@ -77,6 +86,9 @@ const userSchema = new mongoose.Schema({
   },
   specialization: { type: String },
   ratings: [ratingSchema],
+  passwordChangedAt: Date,
+  passwordResetToken: String,
+  passwordResetExpires: Date,
 });
 
 userSchema.pre('save', async function (next) {

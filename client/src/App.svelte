@@ -17,7 +17,7 @@
     receivedData = event.detail;
     name = receivedData.user.name;
     role = receivedData.user.role;
-    console.log(receivedData);
+    console.log(role);
   }
 
   onMount(async () => {
@@ -25,9 +25,7 @@
       const responseHospitals = await axios.get(
         "http://127.0.0.1:3000/api/users/hospital"
       );
-      console.log("Hospitals:", responseHospitals.data);
       hospitals.set(responseHospitals.data);
-
     } catch (error) {
       console.error(error);
     }
@@ -36,18 +34,17 @@
 
 <div class="container">
   {#if receivedData === undefined && isVisible === "login"}
-  <Login
-    on:dataReceived={handleDataReceived}
-    on:signup={() => (isVisible = "signup")}
-  />
+    <Login
+      on:dataReceived="{handleDataReceived}"
+      on:signup="{() => (isVisible = 'signup')}"
+    />
   {:else if receivedData === undefined && isVisible === "signup"}
-  <Signup on:signUpDataReceived={handleDataReceived} />
+    <Signup on:signUpDataReceived="{handleDataReceived}" />
   {:else}
-  <Header {name} {role} />
-  <Overview {role} data={receivedData} />
+    <Header name="{name}" role="{role}" />
+    <Overview role="{role}" data="{receivedData}" />
   {/if}
 </div>
 
 <style>
- 
 </style>

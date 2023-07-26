@@ -1,14 +1,22 @@
 <script>
 // @ts-nocheck
-
+import axios from "axios";
   export let role;
   export let name
   let showDropdown = false;
 
-  function logoutHandler() {
+  function dropHandler() {
     showDropdown = !showDropdown;
   }
-  console.log(role)
+
+  async function logoutHandler() {
+    try {
+      await axios.get('http://127.0.0.1:3000/api/users/logout');
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+ }
 
 </script>
 
@@ -19,29 +27,17 @@
     <h3>Telehealth</h3>
   </nav>
 
-  {#if role === 'doctor'}
+ 
   <div class="nav--button-group">
-    <button class="nav--button-dropdown" on:click={logoutHandler}>
-      Hi Dr.{name} 🙋‍♀️ Welcome <i class="fas fa-chevron-down"></i>
+    <button class="nav--button-dropdown" on:click={dropHandler}>
+      Hi {name} 🙋‍♀️ Welcome <i class="fas fa-chevron-down"></i>
     </button>
     {#if showDropdown}
       <div class="dropdown-content">
-        <button class="dropdown-item" onclick={logoutHandler}>Logout</button>
+        <button class="dropdown-item" on:click={logoutHandler}>Logout</button>
       </div>
     {/if}
   </div>
-  {:else}
-    <div class="nav--button-group">
-      <button class="nav--button-dropdown" on:click={logoutHandler}>
-        Hi {name} 🙋‍♀️ Welcome<i class="fas fa-chevron-down"></i>
-      </button>
-      {#if showDropdown}
-        <div class="dropdown-content">
-          <button class="dropdown-item" onclick={logoutHandler}>Logout</button>
-        </div>
-      {/if}
-    </div>
-  {/if}
 </section>
 
 <style>

@@ -16,8 +16,9 @@
   
       try {
         const response = await axios.post('http://127.0.0.1:3000/api/users/login', requestData);
-        data = response.data;
+        data = response.data.data;
         dispatcher('dataReceived', data);
+        console.log(response)
       } catch (error) {
         errorMessage = error.response.data.message;
       }

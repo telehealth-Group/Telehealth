@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
+const Hospital = require('./hospitalmodel')
 
-const reviewschema = new mongoose.Schema(
+const reviewSchema = new mongoose.Schema(
   {
     review: {
       type: String,
-      require: [true, "Review can not be empty"],
+      required: [true, "Review can not be empty"],
     },
     rating: {
       type: Number,
@@ -13,17 +14,17 @@ const reviewschema = new mongoose.Schema(
     },
     createdAt: {
       type: Date,
-      default: Date.now,
+      default: Date.now(),
     },
     hospital: {
       type: mongoose.Schema.ObjectId,
       ref: "Hospital",
-      require: [true, "Review must belong to a hospital"],
+      required: [true, "Review must belong to a hospital"],
     },
     user: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
-      require: [true, "Review must belong to a user"],
+      required: [true, "Review must belong to a hospital"],
     },
   },
   {
@@ -31,18 +32,51 @@ const reviewschema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+reviewSchema.index({ hospital : 1, user: 1 }, { unique: true });
 
-reviewschema.pre(/^find/, function (next) {
+reviewSchema.pre(/^find/, function (next) {
   this.populate({
-    path: "hospital",
-    select: "title",
-  }).populate({
     path: "user",
-    select: "name image",
+    select: "name",
+  }).populate({
+    path: "hospital",
+    select: "name",
   });
   next();
 });
+reviewSchema.statics.calcAvarageRatings = async function (hospitalId) {
+  const stats = await this.aggregate([
+    {
+      $match: { hospital: hospitalId },
+    },
+    {
+      $group: {
+        _id: "$hospital",
+        nRating: { $sum: 1 },
+        avgRating: { $avg: "rating" },
+      },
+    },
+  ]);
+  Hospital.findByIdAndUpdate(hospitalId, {
+    ratingsQuantity: 0,
+    ratingsAvarage: 4.5,
+  });
+};
 
-const Review = mongoose.model("Review", reviewschema);
+reviewSchema.pre("save", function (next) {
+  this.constructor.calcAvarageRatings(this.hospital);
+  next();
+});
+
+reviewSchema.pre(/^findOneAnd/, async function (next) {
+  this.r = await this.findOne();
+  next();
+});
+
+reviewSchema.pre(/^findOneAnd/, async function (next) {
+  this.r.constructor.calcAvarageRatings(this.r.hospital);
+  next();
+});
+const Review = mongoose.model("Review", reviewSchema);
 
 module.exports = Review;

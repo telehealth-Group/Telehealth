@@ -10,7 +10,6 @@
   let passwordConfirmation = "";
   let age = null;
   let gender = "";
-  let address = "";
   export let data;
   async function signUp() {
     const userData = {
@@ -20,17 +19,15 @@
       password: password,
       passwordConfirmation: passwordConfirmation,
       age: age,
-      gender: gender,
-      address: address,
+      gender: gender
     };
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:3000/api/users/signup",
+        "http://127.0.0.1:3000/api/users/signUp",
         userData
       );
-      data = response.data
-      console.log(response.data);
+      data = response.data.data
       // Handle success, redirect or show success message
       dispatcher("signUpDataReceived", data);
     } catch (error) {
@@ -71,10 +68,6 @@
       <option value="male">Male</option>
       <option value="female">Female</option>
     </select>
-
-    <label for="address">Address</label>
-    <input type="text" id="address" bind:value={address} />
-
     <button on:click={signUp}>Sign Up</button>
   </div>
 </div>
@@ -91,7 +84,7 @@
   }
 
   .signup-form {
-    max-width: 400px;
+    width: 500px;
     padding: 20px;
     background-color: white;
     border-radius: 4px;
