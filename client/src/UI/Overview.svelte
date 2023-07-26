@@ -5,8 +5,11 @@
   import PatientDashboard from "./patientDashboard.svelte";
   import Doctor from "./Doctor.svelte";
   import DoctorDashboard from "./DoctorDashboard.svelte";
+  import Settings from "./settings.svelte";
 
   export let role;
+  export let user;
+  console.log(user, "from overview");
 
   let activeSection = "Dashboard";
 
@@ -83,6 +86,8 @@
       <Patient />
     {:else if activeSection === "Appointment"}
       <Appointment />
+    {:else if activeSection === "Settings"}
+      <Settings {user}/>
     {/if}
   </section>
 </main>
@@ -115,7 +120,7 @@
       100% - 200px
     ); /* Adjust the width to accommodate the fixed sidebar */
     margin-left: 200px; /* Add left margin to create space for the sidebar */
-    padding: 20px;
+    /* padding: 20px; */
     background-color: #ffffff;
     box-sizing: border-box;
     overflow-y: auto; /* Add scrollbar for content overflow */

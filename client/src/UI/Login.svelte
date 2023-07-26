@@ -38,6 +38,9 @@
           <label for="password">Password</label>
           <input type="password" id="password" bind:value="{password}" />
           <button on:click="{login}">Login</button>
+          {#if isLoading}
+    <div class="loading-spinner"></div>
+  {/if}
         </div>
         <div class="additional">
           <div class="forgot-password">Forgot Password</div>
@@ -46,7 +49,7 @@
       </div>
     </div>
   </div>
-  
+
   <style>
     /* Styles from previous code */
   
@@ -140,5 +143,24 @@
       text-decoration: none;
       color: #4caf50;
     }
+
+    .loading-spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 2s linear infinite;
+    margin: 20px auto; /* Adjust the margin as needed */
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
   </style>
   
