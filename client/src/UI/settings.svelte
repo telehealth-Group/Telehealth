@@ -78,22 +78,25 @@
       loading = false; // Hide loading indicator
     }
   }
+
 </script>
 
 <main class="profile">
   <div class="profile__header">
     <div class="profile__picture">
-      <img src="profile.jpg" alt="Profile Picture" />
-
-      <button class="profile__picture-edit">
+      <span class="user-icon-container">
+        <i class="fas fa-user user-icon" />
+      </span>
+    
+      <input type="file" id="fileInput" style="display: none" accept="image/*" />
+      <label for="fileInput" class="profile__picture-edit">
         <i class="fas fa-camera" />
-      </button>
+      </label>
     </div>
 
-    <h2 class="profile__name">{user.name}</h2>
+    <h2 class="profile__name">{user.user.name}</h2>
   </div>
 
-  <h3>Patient Profile</h3>
 
   <form on:submit|preventDefault={updateEmail}>
     <div class="form-group">
@@ -220,21 +223,22 @@
   }
 
   .profile__picture-edit {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    background: var(--primary);
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
 
   .profile__picture-edit:hover {
     background: #0062cc;
@@ -294,61 +298,6 @@
 
   .btn-primary:hover {
     background: #0062cc;
-  }
-  /* Dark mode styles */
-  body.dark-mode {
-    background-color: #1a1a1a;
-    color: #fff;
-  }
-
-  /* Toggle styles */
-  .toggle-container {
-    display: flex;
-    align-items: center;
-    margin-top: var(--spacing-md);
-  }
-
-  .toggle-label {
-    display: inline-block;
-    position: relative;
-    margin-right: var(--spacing-md);
-  }
-
-  .toggle-label input[type="checkbox"] {
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-
-  .toggle-button {
-    width: 40px;
-    height: 20px;
-    background-color: #ccc;
-    border-radius: 10px;
-    position: relative;
-    cursor: pointer;
-  }
-
-  .toggle-button:before {
-    content: "";
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 16px;
-    height: 16px;
-    background-color: #fff;
-    border-radius: 50%;
-    transition: transform 0.2s;
-  }
-
-  input[type="checkbox"]:checked + .toggle-button:before {
-    transform: translateX(20px);
-  }
-
-  .toggle-text {
-    font-size: 14px;
-    color: var(--text);
   }
 
   /* Icon Styles */
@@ -452,6 +401,31 @@
     background-color: rgba(255, 255, 255, 0.7);
     z-index: 999;
   }
+
+  /* Adjust the size of the circular container and the user icon */
+.profile__picture {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 3px solid var(--primary);
+  overflow: hidden;
+  position: relative;
+  margin-right: var(--spacing-md);
+}
+
+.user-icon-container {
+  font-size: 100px; /* Adjust the size of the user icon here */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.user-icon {
+  color: #fff;
+}
+
 
   .loading {
     display: inline-block;
