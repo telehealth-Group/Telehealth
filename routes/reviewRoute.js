@@ -2,7 +2,7 @@ const express = require("express");
 const reviewController = require("../controller/reviewController");
 const authController = require("../controller/authController");
 
-const reviewRouter = express.Router({mergeParams:true});
+const reviewRouter = express.Router({ mergeParams: true });
 
 reviewRouter
   .route("/")
@@ -12,11 +12,9 @@ reviewRouter
     reviewController.getAllReview
   )
   .post(reviewController.createReview);
- 
+
 reviewRouter
   .route("/:id")
   .get(reviewController.getAllReview)
-  .post(
-    reviewController.createReview
-  );
+  .post(reviewController.createReview);
 module.exports = reviewRouter;

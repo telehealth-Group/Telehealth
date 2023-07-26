@@ -1,8 +1,8 @@
 <script>
-// @ts-nocheck
-import axios from "axios";
+  // @ts-nocheck
+  import axios from "axios";
   export let role;
-  export let name
+  export let name;
   let showDropdown = false;
 
   function dropHandler() {
@@ -11,37 +11,38 @@ import axios from "axios";
 
   async function logoutHandler() {
     try {
-      await axios.get('http://127.0.0.1:3000/api/users/logout');
-      window.location.href = '/';
+      await axios.get("http://127.0.0.1:3000/api/users/logout");
+      window.location.href = "/";
     } catch (error) {
-      console.error('Logout failed:', error);
+      console.error("Logout failed:", error);
     }
- }
-
+  }
 </script>
 
 <section class="header">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
   <nav>
     <i class="fas fa-medkit"></i>
     <h3>Telehealth</h3>
   </nav>
 
- 
   <div class="nav--button-group">
-    <button class="nav--button-dropdown" on:click={dropHandler}>
+    <button class="nav--button-dropdown" on:click="{dropHandler}">
       Hi {name} 🙋‍♀️ Welcome <i class="fas fa-chevron-down"></i>
     </button>
     {#if showDropdown}
       <div class="dropdown-content">
-        <button class="dropdown-item" on:click={logoutHandler}>Logout</button>
+        <button class="dropdown-item" on:click="{logoutHandler}">Logout</button>
       </div>
     {/if}
   </div>
 </section>
 
 <style>
-    section.header {
+  section.header {
     padding: 10px 30px 30px 20px;
     background-color: #f5f5f5;
     display: flex;
