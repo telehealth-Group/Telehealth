@@ -4,10 +4,17 @@
   import { onDestroy } from "svelte";
   import { patients } from "../store.js";
 
-
+  import { createEventDispatcher } from "svelte";
   export let hospital;
   export let close;
   let subscribedDoctors = [];
+
+  const dispatch = createEventDispatcher();
+  // Function to close the appointment details view
+  function closeDetails() {
+    // Emit a custom event to notify the parent component
+    dispatch("closeDetails");
+  }
 
 
   const unsubscribePatients = patients.subscribe((value) => {
@@ -21,6 +28,7 @@
     unsubscribePatients();
   });
 
+  console.log(closeDetails);
   console.log(subscribedDoctors);
   let isLocationsArray = Array.isArray(hospital.locations);
 
@@ -71,10 +79,14 @@
   function hasBlackBorder(rating) {
     return rating < 5;
   }
+
 </script>
 
 <nav class="navbar">
   <!-- Navigation Bar -->
+  <button class="back-button" on:click={closeDetails}>
+  <i class="fas fa-arrow-left"></i>
+  </button>
   <div class="navbar-container">
     <a href="/">Home</a>
     <a href="/about">About</a>
@@ -112,60 +124,70 @@
         </div>
       {/each}
     </div>
-<!-- Doctors Section -->
-<div class="doctors-section">
-  <h4>Doctors</h4>
-  <div class="doctors-grid-container">
-    <div class="doctors-grid">
-      {#each subscribedDoctors as doctor}
-        <div class="doctor">
-          <div class="profile-icon">
-            <div class="circle">
-              <i class="fas fa-user-md" />
+    <!-- Doctors Section -->
+    <div class="doctors-section">
+      <h4>Doctors</h4>
+      <div class="doctors-grid-container">
+        <div class="doctors-grid">
+          {#each subscribedDoctors as doctor}
+            <div class="doctor">
+              <div class="profile-icon">
+                <div class="circle">
+                  <i class="fas fa-user-md" />
+                </div>
+              </div>
+              <div class="doctor-info">
+                <p><strong>Name:</strong> {doctor.name}</p>
+                <p><strong>Speciality:</strong> {doctor.specialization}</p>
+                <p><strong>Experience:</strong> {doctor.experience} years</p>
+                <p>
+                  <strong>Rating:</strong>{" "}
+                  {#each Array(5) as _, index}
+                    <i
+                      class="fas fa-star {hasBlackBorder(doctor.rating) &&
+                      index === 4
+                        ? 'black-border'
+                        : ''}"
+                    />
+                  {/each}
+                </p>
+              </div>
             </div>
-          </div>
-          <div class="doctor-info">
-            <p><strong>Name:</strong> {doctor.name}</p>
-            <p><strong>Speciality:</strong> {doctor.specialization}</p>
-            <p><strong>Experience:</strong> {doctor.experience} years</p>
-            <p>
-              <strong>Rating:</strong>{" "}
-              {#each Array(5) as _, index}
-                <i class="fas fa-star {hasBlackBorder(doctor.rating) && index === 4 ? 'black-border' : ''}" />
-              {/each}
-            </p>
-          </div>
+          {/each}
         </div>
-      {/each}
+      </div>
     </div>
-  </div>
-</div>
 
-  <!-- Reviews Section -->
-<div class="reviews-section">
-  <div class="reviews-container">
-    <div class="reviews-grid">
-      {#each reviews as review}
-        <div class="review">
-          <div class="profile-icon">
-            <div class="circle">
-              <i class="fas fa-user" />
+    <!-- Reviews Section -->
+    <div class="reviews-section">
+      <div class="reviews-container">
+        <div class="reviews-grid">
+          {#each reviews as review}
+            <div class="review">
+              <div class="profile-icon">
+                <div class="circle">
+                  <i class="fas fa-user" />
+                </div>
+              </div>
+              <div class="review-content">
+                <p><strong>Author:</strong> {review.author}</p>
+                <p>
+                  <strong>Rating:</strong>{" "}
+                  {#each Array(5) as _, index}
+                    <i
+                      class="fas fa-star {hasBlackBorder(review.rating) &&
+                      index === 4
+                        ? 'black-border'
+                        : ''}"
+                    />
+                  {/each}
+                </p>
+                <p><strong>Comment:</strong> {review.comment}</p>
+              </div>
             </div>
-          </div>
-          <div class="review-content">
-            <p><strong>Author:</strong> {review.author}</p>
-            <p>
-              <strong>Rating:</strong>{" "}
-              {#each Array(5) as _, index}
-                <i class="fas fa-star {hasBlackBorder(review.rating) && index === 4 ? 'black-border' : ''}" />
-              {/each}
-            </p>
-            <p><strong>Comment:</strong> {review.comment}</p>
-          </div>
+          {/each}
         </div>
-      {/each}
-    </div>
-  </div>
+      </div>
 
       <!-- Form to add a new review -->
       <form on:submit|preventDefault={addReview}>
@@ -347,7 +369,7 @@
   .reviews-container::-webkit-scrollbar {
     display: none;
   }
- /* Doctors Section Styling */
+  /* Doctors Section Styling */
   /* Doctors Section Styling */
   .doctors-section {
     margin-top: 40px;
@@ -380,7 +402,6 @@
     align-items: center; /* Vertically center the content */
     width: 29%;
   }
-
 
   .profile-icon {
     display: flex;
@@ -639,5 +660,30 @@
   }
   .fas.fa-star.black-border {
     color: #e5dfdf; /* Change the star color to black */
+  }
+
+  .back-button {
+    background-color: #274247;
+    color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+    cursor: pointer;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    position: absolute;
+    top: 120px;
+    margin-left: 5px;
+    /* margin-top: 40px; */
+  }
+
+  .back-button:hover {
+    background-color: #1a1a1940;
+  }
+
+  .back-button:focus {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   }
 </style>
