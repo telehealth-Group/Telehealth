@@ -85,7 +85,7 @@
     {:else if activeSection === "Patients"}
       <Patient />
     {:else if activeSection === "Appointment"}
-      <Appointment />
+      <Appointment {role}/>
     {:else if activeSection === "Settings"}
       <Settings {user}/>
     {/if}
