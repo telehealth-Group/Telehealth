@@ -5,9 +5,11 @@
   import { onDestroy } from "svelte";
 
   import AppointmentDetails from "./AppointmentDetails.svelte";
+  import CreateAppointment from "./CreateAppointment.svelte";
 
   let subscribedAppointments = [];
   let selectedAppointment = null;
+  let isCreatingAppointment = false; // Add a flag to track if we are creating a new appointment
 
   // Subscribe to the appointments store
   const unsubscribe = appointments.subscribe((value) => {
@@ -29,24 +31,14 @@
     selectedAppointment = null;
   }
 
-  // Function to create a new appointment (example only, adjust as needed)
-  function createNewAppointment() {
-    const newAppointment = {
-      dateTime: new Date(),
-      hospital: {
-        name: "Example Hospital",
-        // Add hospital details as needed
-      },
-      // Add more appointment details as needed
-    };
+  // Function to open the CreateAppointment component
+  function openCreateAppointment() {
+    isCreatingAppointment = true;
+  }
 
-    // Add the new appointment to the store (example only, adjust based on your actual implementation)
-    appointments.update((value) => {
-      return { ...value, data: { ...value.data, appointments: [...value.data.appointments, newAppointment] } };
-    });
-
-    // Show the details of the newly created appointment
-    showAppointmentDetails(newAppointment);
+  // Function to close the CreateAppointment component
+  function closeCreateAppointment() {
+    isCreatingAppointment = false;
   }
 </script>
 
@@ -54,9 +46,14 @@
   <h1 class="title">Appointments</h1>
 
   <!-- Button to create a new appointment -->
-  <button class="new-appointment-button" on:click={() => createNewAppointment()}>New Appointment</button>
+  {#if !isCreatingAppointment}
+    <button class="new-appointment-button" on:click={() => openCreateAppointment()}>New Appointment</button>
+  {:else}
+    <!-- Render the CreateAppointment component when isCreatingAppointment is true -->
+    <svelte:component this={CreateAppointment} on:closeCreateAppointment={() => closeCreateAppointment()} />
+  {/if}
 
-  {#if !selectedAppointment}
+  {#if !selectedAppointment && !isCreatingAppointment}
     {#if subscribedAppointments.length > 0}
       <table class="appointments-table">
         <thead>
@@ -70,7 +67,8 @@
           {#each subscribedAppointments as appointment}
             <tr class="appointment-row" on:click={() => showAppointmentDetails(appointment)}>
               <td>{new Date(appointment.dateTime).toLocaleString()}</td>
-              <td>{appointment.hospital.name}</td>
+              <!-- Add a conditional check before accessing the 'name' property -->
+              <td>{#if appointment.hospital}{appointment.hospital.name}{/if}</td>
               <td>
                 <button class="view-button">
                   <i class="fas fa-eye"></i> View Details
@@ -93,7 +91,6 @@
     />
   {/if}
 </main>
-
 <style>
   /* Overall page styles */
   /* Add your styles here */

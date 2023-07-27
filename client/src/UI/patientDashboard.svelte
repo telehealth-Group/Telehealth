@@ -69,13 +69,15 @@
       <p class="no-hospitals">No hospitals found.</p>
     {/if}
   {/if}
-
+  {#if selectedHospital !== null}
+    <!-- Render HospitalDetails component with the selected hospital -->
+    <HospitalDetails hospital={selectedHospital} 
+    on:closeDetails={() => closeDetails()}
+    />
+  {/if}
+  
 </div>
 
-{#if selectedHospital !== null}
-  <!-- Render HospitalDetails component with the selected hospital -->
-  <HospitalDetails hospital={selectedHospital} />
-{/if}
 
 <style>
   .container {
