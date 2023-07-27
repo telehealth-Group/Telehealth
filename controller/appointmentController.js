@@ -1,6 +1,6 @@
 const Appointment  = require("../models/appointmentModel")
 
-exports.createAppointment = async (req, res) => {
+exports.createAppointment = async (req, res,next) => {
      try {
        const newAppointment = await Appointment.create(req.body);
        res.status(201).json({
@@ -58,7 +58,7 @@ exports.updateAppointment = async (req, res) => {
 }
 exports.cancleAppointment = async (req, res, next) => {
   try {
-    await Appointment.findByIdAndUpdate(req.body.id, { status: "canceled" },{
+    await Appointment.findByIdAndUpdate(req.params.id, { status: "canceled" },{
        new: true,
        runValidators: true,
      });
@@ -78,7 +78,7 @@ exports.cancleAppointment = async (req, res, next) => {
 exports.completAppointment = async (req, res, next) => {
   try {
     await Appointment.findByIdAndUpdate(
-      req.body.id,
+      req.params.id,
       { status: "completed" },
       {
         new: true,

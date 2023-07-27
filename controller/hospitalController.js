@@ -19,6 +19,12 @@ exports.getAllHospitals = async (req, res) => {
     });
   }
 };
+exports.topHospitals = (req, res, next) => {
+  req.query.limit = "10";
+  req.query.sort = "-ratingsAvarage";
+  req.query.fields = "ratingsAverage,name,services,specialities";
+  next();
+};
 
 exports.getHospital = async (req, res) => {
   try {
@@ -150,3 +156,100 @@ exports.deleteDoctor = async (req, res) => {
   }
 };
 
+exports.hospiatlStatus = async (req, res) => {
+  try {
+    const stats = await Hospital.aggregate([
+      {
+        $match: { ratingsAverage: { $gte: 4.5 } },
+      },
+      {
+        $group: {
+          numTour: { $sum: 1 },
+          numRating: { $sum: "$ratingsQuantity" },
+          avgRating: { $avg: "$ratingsAverage" },
+          avgPrice: { $avg: "$price" },
+          minPrice: { $min: "$price" },
+          maxPrice: { $max: "$price" },
+        },
+      },
+      {
+        $sort: { avgPrice: 1 },
+      },
+    ]);
+    res.status(200).json({
+      status: "success",
+      data: {
+        stats,
+      },
+    });
+  } catch (err) {
+    return res.status(404).json({
+      status: "failed",
+      message: err,
+    });
+  }
+};
+
+exports.getHospitalwithin = async (req, res, next) => {
+  const { distance, latlng, unit } = req.params;
+  const [lat, lng] = latlng.split(',');
+  const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1;
+  if (!lat || !lng) {
+    return next(
+      res.status(400).json({
+        status: 'failed',
+        message: 'please provide latitude and longtude in the format lat,lng.',
+      })
+    );
+  }
+  const hospital = await Hospital.find({
+    startLocation: { $geoWithin: { $centerSphere: [[lng, lat], radius] } },
+  });
+
+  res.status(200).json({
+    status: 'success',
+    result: hospital.length,
+    data: {
+      hospital,
+    },
+  });
+};
+
+exports.getDistances = async (req, res, next) => {
+  const { latlng, unit } = req.params;
+  const [lat, lng] = latlng.split(",");
+  const multiplier = unit === "mi" ? 0.000621371 : 0.001;
+  if (!lat || !lng) {
+    return next(
+      res.status(400).json({
+        status: "failed",
+        message: "please provide latitude and longtude in the format lat,lng.",
+      })
+    );
+  }
+  const distance = await Hospital.aggregate([
+    {
+      $geoNear: {
+        near: {
+          type: "Point",
+          coordinates: [lng * 1, lat * 1],
+        },
+        distanceField: "distance",
+        distanceMultiplier: multiplier,
+      },
+    },
+    {
+      $project: {
+        distance: 1,
+        name: 1,
+      },
+    },
+  ]);
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      distance,
+    },
+  });
+};

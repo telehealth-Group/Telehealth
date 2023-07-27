@@ -11,8 +11,16 @@ router.route('/hospital/createDoctor').post(hospitalController.createHospitalDoc
 router.route('/hospital/deleteDoctor').patch(hospitalController.deleteDoctor);
 
 
+router
+  .route("/")
+  .get(hospitalController.topHospitals, hospitalController.getAllHospitals);
 
+router.route("/hospital-status").get(hospitalController.hospiatlStatus);
 
+router
+  .route("/hospital-within/:distance/center/:latlng/unit/:unit")
+  .get(hospitalController.getHospitalwithin);
 
+router.route("/distance/:latlng/unit/:unit").get(hospitalController.getDistances);
 
 module.exports = router;

@@ -3,14 +3,14 @@ const { promisify } = require("util");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 
-const signtoken = function (id) {
+const sendToken = function (id) {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
 
 const createSendToken = (user, statusCode, res) => {
-  const token = signtoken(user._id);
+  const token = sendToken(user._id);
   const cookieOption = {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 + 1000
@@ -93,21 +93,20 @@ exports.logout = (req, res) => {
 };
 
 exports.protect = async (req, res, next) => {
+  console.log(req.headers)
   let token;
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ")[1];
-  } else if (req.cookies.jwt) {
-    token = req.cookies.jwt;
-  }
+  } 
+  console.log(req.headers)
   if (!token) {
-    return next(
-      res.status(400).render("error", {
-        title: "You are not loged in! please login",
-      })
-    );
+    return res.status(401).json({
+      status: "failed",
+      message: "You are not loged in! please login",
+    });
   }
   try {
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
@@ -131,11 +130,10 @@ exports.protect = async (req, res, next) => {
     req.user = freshUser;
     res.locals.user = freshUser;
   } catch (error) {
-    return next(
-      res.status(404).render("error", {
-        title: "invalid Token id",
-      })
-    );
+    return res.status(401).json({
+      status: "failed",
+      message: "invalid Token id",
+    });
   }
   next();
 };
