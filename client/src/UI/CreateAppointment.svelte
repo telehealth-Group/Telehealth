@@ -1,284 +1,139 @@
 <!-- CreateAppointment.svelte -->
 <script>
-    // @ts-nocheck
-    import { hospitals } from "../store.js";
-    import CreateAppointment from "./CreateAppointment.svelte"
     import { onDestroy } from "svelte";
-  
-    let subscribedHospitals = [];
-    const unsubscribeHospitals = hospitals.subscribe((value) => {
-      subscribedHospitals = value.data.hospitals;
-    });
-  
-    // Unsubscribe from the hospitals store when the component is destroyed
-    onDestroy(() => {
-      unsubscribeHospitals();
-    });
-  
     import { createEventDispatcher } from "svelte";
+    import { patients } from "../store.js"; // Assuming you have stores for patients and doctors
+  
+    export let close;
+  
+    // Data to populate the form
+    let selectedDoctor = "";
+    let selectedTimeSlot = "";
+    let date = "";
   
     const dispatch = createEventDispatcher();
   
-    let selectedHospital = subscribedHospitals[0]; // Set the default selected hospital
-    let selectedDateTime = null;
-  
-    // Function to close the create appointment form
-    function closeForm() {
-      // Emit a custom event to notify the parent component
+    // Function to close the Create Appointment view
+    function closeCreateAppointment() {
       dispatch("closeCreateAppointment");
     }
   
-    // Function to handle date selection
-    function selectDate(date) {
-      selectedDateTime = date;
+    // Function to handle form submission
+    function submitAppointment() {
+      // Handle the logic to submit the appointment details here
+      // For example, you can save the appointment details to a database or another store
+      console.log("Appointment details submitted:");
+      console.log("Doctor: ", selectedDoctor);
+      console.log("Date: ", date);
+      console.log("Time Slot: ", selectedTimeSlot);
+  
+      // Close the Create Appointment view after submission
+      closeCreateAppointment();
     }
   
-    // Function to create a new appointment (example only, adjust as needed)
-    function createNewAppointment() {
-      if (selectedDateTime && selectedHospital) {
-        const newAppointment = {
-          dateTime: selectedDateTime,
-          hospital: selectedHospital,
-          // Add more appointment details as needed
-        };
+    // Subscribe to the patients store to get the list of doctors
+    let subscribedDoctors = [];
+    const unsubscribePatients = patients.subscribe((value) => {
+      subscribedDoctors = value.data.users.filter((user) => user.role === "doctor");
+    });
   
-        // Add the new appointment to the store (example only, adjust based on your actual implementation)
-        // appointments.update((value) => {
-        //   return { ...value, data: { ...value.data, appointments: [...value.data.appointments, newAppointment] } };
-        // });
+    // Unsubscribe from the patients store when the component is destroyed
+    onDestroy(() => {
+      unsubscribePatients();
+    });
   
-        // Show the details of the newly created appointment (optional)
-        // showAppointmentDetails(newAppointment);
-  
-        // Close the form after creating the appointment
-        closeForm();
-      } else {
-        alert("Please select both a date and a hospital before creating the appointment.");
-      }
-    }
+    // Dummy time slots data (you can replace this with actual data from your store or API)
+    let timeSlots = [
+      "09:00 AM",
+      "10:00 AM",
+      "11:00 AM",
+      "12:00 PM",
+      "01:00 PM",
+      "02:00 PM",
+      "03:00 PM",
+      "04:00 PM",
+      "05:00 PM",
+    ];
   </script>
   
-  <main class="create-appointment">
+  <div class="create-appointment-container">
     <h2>Create Appointment</h2>
-  
-    <!-- Hospital dropdown -->
-    <div class="hospital-dropdown">
-      <label for="hospital">Select Hospital:</label>
-      <select id="hospital" bind:value={selectedHospital}>
-        {#each subscribedHospitals as hospital}
-          <option value={hospital}>{hospital.name}</option>
+    <form on:submit|preventDefault={submitAppointment}>
+      <label for="doctor">Select Doctor:</label>
+      <select id="doctor" bind:value={selectedDoctor}>
+        <option value="" disabled>Select a doctor</option>
+        {#each subscribedDoctors as doctor}
+          <option value={doctor.name}>{doctor.name} - {doctor.specialization}</option>
         {/each}
       </select>
-    </div>
-    <!-- Date grid -->
-    <div class="date-grid">
-      {#each $dates as date}
-        <button
-          class="date-button {#if selectedDateTime === date}selected{/if}"
-          on:click={() => selectDate(date)}
-          disabled={!date.available}
-        >
-          {new Date(date.dateTime).toLocaleString()}
-        </button>
-      {/each}
-    </div>
   
-    <!-- Close button to cancel creating the appointment -->
-    <button class="close-button" on:click={closeForm}>Cancel</button>
+      <label for="date">Select Date:</label>
+      <input type="date" id="date" bind:value={date} required />
   
-    <!-- Button to create a new appointment -->
-    <button class="create-button" on:click={createNewAppointment}>Create Appointment</button>
-  </main>
+      <label for="time">Select Time Slot:</label>
+      <select id="time" bind:value={selectedTimeSlot}>
+        <option value="" disabled>Select a time slot</option>
+        {#each timeSlots as timeSlot}
+          <option value={timeSlot}>{timeSlot}</option>
+        {/each}
+      </select>
   
-<style>
-  /* Add your styles for the CreateAppointment component here */
+      <button type="submit">Submit Appointment</button>
+    </form>
+  
+    <button class="cancel-button" on:click={close}>
+      Cancel
+    </button>
+  </div>
 
-  .date-grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    grid-gap: 10px;
-    margin: 20px 0;
+  <style>
+     .create-appointment-container {
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
+    margin-top: 40px;
   }
 
-  .date-grid button {
+  h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #274247;
+  }
+
+  label {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #274247;
+  }
+
+  select,
+  input[type="date"] {
     padding: 10px;
-    font-size: 14px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+    box-sizing: border-box;
+  }
+
+  button[type="submit"],
+  .cancel-button {
+    background-color: #274247;
+    color: #ffffff;
+    padding: 10px 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    background-color: #f5f5f5;
-    color: #333;
   }
 
-  .date-grid button:hover {
-    background-color: #e6ecee;
+  button[type="submit"]:hover,
+  .cancel-button:hover {
+    background-color: #1a2d38;
   }
-
-  .date-grid button:active {
-    background-color: #60aec2;
-    color: #fff;
-  }
-
-  .date-grid button.activeDate {
-    background-color: #274247;
-    color: #fff;
-  }
-
-  .date-grid button.activeDate:hover {
-    background-color: #45a049;
-  }
-
-  /* Form styles */
-
-  label {
-    display: block;
-    margin-top: 10px;
-  }
-
-  input {
-    width: 100%;
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-
-  /* Buttons */
-
-  .button-container {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-  }
-
-  button {
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    margin-left: 10px;
-  }
-
-  button[type="submit"] {
-    background-color: #274247;
-    color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
-  }
-
-  button[type="submit"]:hover {
-    background-color: #45a049;
-  }
-
-  button[type="submit"]:focus {
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-  }
-
-  button[type="button"] {
-    background-color: #ccc;
-    color: #333;
-  }
-
-  button[type="button"]:hover {
-    background-color: #e6ecee;
-  }
-
-  .create-appointment {
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    max-width: 600px;
-    text-align: center;
-    margin: 0; /* Remove margin */
-  }
-
-  .create-appointment h2 {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #333;
-  }
-
-  /* Hospital dropdown */
-  .hospital-dropdown {
-    margin-bottom: 20px;
-  }
-
-  .hospital-dropdown label {
-    display: block;
-    margin-bottom: 5px;
-  }
-
-  .hospital-dropdown select {
-    width: 100%;
-    padding: 8px;
-    font-size: 16px;
-    border-radius: 5px;
-  }
-
-  /* Date grid */
-  .date-grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    grid-gap: 10px;
-    margin-bottom: 20px;
-  }
-
-  .date-button {
-    background-color: #f5f5f5;
-    border: 1px solid #ddd;
-    padding: 8px;
-    border-radius: 5px;
-    width: 100%;
-    font-size: 14px;
-    cursor: pointer;
-  }
-
-  .date-button:hover {
-    background-color: #eee;
-  }
-
-  .date-button.selected {
-    background-color: #6C5CE7;
-    color: white;
-  }
-
-  .date-button[disabled] {
-    background-color: #f7f7f7;
-    color: #aaa;
-    cursor: not-allowed;
-  }
-
-  /* Buttons */
-  .close-button,
-  .create-button {
-    background-color: #274247;
-    color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
-    cursor: pointer;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: none;
-    outline: none;
-  }
-
-  .close-button {
-    margin-right: 10px;
-  }
-
-  .close-button:hover,
-  .create-button:hover {
-    background-color: #45a049;
-  }
-
-  .close-button:focus,
-  .create-button:focus {
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-  }
-</style>
+  </style>
