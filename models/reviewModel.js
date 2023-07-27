@@ -19,12 +19,17 @@ const reviewSchema = new mongoose.Schema(
     hospital: {
       type: mongoose.Schema.ObjectId,
       ref: "Hospital",
-      required: [true, "Review must belong to a hospital"],
     },
-    user: {
+    doctor: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
-      required: [true, "Review must belong to a hospital"],
+      role: "doctor",
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      role: "patient",
+      required: true,
     },
   },
   {
@@ -34,14 +39,20 @@ const reviewSchema = new mongoose.Schema(
 );
 reviewSchema.index({ hospital : 1, user: 1 }, { unique: true });
 
+
 reviewSchema.pre(/^find/, function (next) {
   this.populate({
     path: "user",
     select: "name",
-  }).populate({
-    path: "hospital",
-    select: "name",
-  });
+  })
+    .populate({
+      path: "doctor",
+      select: "name specialization",
+    })
+    .populate({
+      path: "hospital",
+      select: "name phoneNumber locations",
+    });
   next();
 });
 reviewSchema.statics.calcAvarageRatings = async function (hospitalId) {

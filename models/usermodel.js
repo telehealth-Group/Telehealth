@@ -89,8 +89,17 @@ const userSchema = new mongoose.Schema({
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
+},
+{
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  });
+  
+userSchema.virtual("reviews", {
+  ref: "Review",
+  foreignField: "doctor",
+  localField: "_id",
 });
-
 userSchema.pre('save', async function (next) {
   // only run this function if password was actually modefied
   if (!this.isModified('password')) return next()

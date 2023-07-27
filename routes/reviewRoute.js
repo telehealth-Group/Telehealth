@@ -7,8 +7,6 @@ const reviewRouter = express.Router({ mergeParams: true });
 reviewRouter
   .route("/")
   .get(
-    authController.protect,
-    authController.restrictTo("user"),
     reviewController.getAllReview
   )
   .post(reviewController.createReview);
