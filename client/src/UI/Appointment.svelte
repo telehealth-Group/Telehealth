@@ -2,10 +2,13 @@
 <script>
   // @ts-nocheck
   import { appointments } from "../store.js";
+  import { hospitals } from "../store.js"; // Import the hospitals store
   import { onDestroy } from "svelte";
 
+  export let role 
+
   import AppointmentDetails from "./AppointmentDetails.svelte";
-  import CreateAppointment from "./CreateAppointment.svelte";
+  import PatientDashboard from "./PatientDashboard.svelte"; // Import the PatientDashboard component
 
   let subscribedAppointments = [];
   let selectedAppointment = null;
@@ -35,7 +38,6 @@
   function openCreateAppointment() {
     isCreatingAppointment = true;
   }
-
   // Function to close the CreateAppointment component
   function closeCreateAppointment() {
     isCreatingAppointment = false;
@@ -50,7 +52,7 @@
     <button class="new-appointment-button" on:click={() => openCreateAppointment()}>New Appointment</button>
   {:else}
     <!-- Render the CreateAppointment component when isCreatingAppointment is true -->
-    <svelte:component this={CreateAppointment} on:closeCreateAppointment={() => closeCreateAppointment()} />
+    <PatientDashboard on:closeCreateAppointment={() => closeCreateAppointment()} />
   {/if}
 
   {#if !selectedAppointment && !isCreatingAppointment}
@@ -85,7 +87,7 @@
 
   {#if selectedAppointment}
     <!-- Render AppointmentDetails component with the selected appointment -->
-    <AppointmentDetails
+    <AppointmentDetails {role}
       appointment={selectedAppointment}
       on:closeDetails={() => closeDetails()}
     />
@@ -96,6 +98,95 @@
   /* Add your styles here */
 
   .appointments {
+    max-width: 1100px;
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+  }
+
+  /* Typography */
+
+  .title {
+    font-size: 24px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  .no-appointments {
+    text-align: center;
+    font-style: italic;
+    color: #777;
+    margin-top: 20px;
+  }
+
+  /* Table */
+
+  .appointments-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .appointments-table th,
+  .appointments-table td {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+  }
+
+  .appointments-table th {
+    background: #f5f5f5;
+  }
+
+  .appointment-row:hover {
+    background: #f9f9f9;
+    cursor: pointer;
+  }
+
+  /* Buttons */
+
+  .new-appointment-button {
+    background-color: #274247;
+    color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+    cursor: pointer;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    margin-bottom: 20px;
+  }
+
+  .new-appointment-button:hover {
+    background-color: #45a049;
+  }
+
+  .new-appointment-button:focus {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  }
+
+  .view-button {
+    padding: 8px 12px;
+    font-size: 14px;
+    background-color: #60aec2;
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .view-button i {
+    margin-right: 8px;
+  }
+
+  .view-button:hover {
+    background-color: #e6ecee;
+    color: black;
+  }.appointments {
     max-width: 1100px;
     margin: 50px auto;
     padding: 30px;

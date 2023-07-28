@@ -1,6 +1,7 @@
+<!-- HospitalDetails.svelte -->
 <script>
   // @ts-ignore
-  import PatientDashboard from "./patientDashboard.svelte";
+  import CreateAppointment from "./CreateAppointment.svelte";
   import { onDestroy } from "svelte";
   import { patients } from "../store.js";
 
@@ -16,6 +17,12 @@
     dispatch("closeDetails");
   }
 
+  function createAppointment() {
+    // Handle the logic to create a new appointment here
+    // For example, you could show a form to select a doctor and time slot
+    // and save the appointment details to the database or a store
+    console.log("Creating a new appointment...");
+  }
 
   const unsubscribePatients = patients.subscribe((value) => {
     // @ts-ignore
@@ -28,8 +35,6 @@
     unsubscribePatients();
   });
 
-  console.log(closeDetails);
-  console.log(subscribedDoctors);
   let isLocationsArray = Array.isArray(hospital.locations);
 
   // Dummy reviews data (you can replace this with actual data from your store or API)
@@ -79,7 +84,13 @@
   function hasBlackBorder(rating) {
     return rating < 5;
   }
+  // State to control whether the CreateAppointment component should be rendered
+  let showCreateAppointment = false;
 
+  // Function to toggle the CreateAppointment component
+  function toggleCreateAppointment() {
+    showCreateAppointment = !showCreateAppointment;
+  }
 </script>
 
 <nav class="navbar">
@@ -217,7 +228,14 @@
       </form>
     </div>
   </div>
+  {#if showCreateAppointment}
+  <CreateAppointment close={() => (showCreateAppointment = false)} />
 {:else}
+  <button class="create-appointment-button" on:click={toggleCreateAppointment}>
+    <i class="fas fa-calendar-plus"></i> Create Appointment
+  </button>
+{/if}
+{:else} 
   <p>No location information available.</p>
 {/if}
 
@@ -274,7 +292,19 @@
 </footer>
 
 <style>
-  /* General Styling */
+  /* General Styling */.create-appointment-button {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .create-appointment-button:hover {
+    background-color: #0056b3;
+  }
   body {
     margin: 0;
     font-family: Arial, sans-serif;
