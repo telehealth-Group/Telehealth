@@ -439,15 +439,15 @@
   }
 
   .doctor {
-    flex: 0 0 auto; /* Ensure the doctors don't grow or shrink */
-    min-width: 300px; /* Set a minimum width for each doctor card */
+    /* flex: 0 0 auto; Ensure the doctors don't grow or shrink */
+    /* min-width: 300px; Set a minimum width for each doctor card */
     border: 1px solid #ddd;
     border-radius: 5px;
-    padding: 100px 20px; /* Add padding to create spacing inside the doctor card */
+    padding: 60px 20px; 
     box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
     display: flex; /* Align items horizontally */
     align-items: center; /* Vertically center the content */
-    width: 29%;
+    width: 380px;
   }
 
   .profile-icon {
