@@ -10,7 +10,7 @@ exports.setTourUserId = (req, res, next) => {
 exports.getAllReview = async (req, res, next) => {
   try {
     let filter={}
-    if(req.params.hopitalId)filter = {hospital:req.params.hospitalId}
+    if(req.params.hopitalId) filter = {hospital:req.params.hospitalId}
 
     const reviews = await Review.find(filter);
 
@@ -22,12 +22,10 @@ exports.getAllReview = async (req, res, next) => {
       },
     });
   } catch (error) {
-    return next(
-      res.status(400).json({
+    return res.status(400).json({
         status: "failed",
         message: error,
       })
-    );
   }
 };
 

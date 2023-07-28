@@ -7,12 +7,22 @@ const reviewRouter = express.Router({ mergeParams: true });
 reviewRouter
   .route("/")
   .get(
+    authController.protect,
+    reviewController.setTourUserId,
     reviewController.getAllReview
   )
   .post(reviewController.createReview);
 
 reviewRouter
   .route("/:id")
-  .get(reviewController.getAllReview)
-  .post(reviewController.createReview);
+  .get(
+    authController.protect,
+    reviewController.setTourUserId,
+    reviewController.getAllReview
+  )
+  .post(
+    authController.protect,
+    reviewController.setTourUserId,
+    reviewController.createReview
+  );
 module.exports = reviewRouter;
