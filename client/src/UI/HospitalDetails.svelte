@@ -93,206 +93,219 @@
   }
 </script>
 
-<nav class="navbar">
-  <!-- Navigation Bar -->
-  <button class="back-button" on:click={closeDetails}>
-  <i class="fas fa-arrow-left"></i>
-  </button>
-  <div class="navbar-container">
-    <a href="/">Home</a>
-    <a href="/about">About</a>
-    <a href="/services">Services</a>
-    <a href="/contact">Contact</a>
-  </div>
-</nav>
-
-{#if isLocationsArray}
-  <!-- Container for PatientDashboard component -->
-  <div id="patientDashboardContainer" />
-  <div class="hero-section">
-    <h1>Welcome to {hospital.name}</h1>
-    <p>Providing Quality Healthcare Services</p>
-  </div>
-  <div class="hospital-details-container">
-    <p>services</p>
-    <p class="services-info">
-      {#each hospital.services as service}
-        <div class="service-box">
-          <i class="fas fa-stethoscope" />
-          <h4>{service}</h4>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        </div>
-      {/each}
-    </p>
-
-    <p>Specialities</p>
-    <div class="specialities-grid">
-      {#each hospital.specialities as speciality}
-        <div class="speciality-box">
-          <i class="fas fa-certificate" />
-          <h4>{speciality}</h4>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        </div>
-      {/each}
-    </div>
-    <!-- Doctors Section -->
-    <div class="doctors-section">
-      <h4>Doctors</h4>
-      <div class="doctors-grid-container">
-        <div class="doctors-grid">
-          {#each subscribedDoctors as doctor}
-            <div class="doctor">
-              <div class="profile-icon">
-                <div class="circle">
-                  <i class="fas fa-user-md" />
-                </div>
-              </div>
-              <div class="doctor-info">
-                <p><strong>Name:</strong> {doctor.name}</p>
-                <p><strong>Speciality:</strong> {doctor.specialization}</p>
-                <p><strong>Experience:</strong> {doctor.experience} years</p>
-                <p>
-                  <strong>Rating:</strong>{" "}
-                  {#each Array(5) as _, index}
-                    <i
-                      class="fas fa-star {hasBlackBorder(doctor.rating) &&
-                      index === 4
-                        ? 'black-border'
-                        : ''}"
-                    />
-                  {/each}
-                </p>
-              </div>
-            </div>
-          {/each}
-        </div>
-      </div>
-    </div>
-
-    <!-- Reviews Section -->
-    <div class="reviews-section">
-      <div class="reviews-container">
-        <div class="reviews-grid">
-          {#each reviews as review}
-            <div class="review">
-              <div class="profile-icon">
-                <div class="circle">
-                  <i class="fas fa-user" />
-                </div>
-              </div>
-              <div class="review-content">
-                <p><strong>Author:</strong> {review.author}</p>
-                <p>
-                  <strong>Rating:</strong>{" "}
-                  {#each Array(5) as _, index}
-                    <i
-                      class="fas fa-star {hasBlackBorder(review.rating) &&
-                      index === 4
-                        ? 'black-border'
-                        : ''}"
-                    />
-                  {/each}
-                </p>
-                <p><strong>Comment:</strong> {review.comment}</p>
-              </div>
-            </div>
-          {/each}
-        </div>
-      </div>
-
-      <!-- Form to add a new review -->
-      <form on:submit|preventDefault={addReview}>
-        <h4>Add a Review</h4>
-        <label for="author">Author</label>
-        <input type="text" id="author" bind:value={newReview.author} required />
-
-        <label for="rating">Rating</label>
-        <input
-          type="number"
-          id="rating"
-          bind:value={newReview.rating}
-          min="1"
-          max="5"
-          required
-        />
-
-        <label for="comment">Comment</label>
-        <textarea
-          id="comment"
-          bind:value={newReview.comment}
-          rows="4"
-          required
-        />
-
-        <button type="submit" class="custom-button">Submit Review</button>
-      </form>
-    </div>
-  </div>
-  {#if showCreateAppointment}
-  <CreateAppointment close={() => (showCreateAppointment = false)} />
+{#if showCreateAppointment}
+<CreateAppointment close={() => (showCreateAppointment = false)} />
 {:else}
-  <button class="create-appointment-button" on:click={toggleCreateAppointment}>
-    <i class="fas fa-calendar-plus"></i> Create Appointment
-  </button>
-{/if}
-{:else} 
-  <p>No location information available.</p>
+<button
+  class="create-appointment-button"
+  on:click={toggleCreateAppointment}
+>
+  <i class="fas fa-calendar-plus" /> Create Appointment
+</button>
 {/if}
 
-<footer class="footer">
-  <div class="footer-container">
-    <!-- Footer Navigation Links -->
-    <div class="footer-left">
-      <h4>Navigation</h4>
-      <div class="navbar-container">
-        <a href="/">Home</a>
-        <a href="/about">About</a>
-        <a href="/services">Services</a>
-        <a href="/contact">Contact</a>
+{#if !showCreateAppointment} 
+<main>
+  <nav class="navbar">
+    <!-- Navigation Bar -->
+    <button class="back-button" on:click={closeDetails}>
+      <i class="fas fa-arrow-left" />
+    </button>
+    <div class="navbar-container">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/services">Services</a>
+      <a href="/contact">Contact</a>
+    </div>
+  </nav>
+
+  {#if isLocationsArray}
+    <!-- Container for PatientDashboard component -->
+    <div id="patientDashboardContainer" />
+    <div class="hero-section">
+      <h1>Welcome to {hospital.name}</h1>
+      <p>Providing Quality Healthcare Services</p>
+    </div>
+    <div class="hospital-details-container">
+      <p>services</p>
+      <p class="services-info">
+        {#each hospital.services as service}
+          <div class="service-box">
+            <i class="fas fa-stethoscope" />
+            <h4>{service}</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          </div>
+        {/each}
+      </p>
+
+      <p>Specialities</p>
+      <div class="specialities-grid">
+        {#each hospital.specialities as speciality}
+          <div class="speciality-box">
+            <i class="fas fa-certificate" />
+            <h4>{speciality}</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          </div>
+        {/each}
+      </div>
+      <!-- Doctors Section -->
+      <div class="doctors-section">
+        <h4>Doctors</h4>
+        <div class="doctors-grid-container">
+          <div class="doctors-grid">
+            {#each subscribedDoctors as doctor}
+              <div class="doctor">
+                <div class="profile-icon">
+                  <div class="circle">
+                    <i class="fas fa-user-md" />
+                  </div>
+                </div>
+                <div class="doctor-info">
+                  <p><strong>Name:</strong> {doctor.name}</p>
+                  <p><strong>Speciality:</strong> {doctor.specialization}</p>
+                  <p><strong>Experience:</strong> {doctor.experience} years</p>
+                  <p>
+                    <strong>Rating:</strong>{" "}
+                    {#each Array(5) as _, index}
+                      <i
+                        class="fas fa-star {hasBlackBorder(doctor.rating) &&
+                        index === 4
+                          ? 'black-border'
+                          : ''}"
+                      />
+                    {/each}
+                  </p>
+                </div>
+              </div>
+            {/each}
+          </div>
+        </div>
+      </div>
+
+      <!-- Reviews Section -->
+      <div class="reviews-section">
+        <div class="reviews-container">
+          <div class="reviews-grid">
+            {#each reviews as review}
+              <div class="review">
+                <div class="profile-icon">
+                  <div class="circle">
+                    <i class="fas fa-user" />
+                  </div>
+                </div>
+                <div class="review-content">
+                  <p><strong>Author:</strong> {review.author}</p>
+                  <p>
+                    <strong>Rating:</strong>{" "}
+                    {#each Array(5) as _, index}
+                      <i
+                        class="fas fa-star {hasBlackBorder(review.rating) &&
+                        index === 4
+                          ? 'black-border'
+                          : ''}"
+                      />
+                    {/each}
+                  </p>
+                  <p><strong>Comment:</strong> {review.comment}</p>
+                </div>
+              </div>
+            {/each}
+          </div>
+        </div>
+
+        <!-- Form to add a new review -->
+        <form on:submit|preventDefault={addReview}>
+          <h4>Add a Review</h4>
+          <label for="author">Author</label>
+          <input
+            type="text"
+            id="author"
+            bind:value={newReview.author}
+            required
+          />
+
+          <label for="rating">Rating</label>
+          <input
+            type="number"
+            id="rating"
+            bind:value={newReview.rating}
+            min="1"
+            max="5"
+            required
+          />
+
+          <label for="comment">Comment</label>
+          <textarea
+            id="comment"
+            bind:value={newReview.comment}
+            rows="4"
+            required
+          />
+
+          <button type="submit" class="custom-button">Submit Review</button>
+        </form>
       </div>
     </div>
+  {:else}
+    <p>No location information available.</p>
+  {/if}
 
-    <!-- Hospital Name -->
+  <footer class="footer">
+    <div class="footer-container">
+      <!-- Footer Navigation Links -->
+      <div class="footer-left">
+        <h4>Navigation</h4>
+        <div class="navbar-container">
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+          <a href="/services">Services</a>
+          <a href="/contact">Contact</a>
+        </div>
+      </div>
 
-    <!-- Social Icons -->
-    <div class="footer-right">
-      <div class="social-icons">
-        <!-- Email with icon -->
-        <!-- svelte-ignore a11y-missing-content -->
-        <a
-          href="mailto:contact@yourhospital.com"
-          title="Email Us"
-          class="fa fa-envelope"
-        />
+      <!-- Hospital Name -->
 
-        <!-- Phone with icon -->
-        <!-- svelte-ignore a11y-missing-content -->
-        <a href="tel:+1234567890" title="Call Us" class="fa fa-phone" />
+      <!-- Social Icons -->
+      <div class="footer-right">
+        <div class="social-icons">
+          <!-- Email with icon -->
+          <!-- svelte-ignore a11y-missing-content -->
+          <a
+            href="mailto:contact@yourhospital.com"
+            title="Email Us"
+            class="fa fa-envelope"
+          />
 
-        <!-- Facebook with icon -->
-        <!-- svelte-ignore a11y-missing-content -->
-        <!-- svelte-ignore a11y-invalid-attribute -->
-        <a href="#" title="Facebook" class="fab fa-facebook" />
+          <!-- Phone with icon -->
+          <!-- svelte-ignore a11y-missing-content -->
+          <a href="tel:+1234567890" title="Call Us" class="fa fa-phone" />
 
-        <!-- Twitter with icon -->
-        <!-- svelte-ignore a11y-missing-content -->
-        <!-- svelte-ignore a11y-invalid-attribute -->
-        <a href="#" title="Twitter" class="fab fa-twitter" />
+          <!-- Facebook with icon -->
+          <!-- svelte-ignore a11y-missing-content -->
+          <!-- svelte-ignore a11y-invalid-attribute -->
+          <a href="#" title="Facebook" class="fab fa-facebook" />
 
-        <!-- Instagram with icon -->
-        <!-- svelte-ignore a11y-missing-content -->
-        <!-- svelte-ignore a11y-invalid-attribute -->
-        <a href="#" title="Instagram" class="fab fa-instagram" />
+          <!-- Twitter with icon -->
+          <!-- svelte-ignore a11y-missing-content -->
+          <!-- svelte-ignore a11y-invalid-attribute -->
+          <a href="#" title="Twitter" class="fab fa-twitter" />
+
+          <!-- Instagram with icon -->
+          <!-- svelte-ignore a11y-missing-content -->
+          <!-- svelte-ignore a11y-invalid-attribute -->
+          <a href="#" title="Instagram" class="fab fa-instagram" />
+        </div>
       </div>
     </div>
-  </div>
-  <div class="footer-center">
-    <p>&copy; 2023 {hospital.name}. All rights reserved.</p>
-  </div>
-</footer>
-
+    <div class="footer-center">
+      <p>&copy; 2023 {hospital.name}. All rights reserved.</p>
+    </div>
+  </footer>
+</main>
+{/if}
 <style>
-  /* General Styling */.create-appointment-button {
+  /* General Styling */
+  .create-appointment-button {
     background-color: #007bff;
     color: #ffffff;
     padding: 10px 20px;
@@ -300,6 +313,10 @@
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    position: absolute;
+    right: 30px;
+    top: 120px;
+    opacity: 0.6;
   }
 
   .create-appointment-button:hover {
@@ -693,7 +710,7 @@
   }
 
   .back-button {
-    background-color: #274247;
+    background-color: #007bff;
     color: #ffffff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
@@ -705,12 +722,13 @@
     outline: none;
     position: absolute;
     top: 120px;
+    opacity: 0.6;
     margin-left: 5px;
     /* margin-top: 40px; */
   }
 
   .back-button:hover {
-    background-color: #1a1a1940;
+    background-color: #ff0202;
   }
 
   .back-button:focus {

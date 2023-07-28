@@ -16,6 +16,7 @@
 
   // Subscribe to the appointments store
   const unsubscribe = appointments.subscribe((value) => {
+    console.log(value.data);
     subscribedAppointments = value.data.appointments;
   });
 
