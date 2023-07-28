@@ -1,4 +1,6 @@
 <script>
+// @ts-nocheck
+
   import Dashboard from "./Dashboard.svelte";
   import Patient from "./Patient.svelte";
   import Appointment from "./Appointment.svelte";
@@ -9,6 +11,7 @@
 
   export let role;
   export let user;
+  console.log(user, "from overview", role);
   console.log(user, "from overview");
 
   let activeSection = "Dashboard";
@@ -35,7 +38,7 @@
           >🏠 Dashboard</button
         >
       </li>
-      {#if role === "admin" || role === "superAdmin"}
+      {#if role === "admin" }
         <li class:selected={activeSection === "Doctors"}>
           <button on:click={() => handleSectionChange("Doctors")}
             >👨‍⚕️ Doctors</button
@@ -49,7 +52,7 @@
           >
         </li>
       {/if}
-      {#if role === "doctor" || role === "admin" || role === "patient"}
+      {#if  role === "admin" || role === "patient"}
         <li class:selected={activeSection === "Appointment"}>
           <button on:click={() => handleSectionChange("Appointment")}
             >📅 Appointment</button
