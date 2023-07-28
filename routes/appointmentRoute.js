@@ -5,9 +5,23 @@ const authController = require("../controller/authController")
 const router = express.Router()
 
 router.route('/appointments').get(appointmentController.getAllAppointments)
-router.route('/updateAppointment').patch(appointmentController.updateAppointment)
-router.route('/createAppointment').post(appointmentController.createAppointment)
-router.route('/completeAppointment').patch(appointmentController.completAppointment)
-router.route('/cancelAppointment').patch(appointmentController.cancleAppointment)
+router.route('/updateAppointment/:id').patch(appointmentController.updateAppointment)
+router
+  .route("/createAppointment/:id")
+  .post(
+    authController.protect,
+    authController.restrictTo("user"),
+    appointmentController.createAppointment
+  );
+router
+  .route("/completeAppointment/:id")
+  .patch(
+    authController.protect,
+    authController.restrictTo("doctor"),
+    appointmentController.completAppointment
+  );
+router
+  .route("/cancelAppointment/:id")
+  .patch(appointmentController.cancleAppointment);
 
 module.exports = router

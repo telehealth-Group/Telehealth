@@ -21,7 +21,7 @@ exports.getAllHospitals = async (req, res) => {
 };
 exports.topHospitals = (req, res, next) => {
   req.query.limit = "10";
-  req.query.sort = "-ratingsAvarage";
+  req.query.sort = "-ratingAvarage";
   req.query.fields = "ratingsAverage,name,services,specialities";
   next();
 };
@@ -166,7 +166,6 @@ exports.hospiatlStatus = async (req, res) => {
         $group: {
           numTour: { $sum: 1 },
           numRating: { $sum: "$ratingsQuantity" },
-          avgRating: { $avg: "$ratingsAverage" },
           avgPrice: { $avg: "$price" },
           minPrice: { $min: "$price" },
           maxPrice: { $max: "$price" },

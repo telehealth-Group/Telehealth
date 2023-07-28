@@ -2,6 +2,8 @@ const User = require("../models/usermodel");
 const { promisify } = require("util");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
+const Email = require("../utils/email");
+
 
 const sendToken = function (id) {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -93,7 +95,6 @@ exports.logout = (req, res) => {
 };
 
 exports.protect = async (req, res, next) => {
-  console.log(req.headers)
   let token;
   if (
     req.headers.authorization &&
@@ -101,7 +102,6 @@ exports.protect = async (req, res, next) => {
   ) {
     token = req.headers.authorization.split(" ")[1];
   } 
-  console.log(req.headers)
   if (!token) {
     return res.status(401).json({
       status: "failed",
@@ -109,15 +109,13 @@ exports.protect = async (req, res, next) => {
     });
   }
   try {
-    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+    const decoded = await jwt.verify(token, process.env.JWT_SECRET);
     const freshUser = await User.findById(decoded.id);
     if (!freshUser) {
-      return next(
-        res.status(401).json({
+      return res.status(401).json({
           status: "failed",
           message: "The user belonging to this token does no longer exit",
         })
-      );
     }
     if (freshUser.changedPasswordAfter(decoded.iat)) {
       return next(
@@ -127,9 +125,11 @@ exports.protect = async (req, res, next) => {
         })
       );
     }
+    console.log('dldl', freshUser)
     req.user = freshUser;
     res.locals.user = freshUser;
   } catch (error) {
+    console.error(error)
     return res.status(401).json({
       status: "failed",
       message: "invalid Token id",

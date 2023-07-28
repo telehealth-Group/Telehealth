@@ -5,18 +5,32 @@ const authController=require("../controller/authController")
 const router = express.Router();
 
 
-// router.route('/login').post(userController.login)
-// router.route('/signUp').post(userController.signUp)
-router.route('/addpatients').post(userController.addPatients)
+router.route("/addpatients").post(
+  authController.protect,
+  authController.restrictTo("admin"),
+  userController.addPatients
+);
 router.route('/patients').get (userController.getAllUsers)
 
 router.route('/login').post(authController.login)
 router.route('/signUp').post(authController.signUp)
 
-router.get('/logout', authController.logout);
+router.get(
+  "/logout",
+  authController.protect,
+  authController.logout
+);
 
-router.post("/forgotpassword", authController.forgotPassword);
-router.patch("/resetpassword/:token", authController.resetPassword);
+router.post(
+  "/forgotpassword",
+  authController.protect,
+  authController.forgotPassword
+);
+router.patch(
+  "/resetpassword/:token",
+  authController.protect,
+  authController.resetPassword
+);
 
 router.patch(
   "/updatemypassword",
