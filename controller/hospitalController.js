@@ -4,7 +4,10 @@ const User = require('../models/usermodel')
 exports.getAllHospitals = async (req, res) => {
   try {
     const hospitals = await Hospital.find();
-
+    console.log(hospitals);
+    hospitals.forEach(element => {
+      console.log(element._id)
+    });
     res.status(200).json({
       status: true,
       results: hospitals.length,

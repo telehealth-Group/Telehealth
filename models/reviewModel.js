@@ -29,7 +29,6 @@ const reviewSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       role: "patient",
-      required: true,
     },
   },
   {
@@ -37,8 +36,6 @@ const reviewSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
-reviewSchema.index({ hospital : 1, user: 1 }, { unique: true });
-
 
 reviewSchema.pre(/^find/, function (next) {
   this.populate({
