@@ -117,7 +117,12 @@ exports.updateOne = (Model) => async (req, res) => {
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find();
-
+    users.forEach(element => {
+      if (element.role === 'patient')
+      {
+        console.log(element._id)
+        }
+    });
     res.status(200).json({
       status: true,
       results: users.length,

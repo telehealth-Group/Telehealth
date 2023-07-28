@@ -1,11 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require('bcrypt')
 
-const ratingSchema = new mongoose.Schema({
-  rating: { type: Number },
-  comment: { type: String },
-  date: { type: Date, default: Date.now },
-});
 
 const userSchema = new mongoose.Schema(
   {
@@ -19,7 +14,6 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      unique: true,
       required: [true, "Provide an email address"],
     },
     password: {
@@ -84,7 +78,6 @@ const userSchema = new mongoose.Schema(
       default: "patient",
     },
     specialization: { type: String },
-    ratings: [ratingSchema],
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,

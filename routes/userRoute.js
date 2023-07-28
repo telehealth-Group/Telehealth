@@ -6,8 +6,8 @@ const router = express.Router();
 
 
 router.route("/addpatients").post(
-  authController.protect,
-  authController.restrictTo("admin"),
+  // authController.protect,
+  // authController.restrictTo("admin"),
   userController.addPatients
 );
 router.route('/patients').get (userController.getAllUsers)
