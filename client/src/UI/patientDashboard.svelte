@@ -50,9 +50,22 @@
           <li class="hospital-item">
             <div class="hospital-details">
               <div class="hospital-info">
+                  <img
+                    class="hospital-image"
+                    src={`./src/assets/${hospital.images[0]}`}
+                    alt={hospital.name}
+                  />
                 <p class="hospital-name">
                   <i class="fas fa-hospital" style="color: #6C5CE7" />
                   {hospital.name}
+                </p>
+                 <p class="hospital-phone">
+                  <i class="fas fa-phone-alt" style="color: #009688" />
+                  {hospital.phoneNumber}
+                </p>
+                <p class="hospital-rating">
+                  <i class="fas fa-star" style="color: #FFD700" />
+                  {hospital.ratingAverage} ({hospital.ratingQuantity} reviews)
                 </p>
                 <button
                   class="custom-button"
@@ -81,26 +94,50 @@
 
 <style>
   .container {
-    width: auto;
+    width: 100%;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 0;
+    padding: 20px;
+  }
+.hospital-phone,
+  .hospital-rating {
+    font-size: 16px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
   }
 
+  .hospital-phone i,
+  .hospital-rating i {
+    margin-right: 8px;
+    font-size: 20px;
+  }
+
+  .hospital-rating i {
+    color: #FFD700; /* Gold color for the star icon */
+  }
+
+  .hospital-rating {
+    color: #777;
+  }
   h1 {
     font-size: 24px;
     margin-bottom: 16px;
     text-align: center;
   }
 
+  
   .hospital-list {
     list-style-type: none;
-    padding: 0 20px;
+    padding: 0;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, calc(33.33% - 10px)); /* Reduce width by 10px */
     grid-gap: 20px;
   }
 
   .hospital-item {
+    /* Decrease the width by 10px */
+    width: calc(100% - 10px);
     padding: 20px;
     background-color: #ffffff;
     border-radius: 4px;
@@ -110,6 +147,13 @@
     align-items: center;
     text-align: center;
     position: relative;
+  }
+  .hospital-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 10px;
   }
 
   .hospital-name {
@@ -126,7 +170,7 @@
   }
 
   .custom-button {
-    background-color: #274247;
+    background-color: rgb(44, 71, 56);
     color: #ffffff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
@@ -134,6 +178,7 @@
     padding: 10px 20px;
     font-size: 16px;
     border-radius: 5px;
+    width: 350px;
     border: none;
     outline: none;
   }
@@ -157,3 +202,4 @@
     margin-top: 20px;
   }
 </style>
+

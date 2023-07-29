@@ -10,12 +10,10 @@ exports.createAppointment = async (req, res,next) => {
          },
        });
      } catch (error) {
-       next(
-         res.status(404).json({
+      return res.status(404).json({
            status: "failed",
            message: error,
          })
-       );
      }
 }
 exports.getAllAppointments = async (req, res) =>{

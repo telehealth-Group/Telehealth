@@ -17,7 +17,6 @@ router.route('/signUp').post(authController.signUp)
 
 router.get(
   "/logout",
-  authController.protect,
   authController.logout
 );
 

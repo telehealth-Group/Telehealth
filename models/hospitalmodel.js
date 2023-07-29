@@ -124,11 +124,8 @@ hospitalSchema.pre(/^find/, function (next) {
   next();
 });
 hospitalSchema.pre("save", async function (next) {
-  // only run this function if password was actually modefied
   if (!this.isModified("password")) return next();
-  // hash the password
   this.password = await bcrypt.hash(this.password, 12);
-  // delete the password confirm field
   this.passwordConfirm = undefined;
   next();
 });

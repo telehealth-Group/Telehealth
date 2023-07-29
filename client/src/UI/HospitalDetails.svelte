@@ -111,12 +111,6 @@
     <button class="back-button" on:click={closeDetails}>
       <i class="fas fa-arrow-left" />
     </button>
-    <div class="navbar-container">
-      <a href="/">Home</a>
-      <a href="/about">About</a>
-      <a href="/services">Services</a>
-      <a href="/contact">Contact</a>
-    </div>
   </nav>
 
   {#if isLocationsArray}
@@ -127,7 +121,7 @@
       <p>Providing Quality Healthcare Services</p>
     </div>
     <div class="hospital-details-container">
-      <p>services</p>
+       <h4>services</h4>
       <p class="services-info">
         {#each hospital.services as service}
           <div class="service-box">
@@ -138,7 +132,7 @@
         {/each}
       </p>
 
-      <p>Specialities</p>
+       <h4>specialitys</h4>
       <div class="specialities-grid">
         {#each hospital.specialities as speciality}
           <div class="speciality-box">
@@ -184,6 +178,7 @@
 
       <!-- Reviews Section -->
       <div class="reviews-section">
+         <h4>Reviews</h4>
         <div class="reviews-container">
           <div class="reviews-grid">
             {#each reviews as review}

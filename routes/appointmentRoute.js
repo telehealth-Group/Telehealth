@@ -7,7 +7,7 @@ const router = express.Router()
 router.route('/appointments').get(appointmentController.getAllAppointments)
 router.route('/updateAppointment/:id').patch(appointmentController.updateAppointment)
 router
-  .route("/createAppointment/:id")
+  .route("/createAppointment/")
   .post(
     authController.protect,
     authController.restrictTo("user"),
