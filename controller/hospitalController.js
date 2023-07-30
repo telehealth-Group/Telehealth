@@ -3,8 +3,12 @@ const User = require('../models/usermodel')
 
 exports.getAllHospitals = async (req, res) => {
   try {
-    const hospitals = await Hospital.find();
+    const hospitals = await Hospital.find()
+      .populate("reviews")
+      .populate("appointments")
+      .exec();
     
+   
     res.status(200).json({
       status: true,
       results: hospitals.length,

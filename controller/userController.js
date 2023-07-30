@@ -116,8 +116,14 @@ exports.updateOne = (Model) => async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().populate("reviews");
-    
+    const users = await User.find()
+      .populate("reviews")
+      .populate("DoctorAppointments")
+      .populate("PaitentAppointments")
+      .exec();;
+     users.forEach((element) => {
+       console.log(element.DoctorAppointments);
+     });
     res.status(200).json({
       status: true,
       results: users.length,
