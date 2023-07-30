@@ -1,4 +1,3 @@
-CreateAppointment.svelte
 <script>
   import { onDestroy } from "svelte";
   import { createEventDispatcher } from "svelte";
@@ -7,7 +6,7 @@ CreateAppointment.svelte
   export let close;
 
   // Data to populate the form
-  let selectedDoctor = "";
+  let selectedDoctor = null; // Updated to store the selected doctor object
   let selectedSlot = null;
   let date = new Date(); // Initialize with the current date
 
@@ -103,6 +102,11 @@ CreateAppointment.svelte
     // Hide the doctors and time slots step and go back to the doctors selection step
     showDoctors = false;
   }
+
+  // Function to handle doctor selection
+  function selectDoctor(index) {
+    selectedDoctor = subscribedDoctors[index];
+  }
 </script>
 
 <div class="create-appointment-container">
@@ -111,14 +115,18 @@ CreateAppointment.svelte
     <!-- Step 1: Select Doctor -->
     <form>
       <label for="doctor">Select Doctor:</label>
-      <select id="doctor" bind:value={selectedDoctor}>
-        <option value="" disabled>Select a doctor</option>
-        {#each subscribedDoctors as doctor}
-          <option value={doctor.name}
-            >{doctor.name} - {doctor.specialization}</option
+      <div class="doctor-boxes">
+        {#each subscribedDoctors as doctor, index}
+          <div
+            class="doctor-box"
+            class:selected={selectedDoctor === doctor}
+            on:click={() => selectDoctor(index)}
           >
+            <span>{doctor.name}</span>
+            <span>{doctor.specialization}</span>
+          </div>
         {/each}
-      </select>
+      </div>
 
       <button type="button" on:click={goToNextStep}>Next</button>
     </form>
@@ -152,107 +160,30 @@ CreateAppointment.svelte
 <style>
   /* CSS styles remain unchanged */
 
-  .time-slot-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 10px;
-    margin-top: 10px;
+  .doctor-boxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
   }
 
-  .time-slot-grid input[type="button"] {
+  .doctor-box {
     padding: 10px;
     border: 1px solid #ccc;
-    text-align: center;
     cursor: pointer;
+    width: 100px; /* Set the width to 100px */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 
-  .time-slot-grid input[type="button"]:hover {
+  .doctor-box:hover {
     background-color: #f2f2f2;
   }
 
-  .time-slot-grid input[type="button"].selected {
+  .doctor-box.selected {
     background-color: #274247;
     color: #fff;
-  }
-  form label {
-    margin-bottom: 5px;
-  }
-
-  form input,
-  form select {
-    margin-bottom: 15px;
-  }
-  select#doctor {
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-  }
-  .time-slot-grid input[type="button"]:hover {
-    background-color: #ddd;
-  }
-  .time-slot-grid input[type="button"].selected {
-    background-color: #007bff;
-    color: #fff;
-  }
-  button[type="submit"] {
-    padding: 10px 15px;
-  }
-  .cancel-button {
-    display: block;
-    margin: 0 auto;
-  }
-  .create-appointment-container {
-    padding: 20px;
-  }  .time-slot-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 10px;
-    margin-top: 10px;
-  }
-
-  .time-slot-grid input[type="button"] {
-    padding: 10px;
-    border: 1px solid #ccc;
-    text-align: center;
-    cursor: pointer;
-  }
-
-  .time-slot-grid input[type="button"]:hover {
-    background-color: #f2f2f2;
-  }
-
-  .time-slot-grid input[type="button"].selected {
-    background-color: #274247;
-    color: #fff;
-  }
-  form label {
-    margin-bottom: 5px;
-  }
-
-  form input,
-  form select {
-    margin-bottom: 15px;
-  }
-  select#doctor {
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-  }
-  .time-slot-grid input[type="button"]:hover {
-    background-color: #ddd;
-  }
-  .time-slot-grid input[type="button"].selected {
-    background-color: #007bff;
-    color: #fff;
-  }
-  button[type="submit"] {
-    padding: 10px 15px;
-  }
-  .cancel-button {
-    display: block;
-    margin: 0 auto;
-  }
-  .create-appointment-container {
-    padding: 20px;
   }
 </style>
