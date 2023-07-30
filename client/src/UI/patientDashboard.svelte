@@ -1,9 +1,13 @@
+<!-- patientDashboard.svelte -->
 <script>
   // @ts-nocheck
   import HospitalDetails from "./HospitalDetails.svelte";
   import { hospitals } from "../store.js";
   import { patients } from "../store.js";
   import { onDestroy } from "svelte";
+
+  let isDataLoaded = false; // New flag to track if data is loaded
+  let isDetailsVisible = false; // Track the visibility of the HospitalDetails component
 
   let subscribedHospitals = [];
   let subscribedDoctors = [];
@@ -14,83 +18,89 @@
 
   // Subscribe to the hospitals store
   const unsubscribeHospitals = hospitals.subscribe((value) => {
-    subscribedHospitals = value.data.hospitals;
+    subscribedHospitals = value?.data?.hospitals || []; // Use optional chaining to handle undefined data
+    isDataLoaded = true; // Set isDataLoaded to true when the data arrives
   });
 
   // Subscribe to the patients store
   const unsubscribePatients = patients.subscribe((value) => {
-    subscribedDoctors = value.data.users.filter(
-      (user) => user.role === "doctor"
-    );
+    subscribedDoctors = value.data.users.filter((user) => user.role === "doctor");
   });
 
   // Unsubscribe from the stores when the component is destroyed
   onDestroy(() => {
     unsubscribeHospitals();
     unsubscribePatients();
-  })
+  });
 
   // Function to handle the "View Details" button click event (to show the hospital details)
   function showHospitalDetails(hospital) {
     selectedHospital = hospital;
+    isDetailsVisible = true; // Show the HospitalDetails component
   }
 
   // Function to handle the "Close" button click event (to go back to the hospital list)
   function closeDetails() {
     selectedHospital = null;
+    isDetailsVisible = false; // Hide the HospitalDetails component
   }
 </script>
 
 <div class="container">
-  {#if selectedHospital === null}
-    <!-- Show the hospital list -->
-    {#if subscribedHospitals.length > 0}
-      <ul class="hospital-list">
-        {#each subscribedHospitals as hospital}
-          <li class="hospital-item">
-            <div class="hospital-details">
-              <div class="hospital-info">
+  <!-- Show the loading animation while data is loading -->
+  {#if !isDataLoaded}
+    <div class="loading-animation">
+      <!-- Replace this with your desired loading animation -->
+      Loading...
+    </div>
+  {:else}
+    {#if !isDetailsVisible}
+      <!-- Show the hospital list -->
+      {#if subscribedHospitals.length > 0}
+        <ul class="hospital-list">
+          {#each subscribedHospitals as hospital}
+            <li class="hospital-item">
+              <div class="hospital-details">
+                <div class="hospital-info">
                   <img
                     class="hospital-image"
                     src={`./src/assets/${hospital.images[0]}`}
                     alt={hospital.name}
                   />
-                <p class="hospital-name">
-                  <i class="fas fa-hospital" style="color: #6C5CE7" />
-                  {hospital.name}
-                </p>
-                 <p class="hospital-phone">
-                  <i class="fas fa-phone-alt" style="color: #009688" />
-                  {hospital.phoneNumber}
-                </p>
-                <p class="hospital-rating">
-                  <i class="fas fa-star" style="color: #FFD700" />
-                  {hospital.ratingAverage} ({hospital.ratingQuantity} reviews)
-                </p>
-                <button
-                  class="custom-button"
-                  on:click={() => showHospitalDetails(hospital)}
-                >
-                  View Details
-                </button>
+                  <p class="hospital-name">
+                    <i class="fas fa-hospital" style="color: #6C5CE7" />
+                    {hospital.name}
+                  </p>
+                  <p class="hospital-phone">
+                    <i class="fas fa-phone-alt" style="color: #009688" />
+                    {hospital.phoneNumber}
+                  </p>
+                  <p class="hospital-rating">
+                    <i class="fas fa-star" style="color: #FFD700" />
+                    {hospital.ratingAverage} ({hospital.ratingQuantity} reviews)
+                  </p>
+                  <button
+                    class="custom-button"
+                    on:click={() => showHospitalDetails(hospital)}
+                  >
+                    View Details
+                  </button>
+                </div>
               </div>
-            </div>
-          </li>
-        {/each}
-      </ul>
-    {:else}
-      <p class="no-hospitals">No hospitals found.</p>
+            </li>
+          {/each}
+        </ul>
+      {:else}
+        <p class="no-hospitals">No hospitals found.</p>
+      {/if}
     {/if}
   {/if}
-  {#if selectedHospital !== null}
-    <!-- Render HospitalDetails component with the selected hospital -->
-    <HospitalDetails hospital={selectedHospital} 
-    on:closeDetails={() => closeDetails()}
-    />
-  {/if}
-  
-</div>
 
+  <!-- Render HospitalDetails component with the selected hospital -->
+  {#if isDataLoaded && isDetailsVisible && selectedHospital}
+    <HospitalDetails hospital={selectedHospital} on:closeDetails={() => closeDetails()} />
+  {/if}
+</div>
 
 <style>
   .container {
@@ -99,7 +109,8 @@
     margin: 0 auto;
     padding: 20px;
   }
-.hospital-phone,
+
+  .hospital-phone,
   .hospital-rating {
     font-size: 16px;
     margin-bottom: 5px;
@@ -114,19 +125,19 @@
   }
 
   .hospital-rating i {
-    color: #FFD700; /* Gold color for the star icon */
+    color: #ffd700; /* Gold color for the star icon */
   }
 
   .hospital-rating {
     color: #777;
   }
+
   h1 {
     font-size: 24px;
     margin-bottom: 16px;
     text-align: center;
   }
 
-  
   .hospital-list {
     list-style-type: none;
     padding: 0;
@@ -148,6 +159,7 @@
     text-align: center;
     position: relative;
   }
+
   .hospital-image {
     width: 100%;
     height: 200px;
@@ -201,5 +213,13 @@
     font-size: 16px;
     margin-top: 20px;
   }
-</style>
 
+  /* CSS for the loading animation */
+  .loading-animation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    height: 200px;
+  }
+</style>

@@ -1,6 +1,5 @@
 const Review = require("../models/reviewModel");
 
-
 exports.setTourUserId = (req, res, next) => {
   if (!req.body.tour) req.body.tour = req.params.tourId;
   if (!req.body.user) req.body.user = req.user.id;
@@ -9,8 +8,8 @@ exports.setTourUserId = (req, res, next) => {
 
 exports.getAllReview = async (req, res, next) => {
   try {
-    let filter={}
-    if(req.params.hopitalId) filter = {hospital:req.params.hospitalId}
+    let filter = {};
+    if (req.params.hopitalId) filter = { hospital: req.params.hospitalId };
 
     const reviews = await Review.find(filter);
 
@@ -23,9 +22,9 @@ exports.getAllReview = async (req, res, next) => {
     });
   } catch (error) {
     return res.status(400).json({
-        status: "failed",
-        message: error,
-      })
+      status: "failed",
+      message: error,
+    });
   }
 };
 
@@ -39,11 +38,10 @@ exports.createReview = async (req, res) => {
       },
     });
   } catch (error) {
-console.error(error)
+    console.error(error);
     return res.status(404).json({
-        status: "failed",
-        message: error,
-      })
-    
+      status: "failed",
+      message: error,
+    });
   }
 };
