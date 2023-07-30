@@ -46,6 +46,7 @@
         </div>
         <div class="additional">
           <div class="forgot-password">Forgot Password</div>
+          <!-- svelte-ignore a11y-invalid-attribute -->
           <div class="register"><a href="#" on:click={()=>dispatcher('signup')}>Sign Up</a></div>
         </div>
       </div>
