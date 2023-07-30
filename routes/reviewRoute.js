@@ -8,7 +8,7 @@ reviewRouter
   .route("/")
   .get(
     authController.protect,
-    reviewController.setTourUserId,
+    reviewController.setHospitalUserId,
     reviewController.getAllReview
   )
   .post(reviewController.createReview);
@@ -17,12 +17,19 @@ reviewRouter
   .route("/:id")
   .get(
     authController.protect,
-    reviewController.setTourUserId,
+    reviewController.setHospitalUserId,
     reviewController.getAllReview
-  )
-  .post(
-    authController.protect,
-    reviewController.setTourUserId,
-    reviewController.createReview
-  );
+)
+  reviewRouter
+    .route("/doctorreview/:id")
+    .get(
+      authController.protect,
+      reviewController.setDoctorUserId,
+      reviewController.getAllReview
+    )
+    .post(
+      authController.protect,
+      reviewController.setDoctorUserId,
+      reviewController.createReview
+    );
 module.exports = reviewRouter;

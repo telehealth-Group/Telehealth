@@ -16,7 +16,7 @@
   console.log(user, "from overview");
 
   let activeSection = "Dashboard";
-
+console.log(user)
   const handleSectionChange = (section) => {
     activeSection = section;
   };
@@ -25,15 +25,6 @@
 <main>
   <nav class="vertical-header">
     <ul>
-      <!-- <li>
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-        />
-        <nav>
-          <h3 class="logo">Telehealth<i class="fas fa-medkit" /></h3>
-        </nav>
-      </li> -->
       <li class:selected={activeSection === "Dashboard"}>
         <button on:click={() => handleSectionChange("Dashboard")}
           >🏠 Dashboard</button

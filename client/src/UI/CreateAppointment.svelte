@@ -1155,26 +1155,4 @@
   .appointment-confirmation button:hover {
     background-color: #0056b3;
   }
-  .appointment-confirmation {
-    padding: 20px;
-    background-color: #f7f7f7;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-top: 10px;
-    max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
-    transition: transform 0.3s ease;
-  }
-
-  .appointment-confirmation.show {
-    transform: scale(1);
-  }
-
-  .appointment-confirmation.hide {
-    transform: scale(0);
-    display: none;
-  }
 </style>

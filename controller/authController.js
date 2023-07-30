@@ -3,6 +3,7 @@ const { promisify } = require("util");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const Email = require("../utils/email");
+const Hospital = require("../models/hospitalmodel");
 
 
 const sendToken = function (id) {
@@ -68,15 +69,20 @@ exports.login = async (req, res) => {
 
     // 2) Check if user exists & pass is correct
     const user = await User.findOne({ email }).select("+password");
-    if (!user || !(await user.correctPassword(password, user.password))) {
+    const hospital = await Hospital.findOne({ email }).select("+password");
+    
+    const data = user ? user : hospital;
+    
+    if(!data || !(await data.correctPassword(password, data.password))) {
       return res.status(401).json({
         status: "fail",
         message: "Incorrect email or password",
       });
     }
-    createSendToken(user, 201, res);
+    createSendToken(data, 201, res);
     
   } catch (error) {
+    console.error(error)
     res.status(404).json({
       status: "fail",
       message: error.message,

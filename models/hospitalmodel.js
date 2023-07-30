@@ -83,6 +83,10 @@ const hospitalSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    role: {
+      type: String,
+      default: "admin",
+    },
     availableTimes: [
       {
         time: [
@@ -160,6 +164,15 @@ hospitalSchema.methods.createPasswordResetToken = function () {
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
   return resetToken;
 };
+
+hospitalSchema.methods.correctPassword = async function (
+  candidatePassword,
+
+  userPassword
+) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
+
 const Hospital = mongoose.model("Hospital", hospitalSchema);
 
 module.exports = Hospital;
