@@ -1,12 +1,16 @@
 const Review = require("../models/reviewModel");
 
 
-exports.setTourUserId = (req, res, next) => {
-  if (!req.body.tour) req.body.tour = req.params.tourId;
+exports.setHospitalUserId = (req, res, next) => {
+  if (!req.body.hospital) req.body.hospital = req.params.hopitalId;
   if (!req.body.user) req.body.user = req.user.id;
   next();
 };
-
+exports.setDoctorUserId = (req, res, next) => {
+  if (!req.body.hospital.doctor) req.body.hospital.doctor = req.params.doctorId;
+  if (!req.body.user) req.body.user = req.user.id;
+  next();
+};
 exports.getAllReview = async (req, res, next) => {
   try {
     let filter={}

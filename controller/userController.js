@@ -120,10 +120,8 @@ exports.getAllUsers = async (req, res) => {
       .populate("reviews")
       .populate("DoctorAppointments")
       .populate("PaitentAppointments")
-      .exec();;
-     users.forEach((element) => {
-       console.log(element.DoctorAppointments);
-     });
+      .exec();
+    
     res.status(200).json({
       status: true,
       results: users.length,
