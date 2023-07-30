@@ -8,6 +8,7 @@
   import Doctor from "./Doctor.svelte";
   import DoctorDashboard from "./DoctorDashboard.svelte";
   import Settings from "./settings.svelte";
+  import AdminDashboard from "./AdminDashboard.svelte";
 
   export let role;
   export let user;
@@ -80,6 +81,8 @@
         <PatientDashboard />
       {:else if role === "doctor"}
         <DoctorDashboard />
+      {:else if role === "admin"}
+        <AdminDashboard />
       {:else}
         <Dashboard />
       {/if}
@@ -127,7 +130,7 @@
     background-color: #ffffff;
     box-sizing: border-box;
     overflow-y: auto; /* Add scrollbar for content overflow */
-    margin-top: 80px;
+    margin-top: 90px;
   }
 
   .selected {
