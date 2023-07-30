@@ -93,7 +93,16 @@ userSchema.virtual("reviews", {
   foreignField: "doctor",
   localField: "_id",
 });
-
+userSchema.virtual("DoctorAppointments", {
+  ref: "Appointment",
+  foreignField: "doctor",
+  localField: "_id",
+});
+userSchema.virtual("PaitentAppointments", {
+  ref: "Appointment",
+  foreignField: "patient",
+  localField: "_id",
+});
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next()
   this.password = await bcrypt.hash(this.password, 12)

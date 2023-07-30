@@ -111,7 +111,11 @@ hospitalSchema.virtual("reviews", {
   foreignField: "hospital",
   localField: "_id",
 });
-
+hospitalSchema.virtual("appointments", {
+  ref: "Appointment",
+  foreignField: "hospital",
+  localField: "_id",
+});
 hospitalSchema.pre(/^find/, function (next) {
   this.find({ active: { $ne: false } });
   next();
