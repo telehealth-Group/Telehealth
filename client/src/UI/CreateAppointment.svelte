@@ -4,16 +4,23 @@
   import { onDestroy } from "svelte";
   import { createEventDispatcher } from "svelte";
   import { patients } from "../store.js"; // Assuming you have stores for patients and doctors
-
+  
   export let close;
+  let selectedDoctorName = "";
+  let selectedTimeSlot = "";  // New state variable to control the visibility of the payment page
+  let paymentMethod = "";
+  let showPayment = false;
+  let showAppointmentConfirmation = false;
 
   // Data to populate the form
   let selectedDoctor = null; // Updated to store the selected doctor object
   let selectedSlot = null;
   let date = new Date(); // Initialize with the current date
-
+  let showModal = false;
+  
+  
   const dispatch = createEventDispatcher();
-
+  
   // Function to close the Create Appointment view
   function closeCreateAppointment() {
     dispatch("closeCreateAppointment");
@@ -26,37 +33,39 @@
       (booking) =>
         booking.date === date.toDateString() && booking.slot === selectedSlot
     );
-
+    
     if (!isSlotAvailable) {
       alert(
         "The selected date and time slot are not available. Please choose another date or time slot."
-      );
-      return;
+        );
+        return;
+      }
+      
+      // If the slot is available, add it to the bookedDates list
+      bookedDates = [
+        ...bookedDates,
+        { date: date.toDateString(), slot: selectedSlot },
+      ];
+      
+      // Handle the logic to submit the appointment details here
+      // For example, you can save the appointment details to a database or another store
+      console.log("Appointment details submitted:");
+      console.log("Doctor: ", selectedDoctor);
+      console.log("Date: ", date.toDateString());
+      console.log("Time Slot: ", selectedSlot);
+      
+      // Close the Create Appointment view after submission
+      closeCreateAppointment();
+      showAppointmentConfirmation = true
+      showPaymentPage = false
     }
-
-    // If the slot is available, add it to the bookedDates list
-    bookedDates = [
-      ...bookedDates,
-      { date: date.toDateString(), slot: selectedSlot },
-    ];
-
-    // Handle the logic to submit the appointment details here
-    // For example, you can save the appointment details to a database or another store
-    console.log("Appointment details submitted:");
-    console.log("Doctor: ", selectedDoctor);
-    console.log("Date: ", date.toDateString());
-    console.log("Time Slot: ", selectedSlot);
-
-    // Close the Create Appointment view after submission
-    closeCreateAppointment();
-  }
-
-  // Subscribe to the patients store to get the list of doctors
-  let subscribedDoctors = [];
-  const unsubscribePatients = patients.subscribe((value) => {
-    subscribedDoctors = value.data.users.filter(
-      (user) => user.role === "doctor"
-    );
+    
+    // Subscribe to the patients store to get the list of doctors
+    let subscribedDoctors = [];
+    const unsubscribePatients = patients.subscribe((value) => {
+      subscribedDoctors = value.data.users.filter(
+        (user) => user.role === "doctor"
+        );
   });
 
   // Unsubscribe from the patients store when the component is destroyed
@@ -87,37 +96,36 @@
 
   // Add a new variable to control the step of the form
   let showDoctors = false;
-
+  
   // Function to handle the "Next" button click
   function goToNextStep() {
     if (!selectedDoctor) {
       alert("Please select a doctor.");
       return;
     }
-
+    
     // Show the doctors and time slots step
     showDoctors = true;
   }
-
+  
   // Function to handle the "Back" button click
   function goBackToDoctorsSelection() {
     // Hide the doctors and time slots step and go back to the doctors selection step
     showDoctors = false;
   }
-
+  
   // Function to handle doctor selection
   function selectDoctor(index) {
     selectedDoctor = subscribedDoctors[index];
   }
-
+  
   // New state variable to control the visibility of the modal
-  let showModal = false;
-
+  
   // Function to show the modal
   function showDoctorDetails() {
     showModal = true;
   }
-
+  
   // Function to hide the modal
   function hideDoctorDetails() {
     showModal = false;
@@ -129,44 +137,41 @@
       hideDoctorDetails();
     }
   }
-
+  
   // Add event listener to the document
   document.addEventListener("click", handleClickOutside);
+  
 
-  // New state variable to control the visibility of the payment page
-  let paymentMethod = "";
-  let showPayment = false;
-
+  
   // Function to show the payment page
   function showPaymentPage() {
     if (!selectedSlot) {
       alert("Please select a time slot.");
       return;
     }
-
+    
     // Show the payment page
     showPayment = true;
   }
-
+  
   // New state variable to control the visibility of the appointment confirmation page
-  let showAppointmentConfirmation = false;
-
+  
   // Function to handle the "Checkout" button click
-  function handleCheckout() {
-    if (!selectedSlot) {
-      alert("Please select a time slot.");
-      return;
-    }
+  // function handleCheckout() {
+  //   if (!selectedSlot) {
+    //     alert("Please select a time slot.");
+    //     return;
+  //   }
 
-    if (!paymentMethod) {
-      alert("Please select a payment method.");
-      return;
-    }
+  //   if (!paymentMethod) {
+  //     alert("Please select a payment method.");
+  //     return;
+  //   }
 
-    // Show the appointment confirmation page
-    showAppointmentConfirmation = true;
-  }
-
+  //   // Show the appointment confirmation page
+  //   showAppointmentConfirmation = true;
+  // }
+  
   // Function to handle the "Make Appointment" button click in the appointment confirmation page
   function handleMakeAppointment() {
     // Add the logic to confirm and make the appointment here
@@ -175,14 +180,35 @@
     // Close the Create Appointment view after confirmation
     closeCreateAppointment();
   }
-
+  
   // Function to go back to the time slot selection step
   function goBackToTimeSlotSelection() {
     showPayment = false;
   }
-
+  
   // New state variable to store the selected payment method
-
+  
+  function handleCheckout() {
+    if (!selectedSlot) {
+      alert("Please select a time slot.");
+      return;
+    }
+  
+    if (!paymentMethod) {
+      alert("Please select a payment method.");
+      return;
+    }
+  
+    // Update the selectedDoctorName and selectedTimeSlot variables
+    selectedDoctorName = selectedDoctor
+    selectedTimeSlot = selectedSlot;
+  
+    // Show the appointment confirmation page
+    showAppointmentConfirmation = true;
+    showPaymentPage = false
+  }
+  console.log(showAppointmentConfirmation);
+  console.log(selectDoctor);
   // Function to handle the "Checkout" button click
 </script>
 
@@ -195,7 +221,7 @@
       <div class="doctor-boxes">
         {#each subscribedDoctors as doctor, index}
           {#if index < 18}
-            <!-- Display 18 doctors (3 rows of 6 doctors each) -->
+          <!-- Display 18 doctors (3 rows of 6 doctors each) -->
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div
               class="doctor-box"
@@ -260,9 +286,9 @@
   {/if}
   <!-- ... Previous code ... -->
 
-  {#if showPayment}
+  {#if showPayment && !showAppointmentConfirmation }
     <div class="payment-page content">
-      <form>
+      <form on:submit|preventDefault>
         <div class="payment-form">
           <div class="payment-forming">
             <h3>Payment Page</h3>
@@ -302,7 +328,7 @@
               </div>
 
               <!-- Payment Methods -->
-              <div class="form-group">
+              <div class="form-group flex-container">
                 <label for="paymentMethod">Payment Method:</label>
                 <select
                   id="paymentMethod"
@@ -314,7 +340,7 @@
                     >Select a payment method</option
                   >
                   <option value="creditCard">Credit Card</option>
-                  <option value="eMoney">E-Money</option>
+                  <option value="eMoney">Tele-birr</option>
                   <option value="cashOnDelivery">Cash on Delivery</option>
                 </select>
               </div>
@@ -348,7 +374,7 @@
               <!-- Payment Details (E-Money) -->
               {#if paymentMethod === "eMoney"}
                 <div class="form-group">
-                  <label for="eMoney">E-Money Account:</label>
+                  <label for="eMoney">Telebirr-PhoneNumber:</label>
                   <input type="text" id="eMoney" name="eMoney" required />
                 </div>
               {/if}
@@ -381,7 +407,7 @@
             </div>
 
             <div class="button-container">
-              <button type="submit">Checkout</button>
+              <button type="submit" on:click={submitAppointment}>Checkout</button>
               <button type="button" on:click={goBackToTimeSlotSelection}
                 >Back</button
               >
@@ -394,16 +420,24 @@
 
   <!-- ... Previous code ... -->
 
-  {#if showAppointmentConfirmation}
-    <div class="appointment-confirmation">
-      <h3>Appointment Confirmation</h3>
-      <p>
-        Appointment with {selectedDoctor.name} on {date.toDateString()} at {selectedSlot}
-        has been confirmed.
-      </p>
-      <button type="button" on:click={closeCreateAppointment}>Close</button>
-    </div>
+  <!-- ... Previous code ... -->
+
+{#if showAppointmentConfirmation}
+<!-- Appointment Confirmation Page -->
+<div class="appointment-confirmation show">
+  <h3>Appointment Confirmation</h3>
+  {#if selectedDoctor && selectedSlot}
+    <p>
+      Appointment with {selectedDoctor.name} on {date.toDateString()} at {selectedSlot}
+      has been confirmed.
+    </p>
+  {:else}
+    <p>Appointment details missing.</p>
   {/if}
+  <button type="button" on:click={close}>Close</button>
+</div>
+{/if}
+
 </div>
 
 <style>
@@ -650,7 +684,7 @@
 
   .button-container button {
     flex: 1;
-    margin: 0;
+    margin-left: 30px;
   }
   .button-container {
     display: flex;
@@ -1056,5 +1090,91 @@
 
   .form-group.flex-container .flex-item {
     flex: 1;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+
+  .button-container button {
+    padding: 12px 25px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+
+  .button-container button:last-child {
+    background-color: #d9534f;
+  }
+
+  .button-container button:hover {
+    background-color: #0056b3;
+  }
+
+  .button-container button:last-child:hover {
+    background-color: #c9302c;
+  }
+
+  .appointment-confirmation {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    margin: 20px auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .appointment-confirmation h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .appointment-confirmation p {
+    margin-bottom: 20px;
+  }
+
+  /* Additional styles for the close button */
+  .appointment-confirmation button {
+    padding: 12px 25px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+
+  .appointment-confirmation button:hover {
+    background-color: #0056b3;
+  }
+  .appointment-confirmation {
+    padding: 20px;
+    background-color: #f7f7f7;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    transition: transform 0.3s ease;
+  }
+
+  .appointment-confirmation.show {
+    transform: scale(1);
+  }
+
+  .appointment-confirmation.hide {
+    transform: scale(0);
+    display: none;
   }
 </style>
