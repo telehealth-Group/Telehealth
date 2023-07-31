@@ -109,7 +109,10 @@ userSchema.pre('save', async function (next) {
   this.passwordConfirm = undefined
   next()
 })
-
+userSchema.pre(/^find/, function (next) {
+  this.find({ role: { $ne: 'delete' } });
+  next();
+});
 userSchema.methods.correctPassword = async function (
   candidatePassword,
  

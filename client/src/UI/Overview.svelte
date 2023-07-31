@@ -78,11 +78,11 @@ console.log(user)
         <Dashboard />
       {/if}
     {:else if activeSection === "Doctors"}
-      <Doctor />
+      <Doctor {user}/>
     {:else if activeSection === "Patients"}
       <Patient />
     {:else if activeSection === "Appointment"}
-      <Appointment {role}/>
+      <Appointment {role} {user}/>
     {:else if activeSection === "Settings"}
       <Settings {user}/>
     {/if}

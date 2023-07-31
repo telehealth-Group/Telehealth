@@ -3,17 +3,58 @@
   // @ts-nocheck
   export let appointment;
   import { createEventDispatcher } from "svelte";
+  import axios from "axios"; // Import Axios library
 
   const dispatch = createEventDispatcher();
-  
+
+  export let role;
+  let isUpdating = false;
+  let isCanceling = false;
+  let updatedStatus = appointment.status;
+
   // Function to close the appointment details view
   function closeDetails() {
     // Emit a custom event to notify the parent component
     dispatch("closeDetails");
   }
-  
-  export let role;
+
+  // Function to handle the appointment update
+  async function updateAppointment() {
+    try {
+      isUpdating = true;
+      const response = await axios.patch(`http://127.0.0.1:3000/api/users/updateAppointment/${appointment._id}`, {
+        status: updatedStatus,
+      });
+      if (response.status === 200) {
+        appointment.status = updatedStatus;
+        isUpdating = false;
+      } else {
+        throw new Error("Failed to update appointment.");
+      }
+    } catch (error) {
+      console.error(error);
+      isUpdating = false;
+    }
+  }
+
+  // Function to handle the appointment cancellation
+  async function cancelAppointment() {
+    try {
+      isCanceling = true;
+      const response = await axios.patch(`http://127.0.0.1:3000/api/users/cancelAppointment/${appointment._id}`);
+      if (response.status === 204) {
+        appointment.status = "canceled";
+        isCanceling = false;
+      } else {
+        throw new Error("Failed to cancel appointment.");
+      }
+    } catch (error) {
+      console.error(error);
+      isCanceling = false;
+    }
+  }
 </script>
+
 <div class="appointment-details">
   <div class="header">
     <h1>Appointment Details</h1>
@@ -25,7 +66,6 @@
       <h3>Date & Time</h3>
       <p>{new Date(appointment.dateTime).toLocaleString()}</p>
     </div>
-
     <div class="hospital">
       <h3>Hospital</h3>
       <p>{appointment.hospital ? appointment.hospital.name : 'N/A'}</p>
@@ -51,8 +91,6 @@
             <p><strong>General Medical History:</strong> {appointment.patient.medicalHistory.generalMedicalHistory}</p>
           </div>
         {/if}
-      {:else}
-        <p>N/A</p>
       {/if}
     </div>
 
@@ -81,19 +119,19 @@
 
     <div class="status">
       <h3>Status</h3>
-      {#if appointment.status === "completed"}
-        <p>Completed</p>
-      {:else if appointment.status === "upcoming"}
-        <p>Upcoming</p>
-      {:else if appointment.status === "canceled"}
-        <p>Canceled</p>
+      {#if isUpdating || isCanceling}
+        <p>Updating...</p>
       {:else}
-        <p>N/A</p>
+        {#if appointment.status === "upcoming"}
+          <p>Upcoming</p>
+          <button on:click={cancelAppointment}>Cancel Appointment</button>
+        {:else}
+          <p>Canceled</p>
+        {/if}
       {/if}
     </div>
   </div>
 </div>
-
 
 <style>
   .medical-history {
@@ -221,5 +259,27 @@
   p {
     font-size: 16px;
     line-height: 1.5;
+  }
+
+  /* Cancel Button Style */
+  button {
+    background: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    margin-top: 10px;
+  }
+
+  button:hover {
+    background: #c0392b;
+  }
+
+  button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #ffa69e;
   }
 </style>
