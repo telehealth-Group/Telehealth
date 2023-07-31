@@ -134,8 +134,8 @@ exports.createHospitalDoctor = async(req,res)=>{
 exports.deleteDoctor = async (req, res) => {
   try {
     const doctor = await User.findByIdAndUpdate(
-      req.params,
-      { isActive: false },
+      req.params.id,
+      { role: 'delete' },
       { new: true }
     );
 
@@ -153,7 +153,7 @@ exports.deleteDoctor = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       status: false,
       message: error.message,
     });

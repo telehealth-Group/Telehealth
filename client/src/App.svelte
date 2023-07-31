@@ -18,6 +18,7 @@
     name = receivedData.user.name;
     role = receivedData.user.role;
     console.log(role);
+    console.log(receivedData, "from app");
   }
 
   onMount(async () => {

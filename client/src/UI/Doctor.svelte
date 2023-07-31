@@ -1,13 +1,11 @@
-<!-- Doctors.svelte -->
 <script>
-  // Import the required modules
-  import { patients } from "../store.js";
-  import { onDestroy } from "svelte";
+  export let user;
+
+  import axios from 'axios';
 
   // Create a local variable to store the filtered doctors
   let searchQuery = "";
-  let subscribedDoctors = [];
-  let filteredDoctors = [];
+  let filteredDoctors = user.user.doctors; // Initialize with all doctors
 
   // Function to handle search input changes
   function handleSearch(event) {
@@ -17,29 +15,101 @@
 
   // Function to filter doctors based on the search query and role
   function filterDoctors() {
-    filteredDoctors = subscribedDoctors.filter(
+    filteredDoctors = user.user.doctors.filter(
       (doctor) =>
         doctor.name.toLowerCase().includes(searchQuery) ||
         doctor.specialization.toLowerCase().includes(searchQuery) ||
         doctor.email.toLowerCase().includes(searchQuery) ||
-        doctor.phone.toLowerCase().includes(searchQuery) ||
-        doctor.location.toLowerCase().includes(searchQuery)
+        doctor.phone.toLowerCase().includes(searchQuery)
     );
   }
 
-  // Subscribe to the patients store and update the filtered doctors
-  const unsubscribePatients = patients.subscribe((value) => {
-    subscribedDoctors = value.data.users.filter(
-      (user) => user.role === "doctor"
-    );
+  // Function to add a new doctor
+  async function addDoctor() {
+    try {
+      const newDoctor = {
+        name: "New Doctor",
+        specialization: "Specialization",
+        email: "new.doctor@example.com",
+        phone: "1234567890",
+      };
 
-    // Call the function to update the filtered doctors when the data changes
-    filterDoctors();
-  });
+      const response = await axios.post("http://127.0.0.1:3000/api/users/hospital/createDoctor", newDoctor);
 
-  onDestroy(() => {
-    unsubscribePatients();
-  });
+      if (response.status === 201) {
+        const doctorData = response.data;
+        user.user.doctors.push(doctorData);
+        filterDoctors();
+      } else {
+        // Handle error case
+        console.error("Failed to add the doctor.");
+      }
+    } catch (error) {
+      console.error("Failed to add the doctor.", error);
+    }
+  }
+
+  // Function to delete a doctor
+  let doctorToDelete; // Variable to store the doctor to be deleted
+
+  function openDeleteModal(doctor) {
+    doctorToDelete = doctor;
+    showDeleteModal = true;
+  }
+
+  function closeDeleteModal() {
+    showDeleteModal = false;
+  }
+
+  async function confirmDelete() {
+    try {
+      const response = await axios.patch(`http://127.0.0.1:3000/api/users/hospital/deleteDoctor/${doctorToDelete._id}`, { role: 'delete' });
+
+      if (response.status === 200) {
+        user.user.doctors = user.user.doctors.filter((d) => d._id !== doctorToDelete._id);
+        filterDoctors();
+        closeDeleteModal(); // Close the modal after successful deletion
+      } else {
+        // Handle error case
+        console.error("Failed to delete the doctor.");
+      }
+    } catch (error) {
+      console.error("Failed to delete the doctor.", error);
+    }
+  }
+
+  // Variables to control the modals
+  let showDeleteModal = false;
+  let showAddModal = false;
+
+  // Function to show the add modal
+  function showAddDoctorModal() {
+    showAddModal = true;
+  }
+
+  // Function to hide the add modal
+  function hideAddDoctorModal() {
+    showAddModal = false;
+  }
+
+  // Function to handle form submission and add a new doctor
+  function submitAddModal() {
+    // Perform validation if needed
+
+    // Add the new doctor
+    user.user.doctors = [...user.user.doctors, newDoctorData];
+
+    // Close the modal
+    hideAddDoctorModal();
+  }
+
+  // Variables to store new doctor data
+  let newDoctorData = {
+    name: "",
+    specialization: "",
+    email: "",
+    phone: "",
+  };
 </script>
 
 <main class="dashboard">
@@ -51,6 +121,9 @@
       bind:value={searchQuery}
       on:input={handleSearch}
     />
+    <button class="add-button" on:click={showAddDoctorModal}>
+      <i class="fas fa-plus"></i>
+    </button>
   </div>
 
   <!-- Doctors Table -->
@@ -64,7 +137,7 @@
             <th>Specialization</th>
             <th>Email</th>
             <th>Phone</th>
-            <th>Location</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -74,15 +147,64 @@
               <td><i class="fas fa-stethoscope"></i> {doctor.specialization}</td>
               <td><i class="fas fa-envelope"></i> {doctor.email}</td>
               <td><i class="fas fa-phone"></i> {doctor.phone}</td>
-              <td><i class="fas fa-map-marker-alt"></i> {doctor.location}</td>
+              <td>
+                <button class="delete-button" on:click={() => openDeleteModal(doctor)}>
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </td>
             </tr>
           {/each}
         </tbody>
       </table>
     {:else}
-      <p class="no-patients">No matching doctors found.</p>
+      <p class="no-patients">No doctors found.</p>
     {/if}
   </div>
+
+  <!-- Delete Doctor Modal -->
+  {#if showDeleteModal}
+    <div class="modal-background">
+      <div class="modal-content">
+        <h2>Delete Doctor</h2>
+        <p>Are you sure you want to delete the doctor?</p>
+        <div class="modal-buttons">
+          <button type="button" on:click={confirmDelete}>Yes</button>
+          <button type="button" on:click={closeDeleteModal}>No</button>
+        </div>
+      </div>
+    </div>
+  {/if}
+
+  <!-- Add Doctor Modal -->
+  {#if showAddModal}
+    <div class="modal-background">
+      <div class="modal-content">
+        <h2>Add Doctor</h2>
+        <form on:submit|preventDefault={submitAddModal}>
+          <label>
+            Name:
+            <input type="text" bind:value={newDoctorData.name} />
+          </label>
+          <label>
+            Specialization:
+            <input type="text" bind:value={newDoctorData.specialization} />
+          </label>
+          <label>
+            Email:
+            <input type="email" bind:value={newDoctorData.email} />
+          </label>
+          <label>
+            Phone:
+            <input type="tel" bind:value={newDoctorData.phone} />
+          </label>
+          <div class="modal-buttons">
+            <button type="submit">Add</button>
+            <button type="button" on:click={hideAddDoctorModal}>Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  {/if}
 </main>
 
 <style>
@@ -159,7 +281,7 @@
     cursor: pointer;
   }
 
-  /* No Patients */
+  /* No Doctors */
 
   .no-patients {
     text-align: center;
@@ -185,4 +307,97 @@
     outline: none;
     border-color: #3b5998;
   }
+
+  .search-container button {
+    background: #3b5998;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .search-container button i {
+    margin-right: 5px;
+  }
+
+  .search-container .add-button {
+    background: #3b5998;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .search-container .add-button i {
+    margin-right: 5px;
+  }
+
+  .table .delete-button {
+    /* background: #e74c3c; */
+    color: red;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  .table .delete-button i {
+    margin-right: 5px;
+    font-size: 20px; /* Make the delete icon bigger */
+  }
+
+   /* Modal styles */
+  .modal-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modal-content h2 {
+    margin-bottom: 15px;
+    text-align: center;
+    color: #3b5998;
+  }
+
+  .modal-content p {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .modal-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .modal-buttons button {
+    margin: 0 10px;
+    background-color: #3b5998;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
 </style>
