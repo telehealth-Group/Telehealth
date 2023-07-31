@@ -66,11 +66,9 @@ exports.login = async (req, res) => {
         message: "Please provide email and password",
       });
     }
-
     // 2) Check if user exists & pass is correct
     const user = await User.findOne({ email }).select("+password");
-    const hospital = await Hospital.findOne({ email }).select("+password");
-    
+    const hospital = await Hospital.findOne({ email }).select("+password")
     const data = user ? user : hospital;
     
     if(!data || !(await data.correctPassword(password, data.password))) {
@@ -79,7 +77,23 @@ exports.login = async (req, res) => {
         message: "Incorrect email or password",
       });
     }
-    createSendToken(data, 201, res);
+ 
+    let populatedUser;
+    if (data instanceof User && data.role === "patient") {
+      populatedUser = await User.findById(data._id)
+        .populate("reviews")
+        .populate("PaitentAppointments");
+    } else if (data instanceof User && data.role === "doctor") {
+      populatedUser = await User.findById(data._id)
+        .populate("reviews")
+        .populate("DoctorAppointments");
+    } else if (data instanceof Hospital) {
+      populatedUser = await Hospital.findById(data._id)
+        .populate("reviews")
+        .populate("appointments");
+    }
+    
+    createSendToken(populatedUser, 201, res);
     
   } catch (error) {
     console.error(error)

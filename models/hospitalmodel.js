@@ -120,6 +120,8 @@ hospitalSchema.virtual("appointments", {
   foreignField: "hospital",
   localField: "_id",
 });
+
+
 hospitalSchema.pre(/^find/, function (next) {
   this.find({ active: { $ne: false } });
   next();
@@ -138,12 +140,7 @@ hospitalSchema.pre("save", async function (next) {
   next();
 });
 
-hospitalSchema.methods.correctPassword = async function (
-  candidatePassword,
-  userPassword
-) {
-  return await bcrypt.compare(candidatePassword, userPassword);
-};
+
 hospitalSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   if (this.passwordChangedAt) {
     const changedTimestamp = parseInt(
@@ -167,7 +164,6 @@ hospitalSchema.methods.createPasswordResetToken = function () {
 
 hospitalSchema.methods.correctPassword = async function (
   candidatePassword,
-
   userPassword
 ) {
   return await bcrypt.compare(candidatePassword, userPassword);

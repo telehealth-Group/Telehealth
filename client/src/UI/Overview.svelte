@@ -73,7 +73,7 @@ console.log(user)
       {:else if role === "doctor"}
         <DoctorDashboard />
       {:else if role === "admin"}
-        <AdminDashboard />
+        <AdminDashboard data={user}/>
       {:else}
         <Dashboard />
       {/if}

@@ -32,7 +32,7 @@ exports.topHospitals = (req, res, next) => {
 
 exports.getHospital = async (req, res) => {
   try {
-    const hospital = await Hospital.findById(req.params.id).populate('reviews');
+    const hospital = await Hospital.findById(req.params.id).populate('reviews').populate("appointments").exec();;
 
     res.status(200).json({
       status: true,
