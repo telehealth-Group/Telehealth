@@ -93,7 +93,7 @@ exports.deleteMe = async (req, res, next) => {
 };
 
 
-exports.updateOne = (Model) => async (req, res) => {
+exports.updateOne = () => async (req, res) => {
   try {
     const doc = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
