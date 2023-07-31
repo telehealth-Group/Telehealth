@@ -86,7 +86,7 @@
     {/if}
   {/if}
 
-  {#if selectedAppointment}
+  {#if selectedAppointment && !isCreatingAppointment}
     <!-- Render AppointmentDetails component with the selected appointment -->
     <AppointmentDetails {role}
       appointment={selectedAppointment}
