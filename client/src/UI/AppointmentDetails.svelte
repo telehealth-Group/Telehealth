@@ -124,7 +124,9 @@
       {:else}
         {#if appointment.status === "upcoming"}
           <p>Upcoming</p>
+          {#if role === 'patient' || role === "doctor"}
           <button on:click={cancelAppointment}>Cancel Appointment</button>
+          {/if}
         {:else}
           <p>Canceled</p>
         {/if}

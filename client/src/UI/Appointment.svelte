@@ -62,17 +62,10 @@ console.log(user.user.PatientAppointments);
 
 <main class="appointments">
   <h1 class="title">Appointments</h1>
-
-  <!-- {#if !isCreatingAppointment}
-    <button class="new-appointment-button" on:click={() => openCreateAppointment()}>
-      New Appointment
-    </button>
-  {:else}
-    <PatientDashboard on:closeCreateAppointment={() => closeCreateAppointment()} />
-  {/if} -->
-
+ 
   {#if !selectedAppointment && !isCreatingAppointment}
-    {#if user && user.user.PaitentAppointments && user.user.PaitentAppointments.length > 0}
+  {#if role === 'admin'}
+    {#if user && user.user.appointments && user.user.appointments.length > 0 }
       <table class="appointments-table">
         <thead>
           <tr>
@@ -82,7 +75,7 @@ console.log(user.user.PatientAppointments);
           </tr>
         </thead>
         <tbody>
-          {#each user.user.PaitentAppointments as appointment}
+          {#each user.user.appointments as appointment}
             <tr class="appointment-row" on:click={() => showAppointmentDetails(appointment)}>
               <td>{formatDateAndTime(appointment.dateTime)}</td>
               <td>{#if appointment.hospital}{appointment.hospital.name}{/if}</td>
@@ -97,6 +90,38 @@ console.log(user.user.PatientAppointments);
       </table>
     {:else}
       <p class="no-appointments">No appointments found.</p>
+    {/if}
+  {/if }
+
+  {:else }
+    <!-- Existing code for displaying patient appointments -->
+  {#if !selectedAppointment && !isCreatingAppointment}
+      {#if user && user.user.PatientAppointments && user.user.PatientAppointments.length > 0}
+        <table class="appointments-table">
+          <thead>
+            <tr>
+              <th>Date & Time</th>
+              <th>Hospital</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {#each user.user.PatientAppointments as appointment}
+              <tr class="appointment-row" on:click={() => showAppointmentDetails(appointment)}>
+                <td>{formatDateAndTime(appointment.dateTime)}</td>
+                <td>{#if appointment.hospital}{appointment.hospital.name}{/if}</td>
+                <td>
+                  <button class="view-button">
+                    <i class="fas fa-eye"></i> View Details
+                  </button>
+                </td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      {:else}
+        <p class="no-appointments">No appointments found.</p>
+      {/if}
     {/if}
   {/if}
 
