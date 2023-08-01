@@ -5,6 +5,7 @@
   import { createEventDispatcher } from "svelte";
   import { patients } from "../store.js"; 
   import axios from "axios";
+  
   export let close;
   let selectedDoctorName = "";
   let selectedTimeSlot = ""; 
@@ -101,6 +102,7 @@
       patient: user.user._id,
       hospital: hospital._id,
       doctor: selectedDoctor._id,
+      confirmation:true
     };
 console.log(requestBody)
     try {
