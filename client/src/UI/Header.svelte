@@ -44,7 +44,7 @@
 <style>
   section.header {
     padding: 10px 30px 30px 20px;
-    background-color: #f5f5f5;
+    background-color: #97cece48;
     display: flex;
     justify-content: space-between;
     position: fixed; /* Add fixed positioning */
@@ -52,12 +52,17 @@
     left: 0; /* Ensure the header starts from the left */
     right: 0; /* Extend the header to the right */
     z-index: 999; /* Ensure the header stays above other content */
+    margin-bottom: 5px;
   }
 
-  nav {
+ nav {
     display: flex;
     align-items: center;
     gap: 10px;
+    margin-left: 20px;
+    font-family: 'Helvetica Neue', Arial, sans-serif; /* Replace 'Helvetica Neue' with the desired font */
+    font-size: 18px; /* Optionally, set the font size */
+    color: #333; /* Optionally, set the font color */
   }
 
   h3 {
@@ -77,6 +82,7 @@
     padding: 1rem;
     border-radius: 5px;
     cursor: pointer;
+     border: none;
   }
 
   .dropdown-content {
@@ -88,6 +94,7 @@
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
+    border: none;
   }
 
   .dropdown-item {
@@ -99,4 +106,5 @@
     text-align: left;
     cursor: pointer;
   }
+  
 </style>

@@ -44,7 +44,10 @@
         <input type="password" id="password" bind:value={password} />
         <button on:click={login}>Login</button>
         {#if isLoading}
-          <div class="loading-spinner" />
+          <div class="loading-container" class:visible={isLoading}>
+          <div class="loading-spinner"/>
+          <div class="loading-bg"></div>
+          </div>
         {/if}
       </div>
       <div class="additional">
@@ -61,96 +64,114 @@
 <style>
   /* Styles from previous code */
 
-  .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f2f2f2;
-    width: 100%;
-  }
+.container {
+  background-image: url('../assets/telehealth.jpg');
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 800px;
+   display: flex;
+  align-items: center; 
+  justify-content: center;
+}
 
-  .content {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+.content {
+  background: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  width: 400px;
+}
 
-  .login-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: white;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-  }
+h2 {
+  font-size: 32px;
+  text-align: center;
+  margin-bottom: 30px;
+}
 
-  .login-form {
-    max-width: 400px;
-    width: 100%;
-  }
+label {
+  display: block;
+  text-transform: uppercase;
+  font-size: 14px;
+  color: #888;
+}
 
-  .login-form h2 {
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-weight: bold;
-  }
+input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border 0.3s ease;
+  margin: 10px;
+}
 
-  .login-form label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: bold;
-  }
+input:focus {
+  border-color: #4caf50;
+}
 
-  .login-form input[type="text"],
-  .login-form input[type="password"] {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    margin-bottom: 10px;
-  }
+button {
+  width: 100%;
+  background: #536054;
+  border: none;
+  padding: 15px;
+  color: #fff;
+  border-radius: 5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s ease; 
+  margin-top: 10px;
+}
 
-  .login-form button {
-    width: 100%;
-    padding: 10px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
+button:hover {
+  background: #45a049;
+}
 
-  .login-form button:hover {
-    background-color: #45a049;
-  }
+.error-message {
+  text-align: center;
+  color: #DC3545;
+}
 
-  .login-form .error-message {
-    color: red;
-    margin-top: 10px;
-  }
+.additional {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-top: 20px;
+}
 
-  .additional {
-    display: flex;
-    justify-content: space-evenly;
-    margin-top: 10px;
-    font-size: 14px;
-  }
+.forgot-password {
+  color: #007bff;
+  cursor: pointer;
+}
 
-  .forgot-password {
-    color: #999;
-    cursor: pointer;
-    margin-right: 100px;
-  }
+.register a {
+  color: #4c74af;
+  text-decoration: none;
+}
+.loading-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
 
-  .register a {
-    text-decoration: none;
-    color: #4caf50;
-  }
+.loading-container.visible {
+  display: flex;
+}
 
+.loading-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(160, 157, 157, 0.249); 
+}
   .loading-spinner {
     border: 4px solid rgba(255, 255, 255, 0.3);
     border-top: 4px solid #007bff;
@@ -159,8 +180,12 @@
     height: 40px;
     animation: spin 2s linear infinite;
     margin: 20px auto; /* Adjust the margin as needed */
+    position: absolute;
+  top: 47%; 
+  left: 48%;
+  transform: translateX(-50%);
+  z-index: 1; 
   }
-
   @keyframes spin {
     0% {
       transform: rotate(0deg);

@@ -69,7 +69,7 @@ console.log(user)
   <section class="section-content">
     {#if activeSection === "Dashboard"}
       {#if role === "patient"}
-        <PatientDashboard />
+        <PatientDashboard {user}/>
       {:else if role === "doctor"}
         <DoctorDashboard />
       {:else if role === "admin"}
@@ -99,7 +99,7 @@ console.log(user)
   .vertical-header {
     width: 200px;
     padding: 20px;
-    background-color: #f5f5f5;
+        background-color: #97cece48;
     border-radius: 5px;
     height: inherit;
     flex-shrink: 0;
@@ -108,7 +108,7 @@ console.log(user)
     bottom: 0; /* Extend the sidebar to the bottom */
     left: 0; /* Stick the sidebar to the left */
     display: block;
-    margin-top: 88px;
+    margin-top: 90px;
     z-index: 1000;
   }
 

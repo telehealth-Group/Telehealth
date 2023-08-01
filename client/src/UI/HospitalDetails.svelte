@@ -2,99 +2,50 @@
 <script>
   // @ts-ignore
   import CreateAppointment from "./CreateAppointment.svelte";
-  import { onDestroy } from "svelte";
-  import { patients } from "../store.js";
-
+  import axios from "axios";
   import { createEventDispatcher } from "svelte";
   export let hospital;
-  export let close;
-  let subscribedDoctors = [];
-
+  export let user;
   const dispatch = createEventDispatcher();
-  // Function to close the appointment details view
+  let rating = 1;
+  let comment = "";
+  let submitMessage =''
+  
   function closeDetails() {
-    // Emit a custom event to notify the parent component
     dispatch("closeDetails");
-  }
-
-  function createAppointment() {
-    // Handle the logic to create a new appointment here
-    // For example, you could show a form to select a doctor and time slot
-    // and save the appointment details to the database or a store
-    console.log("Creating a new appointment...");
-  }
-
-  const unsubscribePatients = patients.subscribe((value) => {
-    // @ts-ignore
-    subscribedDoctors = value.data.users.filter(
-      (user) => user.role === "doctor"
-    );
-  });
-
-  onDestroy(() => {
-    unsubscribePatients();
-  });
-
-  let isLocationsArray = Array.isArray(hospital.locations);
-
-  // Dummy reviews data (you can replace this with actual data from your store or API)
-  let reviews = [
-    { id: 1, author: "John Doe", rating: 4, comment: "Great hospital!" },
-    { id: 2, author: "Jane Smith", rating: 5, comment: "Excellent service!" },
-    {
-      id: 3,
-      author: "Mike Johnson",
-      rating: 3,
-      comment: "Average experience.",
-    },
-  ];
-
-  // Function to add a new review
-  let newReview = {
-    author: "",
-    rating: 1,
-    comment: "",
-  };
-
-  function addReview() {
-    // Validate the new review (you can add more complex validation if needed)
-    if (newReview.author.trim() === "" || newReview.comment.trim() === "") {
-      alert("Please fill in all fields.");
-      return;
-    }
-
-    // Push the new review into the reviews array
-    reviews = [
-      ...reviews,
-      {
-        id: reviews.length + 1,
-        author: newReview.author,
-        rating: newReview.rating,
-        comment: newReview.comment,
-      },
-    ];
-
-    // Clear the form fields for the next review
-    newReview = {
-      author: "",
-      rating: 1,
-      comment: "",
-    };
   }
   function hasBlackBorder(rating) {
     return rating < 5;
   }
-  // State to control whether the CreateAppointment component should be rendered
   let showCreateAppointment = false;
 
-  // Function to toggle the CreateAppointment component
   function toggleCreateAppointment() {
     showCreateAppointment = !showCreateAppointment;
   }
+
+
+async function addReview() {
+  const requestData = {
+    hospital: hospital._id,
+    user: user.user._id,
+    rating: rating,
+    review: comment,
+  };
+  try {
+    const response = await axios.post("http://127.0.0.1:3000/api/review", requestData);
+    console.log("Review added successfully:", response.data);
+    
+      submitMessage = "Review submitted successfully!";
+  } catch (error) {
+    console.error("Error adding review:", error);
+    submitMessage = "Failed to submit review. Please try again later.";
+  }
+}
+
 </script>
 
 {#if showCreateAppointment}
-<CreateAppointment close={() => (showCreateAppointment = false)} />
+<CreateAppointment {user} {hospital} close={() => (showCreateAppointment = false)} />
 {:else}
 <button
   class="create-appointment-button"
@@ -107,38 +58,34 @@
 {#if !showCreateAppointment} 
 <main>
   <nav class="navbar">
-    <!-- Navigation Bar -->
     <button class="back-button" on:click={closeDetails}>
       <i class="fas fa-arrow-left" />
     </button>
   </nav>
 
-  {#if isLocationsArray}
-    <!-- Container for PatientDashboard component -->
+  {#if hospital}
     <div id="patientDashboardContainer" />
     <div class="hero-section">
       <h1>Welcome to {hospital.name}</h1>
       <p>Providing Quality Healthcare Services</p>
     </div>
     <div class="hospital-details-container">
-       <h4>services</h4>
+       <h4>Services</h4>
       <p class="services-info">
         {#each hospital.services as service}
           <div class="service-box">
             <i class="fas fa-stethoscope" />
             <h4>{service}</h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
           </div>
         {/each}
       </p>
 
-       <h4>specialitys</h4>
+       <h4>Specialitys</h4>
       <div class="specialities-grid">
         {#each hospital.specialities as speciality}
           <div class="speciality-box">
             <i class="fas fa-certificate" />
             <h4>{speciality}</h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
           </div>
         {/each}
       </div>
@@ -147,7 +94,7 @@
         <h4>Doctors</h4>
         <div class="doctors-grid-container">
           <div class="doctors-grid">
-            {#each subscribedDoctors as doctor}
+            {#each hospital.doctors as doctor}
               <div class="doctor">
                 <div class="profile-icon">
                   <div class="circle">
@@ -157,7 +104,6 @@
                 <div class="doctor-info">
                   <p><strong>Name:</strong> {doctor.name}</p>
                   <p><strong>Speciality:</strong> {doctor.specialization}</p>
-                  <p><strong>Experience:</strong> {doctor.experience} years</p>
                   <p>
                     <strong>Rating:</strong>{" "}
                     {#each Array(5) as _, index}
@@ -181,7 +127,7 @@
          <h4>Reviews</h4>
         <div class="reviews-container">
           <div class="reviews-grid">
-            {#each reviews as review}
+            {#each hospital.reviews as review}
               <div class="review">
                 <div class="profile-icon">
                   <div class="circle">
@@ -189,19 +135,18 @@
                   </div>
                 </div>
                 <div class="review-content">
-                  <p><strong>Author:</strong> {review.author}</p>
+                  <p>{review.user.name}</p>
                   <p>
                     <strong>Rating:</strong>{" "}
                     {#each Array(5) as _, index}
                       <i
                         class="fas fa-star {hasBlackBorder(review.rating) &&
-                        index === 4
+                        index === review.rating
                           ? 'black-border'
                           : ''}"
                       />
                     {/each}
                   </p>
-                  <p><strong>Comment:</strong> {review.comment}</p>
                 </div>
               </div>
             {/each}
@@ -209,93 +154,41 @@
         </div>
 
         <!-- Form to add a new review -->
-        <form on:submit|preventDefault={addReview}>
-          <h4>Add a Review</h4>
-          <label for="author">Author</label>
-          <input
-            type="text"
-            id="author"
-            bind:value={newReview.author}
-            required
-          />
+      <div class="review-form">
+    <form on:submit|preventDefault={addReview}>
+      <h4>Add a Review</h4>
 
-          <label for="rating">Rating</label>
-          <input
-            type="number"
-            id="rating"
-            bind:value={newReview.rating}
-            min="1"
-            max="5"
-            required
-          />
+      <label for="rating">Rating</label>
+      <input
+        type="number"
+        id="rating"
+        min="1"
+        max="5"
+        required
+        bind:value={rating}
+      />
 
-          <label for="comment">Comment</label>
-          <textarea
-            id="comment"
-            bind:value={newReview.comment}
-            rows="4"
-            required
-          />
+      <label for="comment">Comment</label>
+      <textarea
+        id="comment"
+        rows="4"
+        required
+        bind:value={comment}
+      ></textarea>
 
-          <button type="submit" class="custom-button">Submit Review</button>
-        </form>
+      <button type="submit" class="custom-button">Submit Review</button>
+      {#if submitMessage}
+    <p>{submitMessage}</p>
+  {/if}
+    </form>
+  </div>
+
       </div>
     </div>
   {:else}
     <p>No location information available.</p>
   {/if}
 
-  <footer class="footer">
-    <div class="footer-container">
-      <!-- Footer Navigation Links -->
-      <div class="footer-left">
-        <h4>Navigation</h4>
-        <div class="navbar-container">
-          <a href="/">Home</a>
-          <a href="/about">About</a>
-          <a href="/services">Services</a>
-          <a href="/contact">Contact</a>
-        </div>
-      </div>
-
-      <!-- Hospital Name -->
-
-      <!-- Social Icons -->
-      <div class="footer-right">
-        <div class="social-icons">
-          <!-- Email with icon -->
-          <!-- svelte-ignore a11y-missing-content -->
-          <a
-            href="mailto:contact@yourhospital.com"
-            title="Email Us"
-            class="fa fa-envelope"
-          />
-
-          <!-- Phone with icon -->
-          <!-- svelte-ignore a11y-missing-content -->
-          <a href="tel:+1234567890" title="Call Us" class="fa fa-phone" />
-
-          <!-- Facebook with icon -->
-          <!-- svelte-ignore a11y-missing-content -->
-          <!-- svelte-ignore a11y-invalid-attribute -->
-          <a href="#" title="Facebook" class="fab fa-facebook" />
-
-          <!-- Twitter with icon -->
-          <!-- svelte-ignore a11y-missing-content -->
-          <!-- svelte-ignore a11y-invalid-attribute -->
-          <a href="#" title="Twitter" class="fab fa-twitter" />
-
-          <!-- Instagram with icon -->
-          <!-- svelte-ignore a11y-missing-content -->
-          <!-- svelte-ignore a11y-invalid-attribute -->
-          <a href="#" title="Instagram" class="fab fa-instagram" />
-        </div>
-      </div>
-    </div>
-    <div class="footer-center">
-      <p>&copy; 2023 {hospital.name}. All rights reserved.</p>
-    </div>
-  </footer>
 </main>
 {/if}
 <style>
@@ -311,7 +204,8 @@
     position: absolute;
     right: 30px;
     top: 120px;
-    opacity: 0.6;
+    margin-right: 90px;
+    margin-top: 20px;
   }
 
   .create-appointment-button:hover {
@@ -343,40 +237,18 @@
     font-size: 18px;
     margin: 0;
   }
-
-  /* Navigation Bar Styling */
   nav {
     background-color: #274247;
     color: #ffffff;
     padding: 50px 0;
   }
-
-  .navbar-container {
-    max-width: 100px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-around;
-  }
-
-  .navbar a {
-    color: #ffffff;
-    text-decoration: none;
-    padding: 8px 16px;
-  }
-
-  /* Hospital Details Styling */
   .hospital-details-container {
     width: 90%;
-    /* max-width: 1000px; */
     margin: 20px auto;
-    /* padding: 20px; */
     background-color: transparent;
     border-radius: 4px;
-    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); */
     text-align: center;
   }
-
-  /* Reviews Section Styling */
   .reviews-section {
     margin-top: 20px;
     text-align: left;
@@ -411,38 +283,34 @@
   .reviews-container::-webkit-scrollbar {
     display: none;
   }
-  /* Doctors Section Styling */
-  /* Doctors Section Styling */
   .doctors-section {
     margin-top: 40px;
-    overflow-x: auto; /* Enable horizontal scrolling */
+    overflow-x: auto;
   }
 
   .doctors-grid-container {
-    display: flex; /* Create a flex container */
-    overflow-x: scroll; /* Enable horizontal scrolling for the flex container */
-    margin-bottom: 20px; /* Add some bottom margin for better separation */
+    display: flex;
+    overflow-x: scroll;
+    margin-bottom: 20px;
     justify-content: space-between;
   }
 
   .doctors-grid {
-    display: flex; /* Use flexbox for the grid */
-    flex-wrap: nowrap; /* Prevent items from wrapping to new lines */
-    gap: 30px; /* Add spacing between doctors */
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 30px;
     justify-content: space-between;
     padding: 20px 0px;
   }
 
   .doctor {
-    /* flex: 0 0 auto; Ensure the doctors don't grow or shrink */
-    /* min-width: 300px; Set a minimum width for each doctor card */
     border: 1px solid #ddd;
     border-radius: 5px;
     padding: 60px 20px; 
     box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
-    display: flex; /* Align items horizontally */
     align-items: center; /* Vertically center the content */
-    width: 380px;
+    width: 350px;
+    display: flex;
   }
 
   .profile-icon {
@@ -450,10 +318,9 @@
     justify-content: center;
     align-items: center;
     width: 60px;
-    height: 60px;
     border-radius: 50%;
     background-color: #e9e9e9;
-    margin-right: 20px;
+    margin: 0 0 30px 100px;
     box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
   }
 
@@ -461,7 +328,9 @@
     font-size: 34px;
     color: #15a7dd;
   }
-
+h4{
+  font-size: 20px;
+}
   .doctor-info {
     flex: 1;
   }
@@ -500,37 +369,7 @@
   .doctors-grid-container::-webkit-scrollbar-thumb:hover {
     background: #555; /* Color of the scrollbar thumb on hover */
   }
-  /* Contact Us Section Styling */
-
-  /* Footer Styling */
-  footer {
-    background-color: #274247;
-    color: #ffffff;
-    padding: 20px 0;
-    text-align: center;
-  }
-
-  .footer-container {
-    max-width: 960px;
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .footer p {
-    margin: 0;
-  }
-
-  .social-icons {
-    font-size: 24px;
-  }
-
-  .social-icons a {
-    color: #ffffff;
-    margin-right: 10px;
-    text-decoration: none;
-  }
+ 
 
   .specialities-grid,
   .services-info {
@@ -545,8 +384,6 @@
   .speciality-box {
     padding: 60px;
     border-radius: 8px;
-    /* background-color: #274247; */
-    /* background-color: #fff; */
     box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
   }
 
@@ -592,6 +429,7 @@
     border-radius: 50%;
     background-color: #e9e9e9;
     margin-right: 20px;
+    margin-left: 0;
     box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
   }
 
@@ -603,7 +441,17 @@
   .review-content {
     flex: 1;
   }
-
+.circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #f2f2f2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #333;
+}
   .review-content p {
     margin-bottom: 10px;
     line-height: 1.4;
@@ -634,6 +482,7 @@
     max-width: 500px;
     box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
     margin: auto;
+    text-align: left;
   }
 
   h4 {
@@ -678,27 +527,21 @@
   }
   .reviews-section {
     margin-top: 20px;
-    text-align: left;
+    text-align: center;
   }
 
   .reviews-container {
     overflow-x: scroll; /* Enable horizontal scrolling */
     margin-bottom: 60px;
     margin-top: 60px;
+    
   }
 
   .reviews-grid {
     display: flex; /* Use flexbox for the grid */
     flex-wrap: nowrap; /* Prevent items from wrapping to new lines */
     gap: 10px; /* Add spacing between reviews */
-  }
-  .footer-left a {
-    color: #ffffff;
-    text-decoration: none;
-    padding: 8px 8px;
-  }
-  .footer-left {
-    display: flex;
+    
   }
   .fas.fa-star.black-border {
     color: #e5dfdf; /* Change the star color to black */
@@ -717,7 +560,7 @@
     outline: none;
     position: absolute;
     top: 120px;
-    opacity: 0.6;
+    margin-top: 20px;
     margin-left: 5px;
     /* margin-top: 40px; */
   }

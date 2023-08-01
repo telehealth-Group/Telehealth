@@ -19,7 +19,7 @@ router.get(
   "/logout",
   authController.logout
 );
-
+router.patch("/updateOne", userController.updateOne);
 router.post(
   "/forgotpassword",
   authController.protect,
