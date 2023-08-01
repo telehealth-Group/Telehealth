@@ -126,7 +126,7 @@
     bottom: 0; /* Extend the sidebar to the bottom */
     left: 0; /* Stick the sidebar to the left */
     display: block;
-    margin-top: 103px;
+    margin-top: 93px;
     z-index: 1000;
   }
 
