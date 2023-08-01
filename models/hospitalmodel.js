@@ -46,7 +46,7 @@ const hospitalSchema = new mongoose.Schema(
     images: [
       {
         type: String,
-        required: [true, "Please image of the hospital"],
+        // required: [true, "Please image of the hospital"],
       },
     ],
     locations: [
@@ -93,11 +93,11 @@ const hospitalSchema = new mongoose.Schema(
           {
             startTime: {
               type: String,
-              required: true,
+              // required: true,
             },
             endTime: {
               type: String,
-              required: true,
+              // required: true,
             },
           },
         ],

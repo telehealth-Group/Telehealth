@@ -1,5 +1,5 @@
 <script>
-// @ts-nocheck
+  // @ts-nocheck
 
   import Dashboard from "./Dashboard.svelte";
   import Patient from "./Patient.svelte";
@@ -9,6 +9,8 @@
   import DoctorDashboard from "./DoctorDashboard.svelte";
   import Settings from "./settings.svelte";
   import AdminDashboard from "./AdminDashboard.svelte";
+  import SuperAdminDashboard from "./superAdminDashboard.svelte";
+  import AddHospitals from "./addHospitals.svelte";
 
   export let role;
   export let user;
@@ -16,7 +18,7 @@
   console.log(user, "from overview");
 
   let activeSection = "Dashboard";
-console.log(user)
+  console.log(user);
   const handleSectionChange = (section) => {
     activeSection = section;
   };
@@ -30,10 +32,22 @@ console.log(user)
           >🏠 Dashboard</button
         >
       </li>
-      {#if role === "admin" }
+      {#if role === "admin"}
         <li class:selected={activeSection === "Doctors"}>
           <button on:click={() => handleSectionChange("Doctors")}
             >👨‍⚕️ Doctors</button
+          >
+        </li>
+      {/if}
+      {#if role === "superAdmin"}
+        <li class:selected={activeSection === "superAdmin"}>
+          <button on:click={() => handleSectionChange("superAdmin")}
+            >👨‍⚕️ Hospitals</button
+          >
+        </li>
+        <li class:selected={activeSection === "addHospitals"}>
+          <button on:click={() => handleSectionChange("addHospitals")}
+            >🏥 Add Hospitals</button
           >
         </li>
       {/if}
@@ -44,7 +58,7 @@ console.log(user)
           >
         </li>
       {/if}
-      {#if  role === "admin" || role === "patient"}
+      {#if role === "admin" || role === "patient"}
         <li class:selected={activeSection === "Appointment"}>
           <button on:click={() => handleSectionChange("Appointment")}
             >📅 Appointment</button
@@ -69,22 +83,26 @@ console.log(user)
   <section class="section-content">
     {#if activeSection === "Dashboard"}
       {#if role === "patient"}
-        <PatientDashboard {user}/>
+        <PatientDashboard {user} />
       {:else if role === "doctor"}
         <DoctorDashboard />
       {:else if role === "admin"}
-        <AdminDashboard data={user}/>
+        <AdminDashboard data={user} />
       {:else}
         <Dashboard />
       {/if}
     {:else if activeSection === "Doctors"}
-      <Doctor {user}/>
+      <Doctor {user} />
+    {:else if activeSection === "superAdmin"}
+      <SuperAdminDashboard/>
+    {:else if activeSection === "addHospitals"}
+      <AddHospitals/>
     {:else if activeSection === "Patients"}
       <Patient />
     {:else if activeSection === "Appointment"}
-      <Appointment {role} {user}/>
+      <Appointment {role} {user} />
     {:else if activeSection === "Settings"}
-      <Settings {user}/>
+      <Settings {user} />
     {/if}
   </section>
 </main>
@@ -99,7 +117,7 @@ console.log(user)
   .vertical-header {
     width: 200px;
     padding: 20px;
-        background-color: #97cece48;
+    background-color: #97cece48;
     border-radius: 5px;
     height: inherit;
     flex-shrink: 0;
