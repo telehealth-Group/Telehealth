@@ -57,6 +57,7 @@
 
 <div class="container">
     <!-- Add the "Add Hospital" icon (without the circle) -->
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div class="add-hospital-icon" on:click={addHospital}>
       <i class="fas fa-plus"></i>
     </div>

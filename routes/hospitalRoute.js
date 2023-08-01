@@ -31,8 +31,8 @@ router
 router
   .route("/hospital/createDoctor")
   .post(
-    authController.protect,
-    authController.restrictTo("admin"),
+    // authController.protect,
+    // authController.restrictTo("admin"),
     hospitalController.createHospitalDoctor
   );
 router

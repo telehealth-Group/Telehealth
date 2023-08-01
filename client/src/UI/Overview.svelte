@@ -58,7 +58,7 @@
           >
         </li>
       {/if}
-      {#if role === "admin" || role === "patient"}
+      {#if role === "admin" || role === "patient" || role === "doctor"}
         <li class:selected={activeSection === "Appointment"}>
           <button on:click={() => handleSectionChange("Appointment")}
             >📅 Appointment</button
