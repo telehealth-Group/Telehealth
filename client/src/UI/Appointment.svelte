@@ -29,44 +29,38 @@ console.log(user.user);
 </script>
 
 <main class="appointments">
-  <h1 class="title">Appointments</h1>
+  {#if user && user.user.role === "patient"}
+    <!-- Display patient appointments -->
+    <h1 class="title">Appointments</h1>
 
-  <!-- {#if !isCreatingAppointment}
-    <button class="new-appointment-button" on:click={() => openCreateAppointment()}>
-      New Appointment
-    </button>
-  {:else}
-    <PatientDashboard on:closeCreateAppointment={() => closeCreateAppointment()} />
-  {/if} -->
-
-  {#if !selectedAppointment && !isCreatingAppointment}
-    {#if user && user.user.PaitentAppointments && user.user.PaitentAppointments.length > 0}
-      <table class="appointments-table">
-        <thead>
-          <tr>
-            <th>Date & Time</th>
-            <th>Hospital</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each user.user.PaitentAppointments as appointment}
-            <tr class="appointment-row" on:click={() => showAppointmentDetails(appointment)}>
-              <td>{formatDateAndTime(appointment.dateTime)}</td>
-              <td>{#if appointment.hospital}{appointment.hospital.name}{/if}</td>
-              <td>
-                <button class="view-button">
-                  <i class="fas fa-eye"></i> View Details
-                </button>
-              </td>
+    {#if !selectedAppointment && !isCreatingAppointment}
+      {#if user && user.user.PatientAppointments && user.user.PatientAppointments.length > 0}
+        <table class="appointments-table">
+          <thead>
+            <tr>
+              <th>Date & Time</th>
+              <th>Hospital</th>
+              <th>Action</th>
             </tr>
-          {/each}
-        </tbody>
-      </table>
-    {:else}
-      <p class="no-appointments">No appointments found.</p>
+          </thead>
+          <tbody>
+            {#each user.user.PatientAppointments as appointment}
+              <tr class="appointment-row" on:click={() => showAppointmentDetails(appointment)}>
+                <td>{formatDateAndTime(appointment.dateTime)}</td>
+                <td>{#if appointment.hospital}{appointment.hospital.name}{/if}</td>
+                <td>
+                  <button class="view-button">
+                    <i class="fas fa-eye"></i> View Details
+                  </button>
+                </td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      {:else}
+        <p class="no-appointments">No appointments found.</p>
+      {/if}
     {/if}
-  {/if}
 
     {#if selectedAppointment && !isCreatingAppointment}
       <AppointmentDetails {role} appointment={selectedAppointment} on:closeDetails={() => closeDetails()} />
@@ -74,6 +68,7 @@ console.log(user.user);
   <!-- {:else if user && user.user.role === "doctor"} -->
     <!-- Display doctor appointments -->
     <h1 class="title">Doctor Appointments</h1>
+
     {#if !selectedAppointment && !isCreatingAppointment}
       {#if user && user.user.DoctorAppointments && user.user.DoctorAppointments.length > 0}
         <table class="appointments-table">
