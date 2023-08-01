@@ -114,7 +114,7 @@
     bottom: 0; /* Extend the sidebar to the bottom */
     left: 0; /* Stick the sidebar to the left */
     display: block;
-    margin-top: 90px;
+    margin-top: 103px;
     z-index: 1000;
   }
 
@@ -147,17 +147,13 @@
   button {
     background-color: #fff;
     border: 1px solid #ccc;
+    color: #555;
     padding: 10px 20px;
     cursor: pointer;
     border-radius: 3px;
     transition: background-color 0.3s, color 0.3s;
     width: 100%;
     text-align: left;
-  }
-
-  button:hover {
-    background-color: #f0f0f0;
-    color: #555;
   }
 
   button:focus {
