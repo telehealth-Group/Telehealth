@@ -2,7 +2,7 @@
   export let user;
 
   import axios from "axios";
-
+  console.log(user, "from top");
   // Create a local variable to store the filtered doctors
   let searchQuery = "";
   let filteredDoctors = user.user.doctors; // Initialize with all doctors
@@ -13,7 +13,7 @@
     email: "",
     phone: "",
     password: "",
-    passwordConfirm: ""
+    passwordConfirm: "",
   };
   // Function to handle search input changes
   function handleSearch(event) {
@@ -23,14 +23,18 @@
 
   // Function to filter doctors based on the search query and role
   function filterDoctors() {
-    filteredDoctors = user.user.doctors.filter(
-      (doctor) =>
-        doctor.name.toLowerCase().includes(searchQuery) ||
-        doctor.specialization.toLowerCase().includes(searchQuery) ||
-        doctor.email.toLowerCase().includes(searchQuery) ||
-        doctor.phone.toLowerCase().includes(searchQuery)
-    );
-  }
+  filteredDoctors = user.user.doctors.filter((doctor) => {
+    // Check if each property is defined before calling toLowerCase()
+    const nameMatch = doctor.name && doctor.name.toLowerCase().includes(searchQuery);
+    const specializationMatch = doctor.specialization && doctor.specialization.toLowerCase().includes(searchQuery);
+    const emailMatch = doctor.email && doctor.email.toLowerCase().includes(searchQuery);
+    const phoneMatch = doctor.phone && doctor.phone.toLowerCase().includes(searchQuery);
+
+    // Return true if any of the properties match the search query
+    return nameMatch || specializationMatch || emailMatch || phoneMatch;
+  });
+}
+
 
   // Function to add a new doctor
   async function addDoctor() {
@@ -41,10 +45,11 @@
         email: newDoctorData.email,
         phone: newDoctorData.phone,
         password: newDoctorData.password,
-        passwordConfirm: newDoctorData.passwordConfirm
+        passwordConfirm: newDoctorData.passwordConfirm,
+        hospitalId: user.user._id,
       };
       console.log(newDoctor);
-      
+
       const response = await axios.post(
         "http://127.0.0.1:3000/api/users/hospital/createDoctor",
         newDoctor

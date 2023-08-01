@@ -58,13 +58,13 @@
           >⚙️ Settings</button
         >
       </li>
-      {#if role === "admin" || role === "superAdmin" || role === "doctor"}
+      <!-- {#if role === "admin" || role === "superAdmin" || role === "doctor"}
         <li class:selected={activeSection === "Reports"}>
           <button on:click={() => handleSectionChange("Reports")}
             >📊 Reports</button
           >
         </li>
-      {/if}
+      {/if} -->
     </ul>
   </nav>
 

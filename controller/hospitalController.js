@@ -104,34 +104,39 @@ try {
   });
 }
 }
-exports.createHospitalDoctor = async(req,res)=>{
-    try {
-        const { name, phone, email, password, passwordConfirm,specialization } = req.body;
-        const newDoctor = await User.create({
-            name,
-            phone,
-            email,
-            password,
-            passwordConfirm,
-            specialization,
-            role: 'doctor',
-          });
-    const hospital = await Hospital.findByIdAndUpdate()
-        res.status(201).json({
-          status: true,
-          data: {
-            newDoctor,
-          },
-        });
-      } catch (error) {
-        console.error(error)
-        res.status(404).json({
-          status: false,
-          message: error.message,
-        });
-      }
-}
-
+exports.createHospitalDoctor = async (req, res) => { 
+  try { 
+    const { name, phone, email, password, passwordConfirm, specialization, hospitalId } = req.body; 
+    const newDoctor = await User.create({ 
+      name, 
+      phone, 
+      email, 
+      password, 
+      passwordConfirm, 
+      specialization, 
+      role: 'doctor', 
+    }); 
+    const updatedHospital = await Hospital.findByIdAndUpdate( 
+      hospitalId, 
+      { $push: { doctors: newDoctor._id } },  
+      { new: true }  
+    ); 
+ 
+    res.status(201).json({ 
+      status: true, 
+      data: { 
+        newDoctor, 
+        updatedHospital, 
+      }, 
+    }); 
+  } catch (error) { 
+    console.error(error); 
+    res.status(404).json({ 
+      status: false, 
+      message: error.message, 
+    }); 
+  } 
+};
 
 exports.deleteDoctor = async (req, res) => {
   try {
