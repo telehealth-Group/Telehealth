@@ -1,18 +1,25 @@
 <script>
 // @ts-nocheck
-
-  import { appointments } from "../store.js";
-  import { onDestroy } from "svelte";
-
-  let subscribedAppointments = [];
-  const unsubscribe = appointments.subscribe((value) => {
-    console.log(value.data , "From Doc Dashboard");
-    subscribedAppointments = value.data.appointments;
-  });
-
-  onDestroy(() => {
-    unsubscribe();
-  });
+import axios from "axios";
+ export let user;
+const doctor = user.user;
+let isCanceling = false;
+async function completAppointment(appointment) {
+    try {
+      isCanceling = true;
+      const response = await axios.patch(`http://127.0.0.1:3000/api/users/completeAppointment/${appointment._id}`);
+      if (response.status === 204) {
+        console.log(response)
+        appointment.status = "completed";
+        isCanceling = false;
+      } else {
+        throw new Error("Failed to complete appointment.");
+      }
+    } catch (error) {
+      console.error(error);
+      isCanceling = false;
+    }
+  }
 </script>
 
 
@@ -20,7 +27,7 @@
   <p style="margin: 20px; width: 20%; margin: auto; text-align: center; margin-bottom: 10px; border: 2px solid blue; border-radius: 10px; font-weight: bold; padding: 20px;">UPCOMING APPOINTMENTS</p>
   
   <div class="upcoming-appointments">
-    {#each subscribedAppointments.filter(appointment => appointment.status === "upcoming") as appointment}
+    {#each doctor.DoctorAppointments.filter(appointment => appointment.status === "upcoming") as appointment}
       <div class="appointment-card">
         <div class="appointment-details">
           {#if appointment.patient}
@@ -38,7 +45,7 @@
             <i class="fas fa-notes-medical"></i> Diagnosis: {appointment.patient?.medicalhistory?.diagnosticTestsResults || 'N/A'}
           </p>
         </div>
-        <button class="complete-button">Mark as Completed</button>
+        <button class="complete-button" on:click="{() => completAppointment(appointment)}">Mark as Completed</button>
       </div>
     {/each}
   </div>
@@ -48,7 +55,7 @@
   <!-- Completed Appointments -->
   <h3>Completed Appointments</h3>
   <div class="appointment-grid">
-    {#each subscribedAppointments.filter(appointment => appointment.status === "completed") as appointment}
+    {#each doctor.DoctorAppointments.filter(appointment => appointment.status === "completed") as appointment}
       <div class="appointment-card">
         <div class="appointment-details">
           {#if appointment.patient}

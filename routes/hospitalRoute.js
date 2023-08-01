@@ -16,8 +16,6 @@ router
   .route("/hospital")
   .get(hospitalController.getAllHospitals)
   .post(
-    authController.protect,
-    authController.restrictTo("superAdmin"),
     hospitalController.createHospitals
   );
 router

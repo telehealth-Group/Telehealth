@@ -1,107 +1,104 @@
 <!-- Appointments.svelte -->
 <script>
   // @ts-nocheck
-  import { onDestroy } from "svelte";
 
   export let role;
   export let user;
 
   import AppointmentDetails from "./AppointmentDetails.svelte";
   import PatientDashboard from "./PatientDashboard.svelte";
+  import { onMount } from "svelte";
 
   let selectedAppointment = null;
   let isCreatingAppointment = false;
 
-  onDestroy(() => {
-    // You don't need to unsubscribe as there's no store anymore
-  });
-
   function showAppointmentDetails(appointment) {
     selectedAppointment = appointment;
   }
-console.log(user.user.PatientAppointments);
+console.log(user.user);
   function closeDetails() {
     selectedAppointment = null;
   }
 
-  function openCreateAppointment() {
-    isCreatingAppointment = true;
-  }
-
-  function closeCreateAppointment() {
-    isCreatingAppointment = false;
-  }
-
-  // Helper function to format the date and time in a user-friendly way
+  
   function formatDateAndTime(dateTime) {
     return new Date(dateTime).toLocaleString();
   }
 
-  // Log user details and appointments
-  function logAppointments() {
-    console.log("User Details:", user.user.PaitentAppointments);
-    if (user && user.user.PaitentAppointments && user.user.PaitentAppointments.length > 0) {
-      console.log("User's Appointments:");
-      for (const appointment of user.user.PaitentAppointments) {
-        console.log("Confirmation:", appointment.confirmation);
-        console.log("Date & Time:", formatDateAndTime(appointment.dateTime));
-        console.log("Doctor Name:", appointment.doctor?.name || "N/A");
-        console.log("Hospital Name:", appointment.hospital?.name || "N/A");
-        console.log("Patient Name:", appointment.patient?.name || "N/A");
-        console.log("Status:", appointment.status);
-        console.log("-------");
-      }
-    } else {
-      console.log("No appointments found.");
-    }
-  }
-
-  // Call the logAppointments() function
-  logAppointments();
+ 
 </script>
 
 <main class="appointments">
-  <h1 class="title">Appointments</h1>
-
-  <!-- {#if !isCreatingAppointment}
-    <button class="new-appointment-button" on:click={() => openCreateAppointment()}>
-      New Appointment
-    </button>
-  {:else}
-    <PatientDashboard on:closeCreateAppointment={() => closeCreateAppointment()} />
-  {/if} -->
-
-  {#if !selectedAppointment && !isCreatingAppointment}
-    {#if user && user.user.PaitentAppointments && user.user.PaitentAppointments.length > 0}
-      <table class="appointments-table">
-        <thead>
-          <tr>
-            <th>Date & Time</th>
-            <th>Hospital</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each user.user.PaitentAppointments as appointment}
-            <tr class="appointment-row" on:click={() => showAppointmentDetails(appointment)}>
-              <td>{formatDateAndTime(appointment.dateTime)}</td>
-              <td>{#if appointment.hospital}{appointment.hospital.name}{/if}</td>
-              <td>
-                <button class="view-button">
-                  <i class="fas fa-eye"></i> View Details
-                </button>
-              </td>
+  {#if user && user.user.role === "patient"}
+    <!-- Display patient appointments -->
+    <h1 class="title">Patient Appointments</h1>
+    {#if !selectedAppointment && !isCreatingAppointment}
+      {#if user && user.user.PatientAppointments && user.user.PatientAppointments.length > 0}
+        <table class="appointments-table">
+          <thead>
+            <tr>
+              <th>Date & Time</th>
+              <th>Hospital</th>
+              <th>Action</th>
             </tr>
-          {/each}
-        </tbody>
-      </table>
-    {:else}
-      <p class="no-appointments">No appointments found.</p>
+          </thead>
+          <tbody>
+            {#each user.user.PatientAppointments as appointment}
+              <tr class="appointment-row" on:click={() => showAppointmentDetails(appointment)}>
+                <td>{formatDateAndTime(appointment.dateTime)}</td>
+                <td>{#if appointment.hospital}{appointment.hospital.name}{/if}</td>
+                <td>
+                  <button class="view-button">
+                    <i class="fas fa-eye"></i> View Details
+                  </button>
+                </td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      {:else}
+        <p class="no-appointments">No appointments found.</p>
+      {/if}
     {/if}
-  {/if}
 
-  {#if selectedAppointment && !isCreatingAppointment}
-    <AppointmentDetails {role} appointment={selectedAppointment} on:closeDetails={() => closeDetails()} />
+    {#if selectedAppointment && !isCreatingAppointment}
+      <AppointmentDetails {role} appointment={selectedAppointment} on:closeDetails={() => closeDetails()} />
+    {/if}
+  {:else if user && user.user.role === "doctor"}
+    <!-- Display doctor appointments -->
+    <h1 class="title">Doctor Appointments</h1>
+    {#if !selectedAppointment && !isCreatingAppointment}
+      {#if user && user.user.DoctorAppointments && user.user.DoctorAppointments.length > 0}
+        <table class="appointments-table">
+          <thead>
+            <tr>
+              <th>Date & Time</th>
+              <th>Patient</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {#each user.user.DoctorAppointments as appointment}
+              <tr class="appointment-row" on:click={() => showAppointmentDetails(appointment)}>
+                <td>{formatDateAndTime(appointment.dateTime)}</td>
+                <td>{#if appointment.patient}{appointment.patient.name}{/if}</td>
+                <td>
+                  <button class="view-button">
+                    <i class="fas fa-eye"></i> View Details
+                  </button>
+                </td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      {:else}
+        <p class="no-appointments">No appointments found.</p>
+      {/if}
+    {/if}
+
+    {#if selectedAppointment && !isCreatingAppointment}
+      <AppointmentDetails {role} appointment={selectedAppointment} on:closeDetails={() => closeDetails()} />
+    {/if}
   {/if}
 </main>
 

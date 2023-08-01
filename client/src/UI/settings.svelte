@@ -54,41 +54,45 @@
     }
   }
 
-  async function updatePassword() {
-    loading = true; 
-    if (newPassword !== newPasswordConfirm) {
-      passwordError = "New password and confirmation do not match";
-      loading = false; // Hide loading indicator
-      return;
-    }
-
-    try {
-      const updatedProfile = {
-        ...user,
-      };
-      const response = await fetch(`http://127.0.0.1:3000/api/users/updatemypassword/${user.user._id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedProfile),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update password');
-      }
-
-      user = updatedProfile;
-      currentPassword = "";
-      newPassword = "";
-      newPasswordConfirm = "";
-      passwordError = "";
-    } catch (error) {
-      console.error("Error updating password:", error);
-    } finally {
-      loading = false; // Hide loading indicator
-    }
+ async function updatePassword() {
+  loading = true; 
+  if (newPassword !== newPasswordConfirm) {
+    passwordError = "New password and confirmation do not match";
+    loading = false; // Hide loading indicator
+    return;
   }
+
+  try {
+    const updatedProfile = {
+      ...user,
+      passwordCurrent: currentPassword, // Add the current password to the payload
+      password: newPassword,
+      passwordConfirm: newPasswordConfirm,
+    };
+    const response = await fetch(`http://127.0.0.1:3000/api/users/updatemypassword`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedProfile),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update password');
+    }
+
+    user = updatedProfile;
+    currentPassword = "";
+    newPassword = "";
+    newPasswordConfirm = "";
+    passwordError = "";
+  } catch (error) {
+    console.error("Error updating password:", error);
+  } finally {
+    loading = false;
+  }
+}
+
 </script>
 
 <main class="profile">

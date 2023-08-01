@@ -46,7 +46,6 @@ const hospitalSchema = new mongoose.Schema(
     images: [
       {
         type: String,
-        required: [true, "Please image of the hospital"],
       },
     ],
     locations: [

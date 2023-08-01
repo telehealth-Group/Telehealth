@@ -37,14 +37,14 @@ console.log(user)
           >
         </li>
       {/if}
-      {#if role === "doctor" || role === "admin" || role === "superAdmin"}
+      {#if role === "superAdmin"}
         <li class:selected={activeSection === "Patients"}>
           <button on:click={() => handleSectionChange("Patients")}
             >👥 Patients</button
           >
         </li>
       {/if}
-      {#if  role === "admin" || role === "patient"}
+      {#if  role === "admin" || role === "patient"|| role === "doctor"}
         <li class:selected={activeSection === "Appointment"}>
           <button on:click={() => handleSectionChange("Appointment")}
             >📅 Appointment</button
@@ -71,7 +71,7 @@ console.log(user)
       {#if role === "patient"}
         <PatientDashboard {user}/>
       {:else if role === "doctor"}
-        <DoctorDashboard />
+        <DoctorDashboard {user}/>
       {:else if role === "admin"}
         <AdminDashboard data={user}/>
       {:else}
