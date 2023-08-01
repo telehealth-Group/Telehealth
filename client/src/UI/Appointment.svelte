@@ -101,7 +101,7 @@ console.log(user.user);
     {#if selectedAppointment && !isCreatingAppointment}
       <AppointmentDetails {role} appointment={selectedAppointment} on:closeDetails={() => closeDetails()} />
     {/if}
-  <!-- {/if} -->
+  {/if}
 </main>
 
 <style>
