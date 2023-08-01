@@ -101,6 +101,7 @@
       patient: user.user._id,
       hospital: hospital._id,
       doctor: selectedDoctor._id,
+      conformation: true
     };
 console.log(requestBody)
     try {

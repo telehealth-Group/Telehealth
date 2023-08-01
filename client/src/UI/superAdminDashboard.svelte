@@ -1,111 +1,90 @@
 <script>
   // @ts-nocheck
-  import HospitalDetails from "./HospitalDetails.svelte";
-  import { hospitals } from "../store.js";
-  import { patients } from "../store.js";
-  import { onDestroy } from "svelte";
+  import { onMount } from "svelte";
+  import axios from "axios";
 
-  let subscribedHospitals = [];
-  let subscribedDoctors = [];
-  let selectedDoctor = null;
-  let query = "";
-  export let user;
+  let hospitals = [];
+
+  onMount(async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:3000/api/users/hospital");
+      hospitals = response.data.data.hospitals;
+    } catch (error) {
+      console.error("Error fetching hospitals:", error);
+    }
+  });
 
   let selectedHospital = null;
 
-  // Subscribe to the hospitals store
-  const unsubscribeHospitals = hospitals.subscribe((value) => {
-    subscribedHospitals = value.data.hospitals;
-  });
-
-  // Subscribe to the patients store
-  const unsubscribePatients = patients.subscribe((value) => {
-    subscribedDoctors = value.data.users.filter(
-      (user) => user.role === "doctor"
-    );
-  });
-
-  // Unsubscribe from the stores when the component is destroyed
-  onDestroy(() => {
-    unsubscribeHospitals();
-    unsubscribePatients();
-  });
-  let showhead = true;
   // Function to handle the "View Details" button click event (to show the hospital details)
   function showHospitalDetails(hospital) {
     console.log(hospital);
     selectedHospital = hospital;
-    showhead = false;
   }
 
   // Function to handle the "Close" button click event (to go back to the hospital list)
   function closeDetails() {
     selectedHospital = null;
-    showhead = true;
-  }
-
-  // Function to handle the "Add Hospital" button click event
-  function addHospital() {
-    // Implement the logic to add a new hospital here
   }
 
   // Function to handle the "Remove Hospital" button click event
-  function removeHospital(hospital) {
-    // Implement the logic to remove the selected hospital here
+  async function removeHospital(hospital) {
+    try {
+      await axios.patch(`http://127.0.0.1:3000/api/users/hospital/delete/${hospital._id}`, { active: false });
+      // If the patch request is successful, update the hospital's active status in the local list
+      hospitals = hospitals.map((h) => {
+        if (h._id === hospital._id) {
+          return { ...h, active: false };
+        }
+        return h;
+      });
+    } catch (error) {
+      console.error("Error removing hospital:", error);
+    }
   }
 </script>
 
 <div class="container">
-    <!-- Add the "Add Hospital" icon (without the circle) -->
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <div class="add-hospital-icon" on:click={addHospital}>
-      <i class="fas fa-plus"></i>
-    </div>
-  
-    {#if selectedHospital === null}
-      <!-- Show the hospital list -->
-      {#if subscribedHospitals.length > 0}
-        <ul class="hospital-list">
-          {#each subscribedHospitals as hospital}
-            <li class="hospital-item">
-              <div class="hospital-details">
-                <div class="hospital-info">
-                  <img
-                    class="hospital-image"
-                    src={`./src/assets/${hospital.images[0]}`}
-                    alt={hospital.name}
-                  />
-                  <p class="hospital-name">
-                    <i class="fas fa-hospital" style="color: #6C5CE7"></i>
-                    {hospital.name}
-                  </p>
-                  <p class="hospital-phone">
-                    <i class="fas fa-phone-alt" style="color: #009688"></i>
-                    {hospital.phoneNumber}
-                  </p>
-                  <p class="hospital-rating">
-                    <i class="fas fa-star" style="color: #FFD700"></i>
-                    {hospital.ratingAverage} ({hospital.ratingQuantity} reviews)
-                  </p>
-                  <!-- Add the "Remove Hospital" icon (trash icon) -->
-                  <!-- svelte-ignore a11y-click-events-have-key-events -->
-                  <div class="remove-hospital-icon" on:click={() => removeHospital(hospital)}>
-                    <i class="fas fa-trash"></i>
-                  </div>
+  <!-- Show the hospital list -->
+  {#if hospitals.length > 0}
+    <ul class="hospital-list">
+      {#each hospitals as hospital}
+        {#if hospital.active}
+          <li class="hospital-item">
+            <div class="hospital-details">
+              <div class="hospital-info">
+                <img
+                  class="hospital-image"
+                  src={`./src/assets/${hospital.images[0]}`}
+                  alt={hospital.name}
+                />
+                <p class="hospital-name">
+                  <i class="fas fa-hospital" style="color: #6C5CE7"></i>
+                  {hospital.name}
+                </p>
+                <p class="hospital-phone">
+                  <i class="fas fa-phone-alt" style="color: #009688"></i>
+                  {hospital.phoneNumber}
+                </p>
+                <p class="hospital-rating">
+                  <i class="fas fa-star" style="color: #FFD700"></i>
+                  {hospital.ratingAverage} ({hospital.ratingQuantity} reviews)
+                </p>
+                <!-- Add the "Remove Hospital" icon (trash icon) -->
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <div class="remove-hospital-icon" on:click={() => removeHospital(hospital)}>
+                  <i class="fas fa-trash"></i>
                 </div>
               </div>
-            </li>
-          {/each}
-        </ul>
-      {:else}
-        <p class="no-hospitals">No hospitals found.</p>
-      {/if}
-    {/if}
-    {#if selectedHospital !== null}
-      <!-- Render HospitalDetails component with the selected hospital -->
-      <HospitalDetails {user} hospital={selectedHospital} on:closeDetails={() => closeDetails()} />
-    {/if}
-  </div>
+            </div>
+          </li>
+        {/if}
+      {/each}
+    </ul>
+  {:else}
+    <p class="no-hospitals">No hospitals found.</p>
+  {/if}
+</div>
 
 <style>
   .container {

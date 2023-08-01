@@ -39,10 +39,22 @@
           >
         </li>
       {/if}
-      {#if role === "superAdmin"}
+      {#if role === "superAdmin" || role === "doctor"}
         <li class:selected={activeSection === "Patients"}>
           <button on:click={() => handleSectionChange("Patients")}
             >👥 Patients</button
+          >
+        </li>
+      {/if}
+      {#if role === "superAdmin" }
+        <li class:selected={activeSection === "superAdmin"}>
+          <button on:click={() => handleSectionChange("superAdmin")}
+            >🏥 Hospitals</button
+          >
+        </li>
+        <li class:selected={activeSection === "addHospitals"}>
+          <button on:click={() => handleSectionChange("addHospitals")}
+            >🏥 Add Hospitals</button
           >
         </li>
       {/if}

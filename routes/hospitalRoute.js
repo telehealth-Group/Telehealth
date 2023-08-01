@@ -7,8 +7,8 @@ const router = express.Router();
 router
   .route("/hospital/delete/:id")
   .patch(
-    authController.protect,
-    authController.restrictTo("superAdmin"),
+    // authController.protect,
+    // authController.restrictTo("superAdmin"),
     hospitalController.deleteHospitals
   );
 
@@ -38,8 +38,8 @@ router
 router
   .route("/hospital/deleteDoctor/:id")
   .patch(
-    authController.protect,
-    authController.restrictTo("admin"),
+    // authController.protect,
+    // authController.restrictTo("admin"),
     hospitalController.deleteDoctor
   );
 
