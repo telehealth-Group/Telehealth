@@ -16,6 +16,8 @@ router
   .route("/hospital")
   .get(hospitalController.getAllHospitals)
   .post(
+    // authController.protect,
+    // authController.restrictTo("superAdmin"),
     hospitalController.createHospitals
   );
 router
@@ -29,13 +31,15 @@ router
 router
   .route("/hospital/createDoctor")
   .post(
+    // authController.protect,
+    // authController.restrictTo("admin"),
     hospitalController.createHospitalDoctor
   );
 router
   .route("/hospital/deleteDoctor/:id")
   .patch(
-    // authController.protect,
-    // authController.restrictTo("admin"),
+    authController.protect,
+    authController.restrictTo("admin"),
     hospitalController.deleteDoctor
   );
 

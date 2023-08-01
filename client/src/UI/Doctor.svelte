@@ -1,12 +1,19 @@
 <script>
   export let user;
 
-  import axios from 'axios';
+  import axios from "axios";
 
   // Create a local variable to store the filtered doctors
   let searchQuery = "";
   let filteredDoctors = user.user.doctors; // Initialize with all doctors
-
+  // Variables to store new doctor data
+  let newDoctorData = {
+    name: "",
+    specialization: "",
+    email: "",
+    phone: "",
+    password: "",
+  };
   // Function to handle search input changes
   function handleSearch(event) {
     searchQuery = event.target.value.toLowerCase();
@@ -28,18 +35,34 @@
   async function addDoctor() {
     try {
       const newDoctor = {
-        name: "New Doctor",
-        specialization: "Specialization",
-        email: "new.doctor@example.com",
-        phone: "1234567890",
+        name: newDoctorData.name,
+        specialization: newDoctorData.specialization,
+        email: newDoctorData.email,
+        phone: newDoctorData.phone,
+        password: newDoctorData.password,
       };
+      console.log(newDoctor);
+      
+      const response = await axios.post(
+        "http://127.0.0.1:3000/api/users/hospital/createDoctor",
+        newDoctor
+      );
 
-      const response = await axios.post("http://127.0.0.1:3000/api/users/hospital/createDoctor", newDoctor);
+      console.log(response);
 
       if (response.status === 201) {
         const doctorData = response.data;
         user.user.doctors.push(doctorData);
         filterDoctors();
+
+        // Clear the new doctor data object for the next addition
+        newDoctorData = {
+          name: "",
+          specialization: "",
+          email: "",
+          phone: "",
+          password: "",
+        };
       } else {
         // Handle error case
         console.error("Failed to add the doctor.");
@@ -63,10 +86,15 @@
 
   async function confirmDelete() {
     try {
-      const response = await axios.patch(`http://127.0.0.1:3000/api/users/hospital/deleteDoctor/${doctorToDelete._id}`, { role: 'delete' });
+      const response = await axios.patch(
+        `http://127.0.0.1:3000/api/users/hospital/deleteDoctor/${doctorToDelete._id}`,
+        { role: "delete" }
+      );
 
       if (response.status === 200) {
-        user.user.doctors = user.user.doctors.filter((d) => d._id !== doctorToDelete._id);
+        user.user.doctors = user.user.doctors.filter(
+          (d) => d._id !== doctorToDelete._id
+        );
         filterDoctors();
         closeDeleteModal(); // Close the modal after successful deletion
       } else {
@@ -103,13 +131,13 @@
     hideAddDoctorModal();
   }
 
-  // Variables to store new doctor data
-  let newDoctorData = {
-    name: "",
-    specialization: "",
-    email: "",
-    phone: "",
-  };
+  $: filterDoctors();
+
+  // Svelte reactive statement to update filteredDoctors whenever the user prop changes
+  $: {
+    filteredDoctors = user.user.doctors;
+    filterDoctors();
+  }
 </script>
 
 <main class="dashboard">
@@ -122,7 +150,7 @@
       on:input={handleSearch}
     />
     <button class="add-button" on:click={showAddDoctorModal}>
-      <i class="fas fa-plus"></i>
+      <i class="fas fa-plus" />
     </button>
   </div>
 
@@ -143,13 +171,16 @@
         <tbody>
           {#each filteredDoctors as doctor}
             <tr>
-              <td><i class="fas fa-user-md"></i> {doctor.name}</td>
-              <td><i class="fas fa-stethoscope"></i> {doctor.specialization}</td>
-              <td><i class="fas fa-envelope"></i> {doctor.email}</td>
-              <td><i class="fas fa-phone"></i> {doctor.phone}</td>
+              <td><i class="fas fa-user-md" /> {doctor.name}</td>
+              <td><i class="fas fa-stethoscope" /> {doctor.specialization}</td>
+              <td><i class="fas fa-envelope" /> {doctor.email}</td>
+              <td><i class="fas fa-phone" /> {doctor.phone}</td>
               <td>
-                <button class="delete-button" on:click={() => openDeleteModal(doctor)}>
-                  <i class="fas fa-trash-alt"></i>
+                <button
+                  class="delete-button"
+                  on:click={() => openDeleteModal(doctor)}
+                >
+                  <i class="fas fa-trash-alt" />
                 </button>
               </td>
             </tr>
@@ -194,11 +225,16 @@
             <input type="email" bind:value={newDoctorData.email} />
           </label>
           <label>
+            Password: <!-- New password field -->
+            <input type="password" bind:value={newDoctorData.password} />
+          </label>
+          <label>
             Phone:
             <input type="tel" bind:value={newDoctorData.phone} />
           </label>
           <div class="modal-buttons">
-            <button type="submit">Add</button>
+            <button type="submit" on:click={addDoctor}>Add</button>
+            <!-- Call addDoctor function on click -->
             <button type="button" on:click={hideAddDoctorModal}>Cancel</button>
           </div>
         </form>
@@ -351,7 +387,7 @@
     font-size: 20px; /* Make the delete icon bigger */
   }
 
-   /* Modal styles */
+  /* Modal styles */
   .modal-background {
     position: fixed;
     top: 0;
@@ -451,8 +487,7 @@
     cursor: pointer;
   }
 
-
-/* Modal styles */
+  /* Modal styles */
   .modal-background {
     position: fixed;
     top: 0;
