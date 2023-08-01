@@ -17,7 +17,7 @@
       phone: phone,
       email: email,
       password: password,
-      passwordConfirmation: passwordConfirmation,
+      passwordConfirm: passwordConfirmation,
       age: age,
       gender: gender
     };
@@ -36,6 +36,7 @@
     }
   }
 </script>
+
 
 <div class="container">
   <div class="signup-form">
@@ -80,13 +81,15 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f2f2f2;
+    background-image: url('../assets/telehealth.jpg'); 
+    background-size: cover;
+    background-position: center;
   }
 
   .signup-form {
     width: 500px;
     padding: 20px;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.9); 
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
@@ -116,20 +119,27 @@
   }
 
   .signup-form input#address {
-    margin-bottom: 10px; /* Add space between address field and sign-up button */
+    margin-bottom: 10px;
   }
 
   .signup-form button {
     width: 100%;
     padding: 10px;
-    background-color: #4caf50;
+    background-color: #536054;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
+    text-transform: uppercase;
     cursor: pointer;
+    transition: background 0.3s ease;
+    margin-top: 10px;
   }
 
   .signup-form button:hover {
-    background-color: #45a049;
+    background-color: #45a049; 
+  }
+
+  .signup-form select {
+    margin-bottom: 10px;
   }
 </style>

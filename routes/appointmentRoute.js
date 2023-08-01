@@ -9,15 +9,11 @@ router.route('/updateAppointment/:id').patch(appointmentController.updateAppoint
 router
   .route("/createAppointment/")
   .post(
-    authController.protect,
-    authController.restrictTo("user"),
     appointmentController.createAppointment
   );
 router
   .route("/completeAppointment/:id")
   .patch(
-    authController.protect,
-    authController.restrictTo("doctor"),
     appointmentController.completAppointment
   );
 router

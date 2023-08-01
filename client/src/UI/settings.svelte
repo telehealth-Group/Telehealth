@@ -34,7 +34,7 @@
         ...user,
         email: newEmail,
       };
-      const response = await fetch('http://127.0.0.1:3000/api/users/updateOne', {
+      const response = await fetch(`http://127.0.0.1:3000/api/users/updateOne/${user.user._id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -46,7 +46,6 @@
         throw new Error('Failed to update email');
       }
 
-      // Update the user object with the updated profile
       user = updatedProfile;
     } catch (error) {
       console.error("Error updating email:", error);
@@ -56,8 +55,7 @@
   }
 
   async function updatePassword() {
-    loading = true; // Show loading indicator
-    // Perform validation
+    loading = true; 
     if (newPassword !== newPasswordConfirm) {
       passwordError = "New password and confirmation do not match";
       loading = false; // Hide loading indicator
@@ -68,7 +66,7 @@
       const updatedProfile = {
         ...user,
       };
-      const response = await fetch('http://127.0.0.1:3000/api/users/updatemypassword', {
+      const response = await fetch(`http://127.0.0.1:3000/api/users/updatemypassword/${user.user._id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -80,10 +78,7 @@
         throw new Error('Failed to update password');
       }
 
-      // Update the user object with the updated profile
       user = updatedProfile;
-
-      // Reset the password fields after successful update
       currentPassword = "";
       newPassword = "";
       newPasswordConfirm = "";
@@ -96,8 +91,6 @@
   }
 </script>
 
-
-      <!-- svelte-ignore a11y-label-has-associated-control -->
 <main class="profile">
   <div class="profile__header">
     <div class="profile__picture">
@@ -114,50 +107,51 @@
     <h2 class="profile__name">{user.user.name}</h2>
   </div>
 
-
-    <div class="form-group">
-      <label>Name</label>
-      <input type="text" class="form-control" bind:value={newName} />
-      <button class="btn-edit" on:click={updateName}>
-        <i class="fas fa-user-edit" /> Update Name
-      </button>
-    </div>
-    <div class="form-group">
-      <label>Email</label>
-      <input type="email" class="form-control" bind:value={newEmail} />
-      <button class="btn-edit" on:click={updateEmail}>
-        <i class="fas fa-envelope" /> Update Email
-      </button>
-    </div>
-    <div class="form-group">
-      <label>Current Password</label>
-      <input
-        type="password"
-        class="form-control"
-        bind:value={currentPassword}
-      />
-    </div>
-
-    <div class="form-group">
-      <label>New Password</label>
-      <input type="password" class="form-control" bind:value={newPassword} />
-    </div>
-
-    <div class="form-group">
-      <label>Confirm New Password</label>
-      <input
-        type="password"
-        class="form-control"
-        bind:value={newPasswordConfirm}
-      />
-      {#if passwordError}
-        <p class="error">{passwordError}</p>
-      {/if}
-    </div>
-
-    <button class="btn-primary" on:click={updatePassword}>
-      <i class="fas fa-lock" /> Update Password
+  <div class="form-group">
+    <label>Name</label>
+    <input type="text" class="form-control" bind:value={newName} />
+    <button class="btn-edit" on:click={updateName}>
+      <i class="fas fa-user-edit" /> Update Name
     </button>
+  </div>
+
+  <div class="form-group">
+    <label>Email</label>
+    <input type="email" class="form-control" bind:value={newEmail} />
+    <button class="btn-edit" on:click={updateEmail}>
+      <i class="fas fa-envelope" /> Update Email
+    </button>
+  </div>
+
+  <div class="form-group">
+    <label>Current Password</label>
+    <input
+      type="password"
+      class="form-control"
+      bind:value={currentPassword}
+    />
+  </div>
+
+  <div class="form-group">
+    <label>New Password</label>
+    <input type="password" class="form-control" bind:value={newPassword} />
+  </div>
+
+  <div class="form-group">
+    <label>Confirm New Password</label>
+    <input
+      type="password"
+      class="form-control"
+      bind:value={newPasswordConfirm}
+    />
+    {#if passwordError}
+      <p class="error">{passwordError}</p>
+    {/if}
+  </div>
+
+   <button class="btn-primary" on:click={updatePassword}>
+    <i class="fas fa-lock" /> Update Password
+  </button>
 
   <!-- Loading Indicator -->
   {#if loading}
@@ -175,9 +169,16 @@
   padding: 40px;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: 'Open Sans',
 }
 
-/* Profile header */
+h1, h2, h3 {
+  font-family: 'Montserrat', sans-serif;
+}
+label {
+  font-size: 20px;
+  font-weight: 500;
+}
 .profile__header {
   display: flex;
   align-items: center;
@@ -215,14 +216,19 @@
 }
 
 .profile__name {
-  font-size: 30px; /* Increased font size for the name */
+  font-size: 30px; 
   margin-left: 20px;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  background: linear-gradient(to right, #845EC2, #d7a6c8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; 
 }
 
 /* Form styles */
 .form-group {
   margin-bottom: 30px; 
-  display: flex;
   width: 600px;
 }
 
@@ -257,9 +263,24 @@
 
 .error {
   color: #dc3545;
-  margin-top: 10px; /* Adjusted margin for better alignment */
+  margin-top: 10px; 
+   font-family: 'Lato', sans-serif;
+  font-size: 14px;
+  font-style: italic;
 }
 
+/* Animation delays */
+.form-group:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.form-group:nth-child(2) {
+  animation-delay: 0.1s;  
+}
+
+.form-group:nth-child(3) {
+  animation-delay: 0.2s;
+}
 
 /* Loading indicator styles */
 .loading-indicator {
@@ -268,21 +289,58 @@
   justify-content: center;
   margin-top: 20px;
 }
-
 .loading {
-  border: 3px solid #007bff;
-  border-top: 3px solid transparent;
+  border: 5px solid #ccc;
+  border-top-color: #4285f4;
   border-radius: 50%;
-  width: 25px;
-  height: 25px;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+}
+
+
+/* Add fade in animation when component loads */
+.profile {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1; 
+  }
+}
+
+/* Add slide up animation to form groups */
+.form-group {
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Loading indicator spin animation */  
+.loading {
+  border: 5px solid #ccc;
+  border-top-color: #4285f4;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
   animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
+  to {
     transform: rotate(360deg);
   }
 }

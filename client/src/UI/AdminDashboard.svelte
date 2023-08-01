@@ -2,7 +2,7 @@
 <script>
   export let data;
   import { createEventDispatcher } from "svelte";
-  import AppointmentDetailsModal from "./AppointmentDetailsModal.svelte";
+  import AppointmentDetailsModal from "./AppointmentDetails.svelte";
 
   const dispatch = createEventDispatcher();
 
