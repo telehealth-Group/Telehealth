@@ -71,7 +71,7 @@ console.log(user.user);
     {#if selectedAppointment && !isCreatingAppointment}
       <AppointmentDetails {role} appointment={selectedAppointment} on:closeDetails={() => closeDetails()} />
     {/if}
-  {:else if user && user.user.role === "doctor"}
+  <!-- {:else if user && user.user.role === "doctor"} -->
     <!-- Display doctor appointments -->
     <h1 class="title">Doctor Appointments</h1>
     {#if !selectedAppointment && !isCreatingAppointment}
@@ -106,7 +106,7 @@ console.log(user.user);
     {#if selectedAppointment && !isCreatingAppointment}
       <AppointmentDetails {role} appointment={selectedAppointment} on:closeDetails={() => closeDetails()} />
     {/if}
-  {/if}
+  <!-- {/if} -->
 </main>
 
 <style>

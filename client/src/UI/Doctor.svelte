@@ -13,6 +13,7 @@
     email: "",
     phone: "",
     password: "",
+    passwordConfirm: ""
   };
   // Function to handle search input changes
   function handleSearch(event) {
@@ -40,6 +41,7 @@
         email: newDoctorData.email,
         phone: newDoctorData.phone,
         password: newDoctorData.password,
+        passwordConfirm: newDoctorData.passwordConfirm
       };
       console.log(newDoctor);
       
@@ -62,6 +64,7 @@
           email: "",
           phone: "",
           password: "",
+          passwordConfirm: "",
         };
       } else {
         // Handle error case
@@ -227,6 +230,10 @@
           <label>
             Password: <!-- New password field -->
             <input type="password" bind:value={newDoctorData.password} />
+          </label>
+          <label>
+            Password Confirm: <!-- New password field -->
+            <input type="password" bind:value={newDoctorData.passwordConfirm} />
           </label>
           <label>
             Phone:

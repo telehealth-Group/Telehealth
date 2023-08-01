@@ -106,12 +106,13 @@ try {
 }
 exports.createHospitalDoctor = async(req,res)=>{
     try {
-        const { name, phone, email, password, specialization } = req.body;
+        const { name, phone, email, password, passwordConfirm,specialization } = req.body;
         const newDoctor = await User.create({
             name,
             phone,
             email,
             password,
+            passwordConfirm,
             specialization,
             role: 'doctor',
           });
@@ -123,6 +124,7 @@ exports.createHospitalDoctor = async(req,res)=>{
           },
         });
       } catch (error) {
+        console.error(error)
         res.status(404).json({
           status: false,
           message: error.message,
