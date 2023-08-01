@@ -13,6 +13,7 @@ const sendToken = function (id) {
 };
 
 const createSendToken = (user, statusCode, res) => {
+  console.log(user);
   const token = sendToken(user._id);
   const cookieOption = {
     expires: new Date(
@@ -77,6 +78,7 @@ exports.login = async (req, res) => {
         message: "Incorrect email or password",
       });
     }
+    console.log(user , "now");
  
     let populatedUser;
     if (data instanceof User && data.role === "patient") {
@@ -91,7 +93,12 @@ exports.login = async (req, res) => {
       populatedUser = await Hospital.findById(data._id)
         .populate("reviews")
         .populate("appointments");
+    }else if (data instanceof User && data.role === "superAdmin") {
+      populatedUser = await User.findById(data._id)
+        .populate("reviews")
+        .populate("DoctorAppointments");
     }
+    console.log(populatedUser, "pop");
     
     createSendToken(populatedUser, 201, res);
     

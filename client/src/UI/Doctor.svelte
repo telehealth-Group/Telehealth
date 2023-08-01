@@ -400,4 +400,182 @@
     cursor: pointer;
   }
 
+  /* Modal styles */
+  .modal-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    /* flex-direction: column; */
+    align-items: center; /* Center content horizontally */
+    justify-content: center;
+  }
+
+  .modal-content h2 {
+    margin-bottom: 15px;
+    text-align: center;
+    color: #3b5998;
+  }
+
+  .modal-content p {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .modal-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .modal-buttons button {
+    margin: 0 10px;
+    background-color: #3b5998;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+
+/* Modal styles */
+  .modal-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999; /* Ensure the modal is displayed on top of other elements */
+  }
+
+  .modal-content {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .modal-content h2 {
+    margin-bottom: 15px;
+    text-align: center;
+    color: #3b5998;
+    font-size: 24px;
+  }
+
+  .modal-content p {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #666;
+  }
+
+  .modal-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .modal-buttons button {
+    margin: 0 10px;
+    background-color: #3b5998;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .modal-buttons button:hover {
+    background-color: #2c4560; /* Darker shade on hover */
+  }
+
+  /* Add Doctor Modal Form */
+
+  .modal-content form label {
+    display: block;
+    margin-bottom: 15px;
+    color: #3b5998;
+    font-weight: bold;
+  }
+
+  .modal-content form input[type="text"],
+  .modal-content form input[type="email"],
+  .modal-content form input[type="tel"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+  }
+
+  .modal-content form input[type="text"]:focus,
+  .modal-content form input[type="email"]:focus,
+  .modal-content form input[type="tel"]:focus {
+    border-color: #3b5998;
+  }
+
+  .modal-content form .modal-buttons {
+    margin-top: 30px;
+  }
+
+  /* Modal Icons */
+
+  .modal-content .input-icon {
+    position: absolute;
+    top: 40%;
+    right: 10px;
+    transform: translateY(-50%);
+    color: #aaa;
+  }
+
+  .modal-content .input-icon svg {
+    font-size: 20px;
+  }
+
+  .modal-buttons .add-button {
+    background-color: #00a95c;
+  }
+
+  .modal-buttons .add-button:hover {
+    background-color: #008c4e; /* Darker shade on hover */
+  }
+
+  /* Custom Close Button */
+
+  .modal-content .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px;
+    font-size: 20px;
+    color: #666;
+    cursor: pointer;
+  }
+
+  .modal-content .close-button:hover {
+    color: #3b5998;
+  }
 </style>
