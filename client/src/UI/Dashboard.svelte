@@ -1,26 +1,13 @@
 <script>
+// @ts-nocheck
+
+  import { hospitals, patients } from "../store.js";
+  
+let hospital = $hospitals.data.hospitals
     let doctorsCount = 10;
     let appointmentsCount = 25;
     let patientsCount = 50;
     let revenue = 5000;
-  
-    let upcomingAppointments = [
-      {
-        patientName: "John Doe",
-        appointmentTime: "2023-05-26 10:00 AM",
-        doctorName: "Dr. Smith",
-      },
-      {
-        patientName: "Jane Smith",
-        appointmentTime: "2023-05-27 02:30 PM",
-        doctorName: "Dr. Johnson",
-      },
-      {
-        patientName: "Michael Johnson",
-        appointmentTime: "2023-05-28 09:45 AM",
-        doctorName: "Dr. Davis",
-      },
-    ];
   
     let newPatients = [
       { patientName: "Emily Wilson", registrationDate: "2023-05-15" },
@@ -38,17 +25,8 @@
           <span class="icon">👩‍⚕️</span>
         </div>
         <div class="summary-info">
-          <h2>{doctorsCount}</h2>
+          <h2>{hospital.length}</h2>
           <p>Doctors</p>
-        </div>
-      </div>
-      <div class="summary-item">
-        <div class="icon-container">
-          <span class="icon">📅</span>
-        </div>
-        <div class="summary-info">
-          <h2>{appointmentsCount}</h2>
-          <p>Appointments</p>
         </div>
       </div>
       <div class="summary-item">
@@ -72,19 +50,19 @@
     </div>
   
     <div class="dashboard-item">
-      <h2>Upcoming Appointments</h2>
+      <h2>Hospitals</h2>
       <ul class="appointment-list">
-        {#each upcomingAppointments as appointment}
+        {#each hospital as appointment}
           <li class="appointment-item">
             <div class="patient-info">
-              <div class="patient-name">{appointment.patientName}</div>
+              <div class="patient-name">{appointment.name}</div>
               <div class="appointment-details">
                 <div class="icon-container">
                   <span class="icon">👨‍⚕️</span>
                 </div>
-                <div class="doctor-name">{appointment.doctorName}</div>
+                <div class="doctor-name">{appointment.services}</div>
               </div>
-              <div class="appointment-time">{appointment.appointmentTime}</div>
+              <div class="appointment-time">{appointment.phoneNumber}</div>
             </div>
           </li>
         {/each}
