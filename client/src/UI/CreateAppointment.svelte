@@ -103,7 +103,6 @@
       hospital: hospital._id,
       doctor: selectedDoctor._id,
       confirmation:true
-      conformation: true
     };
 console.log(requestBody)
     try {
