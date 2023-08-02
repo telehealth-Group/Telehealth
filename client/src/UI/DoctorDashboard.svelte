@@ -4,6 +4,10 @@ import axios from "axios";
  export let user;
 const doctor = user.user;
 let isCanceling = false;
+ function moveCompletedAppointment(appointment) {
+    doctor.DoctorAppointments = doctor.DoctorAppointments.filter((appt) => appt._id !== appointment._id);
+    doctor.DoctorAppointments.push(appointment);
+  }
 async function completAppointment(appointment) {
     try {
       isCanceling = true;
@@ -11,6 +15,7 @@ async function completAppointment(appointment) {
       if (response.status === 204) {
         console.log(response)
         appointment.status = "completed";
+        moveCompletedAppointment(appointment); 
         isCanceling = false;
       } else {
         throw new Error("Failed to complete appointment.");
