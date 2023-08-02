@@ -1,16 +1,16 @@
 <script>
   // @ts-nocheck
-  import { onDestroy } from "svelte";
+  import { onDestroy, onMount } from "svelte";
 
   export let role;
   export let user;
   console.log(user);
 
   import AppointmentDetails from "./AppointmentDetails.svelte";
-  import PatientDashboard from "./PatientDashboard.svelte";
 
   let selectedAppointment = null;
   let isCreatingAppointment = false;
+  let filteredAppointments = [];
 
   onDestroy(() => {
     // You don't need to unsubscribe as there's no store anymore
@@ -19,17 +19,9 @@
   function showAppointmentDetails(appointment) {
     selectedAppointment = appointment;
   }
-  console.log(user.user.PatientAppointments);
+
   function closeDetails() {
     selectedAppointment = null;
-  }
-
-  function openCreateAppointment() {
-    isCreatingAppointment = true;
-  }
-
-  function closeCreateAppointment() {
-    isCreatingAppointment = false;
   }
 
   // Helper function to format the date and time in a user-friendly way
@@ -57,7 +49,25 @@
   }
 
   // Call the logAppointments() function
-  logAppointments();
+  $:{
+    logAppointments();
+  }
+
+  // Reactive declaration for the filtered appointments based on the user role
+  function filterAppointments() {
+    filteredAppointments = role === "admin"
+      ? user?.user.appointments?.filter((appointment) => appointment.hospital?.active)
+      : role === "doctor"
+      ? user?.user.DoctorAppointments?.filter((appointment) => appointment.hospital?.active)
+      : role === "patient"
+      ? user?.user.PaitentAppointments?.filter((appointment) => appointment.hospital?.active)
+      : [];
+  }
+
+  // Call the filterAppointments() function when the component is mounted
+  onMount(() => {
+    filterAppointments();
+  });
 </script>
 
 <main class="appointments">
