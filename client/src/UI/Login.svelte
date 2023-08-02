@@ -22,6 +22,7 @@
         requestData
       );
       data = response.data.data;
+      
       dispatcher("dataReceived", data);
       console.log(response);
     } catch (error) {
