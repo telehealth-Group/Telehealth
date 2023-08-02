@@ -13,12 +13,10 @@
   let isVisible = "login";
   let name, role;
 
-  function handleDataReceived(event) {
-    receivedData = event.detail;
+ async function handleDataReceived(event) {
+     receivedData = event.detail;
     name = receivedData.user.name;
-    role = receivedData.user.role;
-    console.log(role);
-    console.log(receivedData, "from app");
+    role =receivedData.user.role;
   }
 
   onMount(async () => {

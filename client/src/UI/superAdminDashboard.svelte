@@ -9,6 +9,7 @@
     try {
       const response = await axios.get("http://127.0.0.1:3000/api/users/hospital");
       hospitals = response.data.data.hospitals;
+      // console.log(hospitals)
     } catch (error) {
       console.error("Error fetching hospitals:", error);
     }

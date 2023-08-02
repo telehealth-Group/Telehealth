@@ -7,20 +7,17 @@
 
   let subscribedHospitals = [];
   let subscribedDoctors = [];
-  let selectedDoctor = null;
   let query = "";
   export let user;
 
   let selectedHospital = null;
-
-  // Subscribe to the hospitals store
-  const unsubscribeHospitals = hospitals.subscribe((value) => {
-    subscribedHospitals = value.data.hospitals;
+  const unsubscribeHospitals = hospitals.subscribe(async (value) => {
+    subscribedHospitals = await value.data.hospitals;
   });
 
   // Subscribe to the patients store
-  const unsubscribePatients = patients.subscribe((value) => {
-    subscribedDoctors = value.data.users.filter(
+  const unsubscribePatients = patients.subscribe(async (value) => {
+    subscribedDoctors = await value.data.users.filter(
       (user) => user.role === "doctor"
     );
   });

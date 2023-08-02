@@ -3,7 +3,7 @@
   // @ts-ignore
   import CreateAppointment from "./CreateAppointment.svelte";
   import axios from "axios";
-  import { createEventDispatcher } from "svelte";
+  import { afterUpdate, createEventDispatcher } from "svelte";
   export let hospital;
   export let user;
   const dispatch = createEventDispatcher();
@@ -33,14 +33,24 @@ async function addReview() {
   };
   try {
     const response = await axios.post("http://127.0.0.1:3000/api/review", requestData);
+    const newReview = {
+      user: {
+        name: user.user.name,
+      },
+      rating: rating,
+    };
+    hospital.reviews.push(newReview);
     console.log("Review added successfully:", response.data);
-    
-      submitMessage = "Review submitted successfully!";
+
+    submitMessage = "Review submitted successfully!";
   } catch (error) {
     console.error("Error adding review:", error);
     submitMessage = "Failed to submit review. Please try again later.";
   }
 }
+
+ 
+
 
 </script>
 
@@ -91,6 +101,7 @@ async function addReview() {
       </div>
       <!-- Doctors Section -->
       <div class="doctors-section">
+        {#if hospital.doctor}
         <h4>Doctors</h4>
         <div class="doctors-grid-container">
           <div class="doctors-grid">
@@ -120,6 +131,7 @@ async function addReview() {
             {/each}
           </div>
         </div>
+        {/if}
       </div>
 
       <!-- Reviews Section -->
@@ -127,6 +139,7 @@ async function addReview() {
          <h4>Reviews</h4>
         <div class="reviews-container">
           <div class="reviews-grid">
+            {#if hospital.reviews}
             {#each hospital.reviews as review}
               <div class="review">
                 <div class="profile-icon">
@@ -139,17 +152,17 @@ async function addReview() {
                   <p>
                     <strong>Rating:</strong>{" "}
                     {#each Array(5) as _, index}
-                      <i
-                        class="fas fa-star {hasBlackBorder(review.rating) &&
-                        index === review.rating
-                          ? 'black-border'
-                          : ''}"
+                      <i class="fas fa-star {hasBlackBorder(review.rating) &&
+                        index >= review.rating
+                        ? 'black-border'
+                        : ''}"
                       />
                     {/each}
                   </p>
                 </div>
               </div>
             {/each}
+            {/if}
           </div>
         </div>
 
