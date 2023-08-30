@@ -53,6 +53,10 @@
       isCanceling = false;
     }
   }
+
+  $: {
+    updatedStatus = appointment.status;
+  }
 </script>
 
 <div class="appointment-details">
